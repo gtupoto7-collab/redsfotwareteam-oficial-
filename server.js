@@ -1,9 +1,13 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 
+const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Увеличаваме лимита на JSON тялото до 20MB за снимки и видеа
+app.use(express.json({ limit: '20mb' }));
+app.use(express.urlencoded({ limit: '20mb', extended: true }));
 
 // Връзка с MongoDB Atlas в облака
 if (process.env.MONGO_URI) {
@@ -15,7 +19,7 @@ if (process.env.MONGO_URI) {
     .catch(err => console.error('Грешка при връзка с MongoDB:', err));
 }
 
-// Схема за съхранение на услугите и проектите в облака
+// Схема за съхранение на услугите и проектите
 const ProjectSchema = new mongoose.Schema({
     title: String,
     tag: String,
@@ -26,108 +30,41 @@ const ProjectSchema = new mongoose.Schema({
 
 const Project = mongoose.model('Project', ProjectSchema);
 
-const MIME_TYPES = {
-    '.html': 'text/html; charset=utf-8',
-    '.css': 'text/css',
-    '.js': 'text/javascript',
-    '.json': 'application/json',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-    '.gif': 'image/gif',
-    '.webp': 'image/webp',
-    '.ico': 'image/x-icon',
-    '.svg': 'image/svg+xml'
-};
-
-const server = http.createServer(async (req, res) => {
-    let safeUrl = req.url.split('?')[0];
-
-    // 1. API GET: Вземи всички проекти/услуги от облака
-    if (safeUrl === '/api/projects' && req.method === 'GET') {
-        try {
-            const projects = await Project.find().sort({ createdAt: -1 });
-            res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(JSON.stringify(projects));
-        } catch (err) {
-            res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(JSON.stringify({ error: 'Грешка при четене от базата данни' }));
-        }
-        return;
+// API GET: Вземи всички проекти от облака
+app.get('/api/projects', async (req, res) => {
+    try {
+        const projects = await Project.find().sort({ createdAt: -1 });
+        res.json(projects);
+    } catch (err) {
+        res.status(500).json({ error: 'Грешка при четене от базата данни' });
     }
-
-    // 2. API POST: Запиши нов проект/услуга от админ панела в облака (с увеличен лимит до 15MB за снимки)
-    if (safeUrl === '/api/projects' && req.method === 'POST') {
-        let body = '';
-        let bodyTooLarge = false;
-
-        req.on('data', chunk => {
-            body += chunk.toString();
-            // Защита: лимит до 15MB за качени файлове/Base64
-            if (body.length > 15 * 1024 * 1024) {
-                bodyTooLarge = true;
-                res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ error: 'Файлът е прекалено голям (над 15MB)' }));
-                req.destroy();
-            }
-        });
-
-        req.on('end', async () => {
-            if (bodyTooLarge) return;
-            try {
-                const data = JSON.parse(body);
-                const newProject = new Project({
-                    title: data.title || 'Нова услуга',
-                    tag: data.tag || '50 €',
-                    description: data.description || '',
-                    imageUrl: data.imageUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60'
-                });
-                await newProject.save();
-                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: true, message: 'Записано успешно в облака!' }));
-            } catch (err) {
-                console.error('Грешка при Mongoose save:', err);
-                res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ error: 'Грешка при запис в базата данни' }));
-            }
-        });
-        return;
-    }
-
-    if (safeUrl === '/') {
-        safeUrl = '/index.html';
-    }
-
-    const filePath = path.join(__dirname, safeUrl);
-    const extname = path.extname(filePath).toLowerCase();
-
-    fs.stat(filePath, (err, stats) => {
-        if (!err && stats.isFile()) {
-            const contentType = MIME_TYPES[extname] || 'application/octet-stream';
-            fs.readFile(filePath, (readErr, data) => {
-                if (readErr) {
-                    res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-                    res.end('Грешка при четене на файла');
-                } else {
-                    res.writeHead(200, { 'Content-Type': contentType });
-                    res.end(data);
-                }
-            });
-        } else {
-            const indexPath = path.join(__dirname, 'index.html');
-            fs.readFile(indexPath, (indexErr, indexData) => {
-                if (indexErr) {
-                    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-                    res.end('404 - Страницата не е намерена');
-                } else {
-                    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-                    res.end(indexData);
-                }
-            });
-        }
-    });
 });
 
-server.listen(PORT, () => {
-    console.log(`Сървърът на Red Software Team работи на порт ${PORT}`);
+// API POST: Запиши нов проект от админ панела
+app.post('/api/projects', async (req, res) => {
+    try {
+        const { title, tag, description, imageUrl } = req.body;
+        const newProject = new Project({
+            title: title || 'Нова услуга',
+            tag: tag || '50 €',
+            description: description || '',
+            imageUrl: imageUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60'
+        });
+        await newProject.save();
+        res.json({ success: true, message: 'Записано успешно в облака!' });
+    } catch (err) {
+        console.error('Грешка при Mongoose save:', err);
+        res.status(500).json({ error: 'Грешка при запис в базата данни' });
+    }
+});
+
+// Сервиране на статични файлове (index.html и др.)
+app.use(express.static(__dirname));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`Сървърът работи на порт ${PORT}`);
 });
