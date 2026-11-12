@@ -3,196 +3,419 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RED SOFTWARE TEAM | Sofuteri, AI i Bezsmurhtni Saytove</title>
+    <title>RED SOFTWARE TEAM | Софтуер, AI модели, Bot ферми и Безсмъртни Сайтове</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class' }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#ef4444', 600: '#dc2626', 900: '#7f1d1d' }
+                    }
+                }
+            }
+        }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .cyber-glow { box-shadow: 0 0 35px rgba(239, 68, 68, 0.25); }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-red-600 selection:text-white">
 
-    <!-- Top Bar -->
-    <div class="bg-red-950 text-xs py-3 text-center font-bold">
-        🔥 RED SOFTWARE TEAM - 28 Kibernetični resheniya. Plashchane sled 7 dni test s EasyPay!
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-red-950 via-slate-900 to-red-950 border-b border-red-900/40 text-xs py-3 px-4 text-center font-bold tracking-wide">
+        🔥 <span class="text-red-400">БЪЛГАРИЯ ИЗИСКВА:</span> Ефтино, да работи вечно безплатно и да е от висша класа! <span class="text-white">RED SOFTWARE TEAM</span> покрива всичко! (Сайт 50€ | Bot ферми 70€ | Tor/AI 80€-220€). Плащане след 7 дни тест с <span class="text-amber-400">EasyPay</span>!
     </div>
 
-    <!-- Nav -->
-    <nav class="sticky top-0 z-40 bg-slate-950/90 border-b border-slate-800 px-6 h-20 flex items-center justify-between">
-        <div class="text-xl font-black">RED SOFTWARE <span class="text-red-500">TEAM</span></div>
-        <div class="flex items-center gap-4">
-            <button onclick="openAdminModal()" class="px-4 py-2 text-xs font-bold bg-slate-900 border border-slate-700 hover:border-red-500 rounded-lg">🔒 Admin Panel</button>
-            <a href="tel:0879813928" class="text-red-400 font-bold">📞 0879 813 928</a>
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center shadow-lg shadow-red-900/40 font-black text-xl tracking-wider text-white">R</div>
+                <div>
+                    <span class="text-lg font-black tracking-wider text-white">RED SOFTWARE <span class="text-red-500">TEAM</span></span>
+                    <span class="block text-[10px] text-slate-400 uppercase tracking-widest">Pernik, Bulgaria</span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-300">
+                <a href="#showcase" class="hover:text-red-400 transition">Портфолио модели (28 услуги)</a>
+                <a href="#configurator" class="hover:text-red-400 transition">Зглоби си сайт</a>
+                <a href="https://hacker-conzole-obuchenie.onrender.com" target="_blank" class="text-amber-400 font-bold hover:text-amber-300 transition flex items-center gap-1 bg-amber-950/40 px-3 py-1.5 rounded-lg border border-amber-800/50">💻 Hacker Console</a>
+                <a href="tel:0879813928" class="text-red-400 font-bold hover:text-red-300 transition flex items-center gap-1">📞 0879 813 928</a>
+            </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="openAdminModal()" class="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg border border-slate-700 hover:border-red-500 hover:text-red-400 transition bg-slate-900">🔒 Админ</button>
+                <a href="#configurator" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-sm shadow-lg shadow-red-600/30 transition">Стартирай</a>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <header class="py-20 text-center px-4">
-        <h1 class="text-4xl sm:text-6xl font-extrabold mb-6">Bezsmurhtni saytove za <span class="text-red-500">50 €</span></h1>
-        <p class="text-slate-400 max-w-2xl mx-auto mb-8">Sinchronizirani v oblaka (MongoDB) za vsichki ustroystva 24/7/365!</p>
-        <a href="#showcase" class="px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 font-extrabold">Razgledai portfolioto</a>
+    <!-- Hero Section -->
+    <header class="relative pt-20 pb-32 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-red-900/20 via-slate-950/0 to-slate-950/0 pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-950/50 border border-red-800/50 text-red-400 text-xs font-bold uppercase tracking-widest mb-6 cyber-glow">
+                ⚡ 100% Анонимност, Сигурност и 28 готови кибер решения за България!
+            </div>
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6">
+                Безсмъртни сайтове за <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-rose-400">50 €</span> & AI Системи
+            </h1>
+            <p class="max-w-3xl mx-auto text-lg sm:text-xl text-slate-300 mb-10 leading-relaxed">
+                Получаваш уебсайт, QR код и линк, който ще работи завинаги на Render сървъри. Пълна синхронизация в облака между лаптоп, телефон и Opera GX 24/7/365!
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <a href="#configurator" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-extrabold text-base shadow-xl shadow-red-600/30 hover:scale-105 transition text-center">🛠️ Зглоби своя сайт или система</a>
+                <a href="tel:0879813928" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 font-bold text-base hover:bg-slate-800 transition text-center">📞 Обади се: 0879 813 928</a>
+            </div>
+        </div>
     </header>
 
-    <!-- Showcase Section -->
-    <section id="showcase" class="py-20 px-6 max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-extrabold">Portfolioto i kachenite uslugi na zhivo</h2>
-            <p class="text-slate-400 text-sm mt-2">Vyzmozhnosti dobaveni ot admin panela</p>
+    <!-- Interactive Configurator Section -->
+    <section id="configurator" class="py-20 bg-slate-900/40 border-t border-slate-800/80 relative">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="bg-slate-900 border border-red-500/30 rounded-3xl p-8 sm:p-12 shadow-2xl relative cyber-glow">
+                <div class="text-center mb-10">
+                    <span class="text-xs uppercase tracking-widest text-red-500 font-extrabold">Модул за поръчки и конфигурация</span>
+                    <h2 class="text-3xl font-extrabold text-white mt-1">Зглоби си сам твоя бизнес пакет</h2>
+                    <p class="text-slate-400 text-sm mt-2">Избери от нашите 28 професионални услуги и кибер решения!</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">1. Избери услуга / пакет</label>
+                        <select id="cfg-industry" onchange="checkCustomIndustry()" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white focus:border-red-500 focus:outline-none transition">
+                            <option value="Софтуер по поръчка (50 - 25000 €)">💻 Софтуер по поръчка и автоматизация (от 50 €)</option>
+                            <option value="Мобилни приложения iOS & Android (199 €)">📱 Мобилни приложения iOS & Android (от 199 €)</option>
+                            <option value="Кибер сигурност Level 1-3 (20-50 €)">🛡️ Кибер сигурност и защита (от 20 €)</option>
+                            <option value="Tor Website & Marketplace (70-250 €)">🧅 Tor Marketplace & Onion Скрити сайтове (от 70 €)</option>
+                            <option value="Flipper Zero & Hardware Suite (50-120 €)">🎛️ Flipper Zero & Hardware софтуер (от 50 €)</option>
+                            <option value="Бот ферми и рекламни агенти (10-500 €)">🤖 Бот ферми и автоматизирани системи (от 10 €)</option>
+                            <option value="Ubuntu Hacker Mobile Device (550 €)">📱 Ubuntu Hacker Mobile Device (550 €)</option>
+                            <option value="Custom AI Intelligence Solutions (80-220 €)">🧠 Custom AI Intelligence & Max Level (от 80 €)</option>
+                            <option value="Стандартен Бизнес Сайт (50 €)">🌐 Стандартен Бизнес Сайт + QR + Хостинг (50 €)</option>
+                            <option value="Ремонт на покриви (50 €)">🏠 Ремонт на покриви (50 €)</option>
+                            <option value="Дърводелски услуги (50 €)">🪵 Дърводелски услуги (50 €)</option>
+                            <option value="Автосервиз & Диагностика (50 €)">🚘 Автосервиз & Диагностика (50 €)</option>
+                            <option value="Пътна помощ 24/7 (50 €)">🚗 Пътна помощ 24/7 (50 €)</option>
+                            <option value="Електротехник / Водопроводчик (50 €)">⚡ Електропрофесионал / ВиК (50 €)</option>
+                            <option value="CUSTOM">✨ Друг / Персонален бизнес (Опиши си го сам)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">2. Име на фирма / Лице</label>
+                        <input type="text" id="cfg-name" placeholder="напр. Ред Софтуер ЕООД" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white focus:border-red-500 focus:outline-none transition">
+                    </div>
+                </div>
+
+                <!-- Custom Business Input -->
+                <div id="custom-business-box" class="hidden mb-8 p-6 rounded-2xl bg-slate-950 border border-red-500/40 space-y-4">
+                    <h4 class="text-sm font-bold text-red-400 uppercase tracking-wider">🛠️ Опиши своя персонален бизнес</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Какъв е твоят бизнес / дейност?</label>
+                            <input type="text" id="cfg-custom-type" placeholder="напр. Специфична софтуерна услуга" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white focus:border-red-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Желана функционалност</label>
+                            <input type="text" id="cfg-custom-func" placeholder="напр. Интеграция с бот или база данни" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white focus:border-red-500 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">3. Телефон за връзка / Viber</label>
+                        <input type="text" id="cfg-phone" placeholder="0879813928" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white focus:border-red-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">4. Подробно описание и изисквания</label>
+                        <input type="text" id="cfg-details" placeholder="напр. Искам пълна анонимност и бърза изработка..." class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white focus:border-red-500 focus:outline-none transition">
+                    </div>
+                </div>
+
+                <button onclick="submitConfiguratorOrder()" class="w-full py-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-extrabold text-lg shadow-xl shadow-red-600/30 transition">
+                    🚀 Заяви сега (30 минути готовност • 7 дни тест • EasyPay)
+                </button>
+                <div id="cfg-success" class="hidden mt-6 p-4 rounded-xl bg-emerald-950/50 border border-emerald-800 text-emerald-400 text-center font-bold">
+                    ✅ Заявката е приета успешно! Очаквайте връзка от екипа до 30 минути.
+                </div>
+            </div>
         </div>
-        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
     </section>
 
+    <!-- Showcase Section -->
+    <section id="showcase" class="py-20 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-xs uppercase tracking-widest text-red-500 font-extrabold">Портфолио и 28 кибер услуги</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Всички налични модели, софтуер и хардуер на живо</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto mt-2">Синхронизирани в реално време от MongoDB Atlas за всички устройства и браузъри.</p>
+            </div>
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Floating Call Button -->
+    <a href="tel:0879813928" class="fixed bottom-6 right-6 z-30 w-14 h-14 rounded-full bg-gradient-to-r from-red-600 to-rose-600 text-white flex items-center justify-center shadow-2xl shadow-red-600/50 hover:scale-110 transition cyber-glow" title="Обади се веднага">
+        <span class="text-2xl">📞</span>
+    </a>
+
     <!-- Footer -->
-    <footer class="py-12 text-center text-slate-500 text-xs border-t border-slate-900">
-        © 2026 RED SOFTWARE TEAM. Pernik, Bulgaria. Tel: 0879 813 928
+    <footer class="bg-slate-950 border-t border-slate-900 py-12 text-center text-slate-500 text-sm">
+        <p class="mb-2">© 2026 RED SOFTWARE TEAM. Всички права запазени. Перник, България.</p>
+        <p class="text-xs">Телефон за връзка: <a href="tel:0879813928" class="text-red-400 font-bold">0879 813 928</a> | Плащане през EasyPay</p>
     </footer>
 
-    <!-- ADMIN MODAL -->
-    <div id="admin-modal" class="fixed inset-0 z-50 bg-slate-950/90 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-8 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeAdminModal()" class="absolute top-6 right-6 text-xl font-bold">✕</button>
+    <!-- SECURE ADMIN MODAL -->
+    <div id="admin-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-3xl w-full p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdminModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white text-xl font-bold">✕</button>
 
-            <!-- Login -->
+            <!-- LOGIN SCREEN -->
             <div id="admin-login-screen">
-                <h3 class="text-2xl font-black mb-6 text-center">Admin Panel Vhod</h3>
+                <div class="text-center mb-8">
+                    <span class="text-xs uppercase tracking-widest text-red-500 font-bold">Secure Terminal</span>
+                    <h3 class="text-2xl font-black text-white mt-1">Административен панел</h3>
+                </div>
                 <div class="space-y-4 max-w-sm mx-auto">
-                    <input type="text" id="admin-user" placeholder="User: admin123" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white">
-                    <input type="password" id="admin-pass" placeholder="Pass: 123456" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white">
-                    <button onclick="verifyAdmin()" class="w-full py-3 bg-red-600 rounded-xl font-bold">Vhod</button>
-                    <p id="admin-error" class="text-red-500 text-xs text-center hidden font-bold">Greshni danni!</p>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-2">Потребителско име</label>
+                        <input type="text" id="admin-user" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-2">Парола</label>
+                        <input type="password" id="admin-pass" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-white focus:border-red-500">
+                    </div>
+                    <button onclick="verifyAdmin()" class="w-full py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold transition">Вход в системата</button>
+                    <p id="admin-error" class="text-red-500 text-xs text-center hidden font-bold">Грешни данни за вход!</p>
                 </div>
             </div>
 
-            <!-- Dashboard -->
-            <div id="admin-dashboard" class="hidden space-y-6">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-                    <h3 class="text-xl font-black text-red-400">⚙️ Panel na Shefa (Oblachen Sinchron)</h3>
-                    <button onclick="logoutAdmin()" class="px-3 py-1 bg-slate-800 text-xs rounded">Izhod</button>
+            <!-- ADMIN DASHBOARD -->
+            <div id="admin-dashboard" class="hidden space-y-8">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div>
+                        <h3 class="text-xl font-black text-white">⚙️ RED SOFTWARE - Панел на шефа</h3>
+                        <p class="text-xs text-slate-400">Управление на 28 услуги, снимки и облачна синхронизация.</p>
+                    </div>
+                    <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-bold">🚪 ИЗХОД</button>
                 </div>
 
-                <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4">
-                    <h4 class="text-sm font-bold text-red-400 uppercase">➕ Kachvane na usluga / snimka / opisanie v oblaka</h4>
-                    <input type="text" id="new-proj-title" placeholder="Zaglaviye (naпр. Remont na pokrivi)" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
-                    <input type="text" id="new-proj-badge" placeholder="Cena / Etiket (naprimer 50 €)" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
-                    <textarea id="new-proj-desc" placeholder="Opisanie na deynostta ili uslugata..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white" rows="2"></textarea>
-                    <div>
-                        <label class="block text-[10px] text-slate-400 uppercase mb-1">Izberi snimka ot ustroystvoto:</label>
-                        <input type="file" id="new-proj-file" accept="image/*" class="w-full text-xs text-slate-400">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5">
+                        <span class="text-xs text-slate-400 uppercase font-bold">Посетители (Live)</span>
+                        <div class="text-2xl font-black text-red-500 mt-2" id="stat-visitors">790</div>
                     </div>
-                    <button onclick="addNewProjectToCloud()" class="w-full py-3 rounded-xl bg-red-600 hover:bg-red-500 font-bold text-sm shadow-md">
-                        🚀 Zapishi v oblaka (Vidimo navsyakyde)
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5">
+                        <span class="text-xs text-slate-400 uppercase font-bold">Проекти / Услуги</span>
+                        <div class="text-2xl font-black text-emerald-400 mt-2" id="stat-count">0</div>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5">
+                        <span class="text-xs text-slate-400 uppercase font-bold">Заявки</span>
+                        <div class="text-2xl font-black text-indigo-400 mt-2" id="stat-orders-count">0</div>
+                    </div>
+                </div>
+
+                <!-- UPLOAD TO CLOUD -->
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
+                    <h4 class="text-sm font-bold text-white uppercase text-red-400">➕ Качване на услуга или снимка в ОБЛАКА (MongoDB)</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <input type="text" id="new-proj-title" placeholder="Заглавие (напр. Услуга / Хардуер)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
+                        <input type="text" id="new-proj-badge" placeholder="Цена / Етикет (напр. 50 € / VIP)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
+                    </div>
+                    <textarea id="new-proj-desc" placeholder="Описание на услугата или продукта..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white" rows="2"></textarea>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Избери снимка или файл от устройството:</label>
+                        <input type="file" id="new-proj-file" accept="image/*,video/mp4" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-950 file:text-red-400 hover:file:bg-red-900">
+                    </div>
+                    <button onclick="addNewProject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-sm shadow-md">
+                        🚀 Запиши в облака (Видимо навсякъде)
                     </button>
                 </div>
 
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                    <h4 class="text-xs font-bold text-slate-400 uppercase mb-2">Kacheni proekti v bazata danni:</h4>
-                    <div id="admin-projects-list" class="space-y-2 text-xs">Zarezhdane...</div>
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
+                    <h4 class="text-sm font-bold text-white uppercase text-amber-400">🗑️ Управление на проектите в базата данни</h4>
+                    <div id="admin-projects-list" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                        <p class="text-xs text-slate-500 italic">Зареждане от облака...</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
+                    <h4 class="text-sm font-bold text-white uppercase text-indigo-400">📥 Входящи заявки от клиенти</h4>
+                    <div id="admin-orders-list" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                        <p class="text-xs text-slate-500 italic">Все още няма получени заявки.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JS Logic -->
+    <!-- JavaScript - Cloud Sync & 28 Services Integration -->
     <script>
+        let visitors = localStorage.getItem('rst_visitors') || 790;
+        visitors = parseInt(visitors) + 1;
+        localStorage.setItem('rst_visitors', visitors);
+        document.getElementById('stat-visitors').innerText = visitors;
+
+        let orders = JSON.parse(localStorage.getItem('rst_orders') || '[]');
         let customProjects = [];
 
-        async function fetchProjects() {
+        function checkCustomIndustry() {
+            const val = document.getElementById('cfg-industry').value;
+            const box = document.getElementById('custom-business-box');
+            if(val === 'CUSTOM') { box.classList.remove('hidden'); } else { box.classList.add('hidden'); }
+        }
+
+        // ЗАРЕЖДАНЕ НА ВСИЧКИ ПРОЕКТИ И УСЛУГИ ОТ МОНГО ДБ ОБЛАКА НА ВСИЧКИ УСТРОЙСТВА
+        async function fetchProjectsFromCloud() {
             try {
-                const res = await fetch('/api/projects');
-                const data = await res.json();
-                if(Array.isArray(data)) {
+                const response = await fetch('/api/projects');
+                const data = await response.json();
+                if (Array.isArray(data)) {
                     customProjects = data.map(p => ({
+                        id: p._id,
                         title: p.title,
                         badge: p.tag || '50 €',
                         desc: p.description,
                         src: p.imageUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60'
                     }));
                     renderProjects();
-                    updateAdminList();
+                    updateAdminProjectsList();
                 }
-            } catch(err) { console.error(err); }
+            } catch (err) {
+                console.error("Грешка при зареждане от облака:", err);
+            }
         }
 
         function renderProjects() {
             const grid = document.getElementById('projects-grid');
+            document.getElementById('stat-count').innerText = customProjects.length;
             let html = '';
-            customProjects.forEach(p => {
+            
+            customProjects.forEach((p) => {
                 html += `
-                <div class="bg-slate-900 border border-red-500/40 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between">
+                <div class="bg-slate-900 border border-red-500/40 rounded-2xl overflow-hidden shadow-xl group flex flex-col justify-between">
                     <div>
                         <div class="h-48 overflow-hidden relative bg-slate-950">
-                            <img src="${p.src}" class="w-full h-full object-cover">
+                            <img src="${p.src}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">${p.badge}</span>
                         </div>
                         <div class="p-6">
                             <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
                             <p class="text-slate-400 text-sm mb-4">${p.desc}</p>
-                            <div class="p-2 bg-slate-950 border border-slate-800 text-[11px] text-red-400 font-semibold">🎁 Sayt + Link + QR kod!</div>
+                            <div class="mb-4 p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-red-400 font-semibold">🎁 Сайт + Линк + QR код!</div>
                         </div>
+                    </div>
+                    <div class="p-6 pt-0 flex items-center justify-between border-t border-slate-800">
+                        <a href="#configurator" class="w-full py-2 bg-slate-800 hover:bg-red-600 text-slate-200 text-xs font-bold rounded-lg text-center transition">Поръчай подобен</a>
                     </div>
                 </div>`;
             });
+
             if(customProjects.length === 0) {
-                html = `<div class="col-span-3 text-center text-slate-500 py-10">nyama vse oshte kacheni proekti v oblaka. Vlez v admin panela i kachi pyrviya!</div>`;
+                html = `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                    <div class="h-48 overflow-hidden relative bg-slate-950">
+                        <img src="https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60" alt="Ремонт покриви" class="w-full h-full object-cover">
+                        <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">50 €</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Ремонт на покриви</h3>
+                        <p class="text-slate-400 text-sm mb-4">Примерен модел сайт за майстори и бригади.</p>
+                        <a href="#configurator" class="px-4 py-2 bg-slate-800 hover:bg-red-600 text-white text-xs font-bold rounded-lg block text-center">Поръчай подобен</a>
+                    </div>
+                </div>`;
             }
             grid.innerHTML = html;
         }
 
-        async function addNewProjectToCloud() {
+        // КАЧВАНЕ НА НОВ ПРОЕКТ В ОБЛАКА НА МОНГО ДБ
+        async function addNewProject() {
             const title = document.getElementById('new-proj-title').value;
             const badge = document.getElementById('new-proj-badge').value;
             const desc = document.getElementById('new-proj-desc').value;
             const fileInput = document.getElementById('new-proj-file');
 
-            if(!title) { alert('Popylni zaglaviye!'); return; }
+            if(!title) { alert('Попълнете поне заглавие на услугата или проекта!'); return; }
 
             let mediaSrc = "https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60";
 
-            if(fileInput.files && fileInput.files[0]) {
+            if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
                 const reader = new FileReader();
                 reader.onload = async function(e) {
-                    mediaSrc = e.target.result;
-                    await sendToServer(title, badge, desc, mediaSrc);
+                    mediaSrc = e.target.result; // Преобразува снимката в текстов низ за облака
+                    await sendToCloud(title, badge, desc, mediaSrc);
                 };
                 reader.readAsDataURL(file);
             } else {
-                await sendToServer(title, badge, desc, mediaSrc);
+                await sendToCloud(title, badge, desc, mediaSrc);
             }
         }
 
-        async function sendToServer(title, badge, desc, src) {
+        async function sendToCloud(title, badge, desc, src) {
             try {
-                const res = await fetch('/api/projects', {
+                const response = await fetch('/api/projects', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, tag: badge, description: desc, imageUrl: src })
+                    body: JSON.stringify({ title, tag: badge || '50 €', description: desc, imageUrl: src })
                 });
-                const data = await res.json();
-                if(data.success) {
-                    alert('Uspeshno zapaseno v oblaka! Sega se vizhda navsyakyde.');
+                const res = await response.json();
+                if(res.success) {
+                    alert('Успешно записано в облака на MongoDB Atlas! Видимо навсякъде.');
                     document.getElementById('new-proj-title').value = '';
                     document.getElementById('new-proj-badge').value = '';
                     document.getElementById('new-proj-desc').value = '';
                     document.getElementById('new-proj-file').value = '';
-                    fetchProjects();
+                    fetchProjectsFromCloud();
                 } else {
-                    alert('Greshka pri zapis.');
+                    alert('Грешка при запис в базата данни.');
                 }
-            } catch(err) {
-                alert(' Mrezhova greshka.');
+            } catch (err) {
+                alert('Мрежова грешка при връзка със сървъра.');
             }
         }
 
-        function updateAdminList() {
+        function updateAdminProjectsList() {
             const list = document.getElementById('admin-projects-list');
-            if(customProjects.length === 0) { list.innerHTML = 'Nyama proekti.'; return; }
+            if(customProjects.length === 0) { list.innerHTML = '<p class="text-xs text-slate-500">Няма качени проекти в облака.</p>'; return; }
             let html = '';
-            customProjects.forEach(p => {
-                html += `<div class="p-2 bg-slate-900 rounded border border-slate-800 flex justify-between"><span>${p.title} (${p.badge})</span><span class="text-emerald-400">V oblaka ✅</span></div>`;
+            customProjects.forEach((p, idx) => {
+                html += `<div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs flex justify-between items-center"><span class="text-white font-bold">${p.title} (${p.badge})</span><span class="text-slate-400">В облака ✅</span></div>`;
+            });
+            list.innerHTML = html;
+        }
+
+        function submitConfiguratorOrder() {
+            let industry = document.getElementById('cfg-industry').value;
+            const name = document.getElementById('cfg-name').value;
+            const phone = document.getElementById('cfg-phone').value;
+            const details = document.getElementById('cfg-details').value;
+            if(industry === 'CUSTOM') {
+                const customType = document.getElementById('cfg-custom-type').value;
+                const customFunc = document.getElementById('cfg-custom-func').value;
+                if(!customType) { alert('Опишете бизнеса си!'); return; }
+                industry = `Персонален: ${customType} (${customFunc})`;
+            }
+            if(!name || !phone) { alert('Попълнете име и телефон!'); return; }
+            orders.unshift({ name, phone, service: industry, notes: details, date: new Date().toLocaleString() });
+            localStorage.setItem('rst_orders', JSON.stringify(orders));
+            document.getElementById('cfg-success').classList.remove('hidden');
+            setTimeout(() => document.getElementById('cfg-success').classList.add('hidden'), 5000);
+            updateAdminOrdersList();
+        }
+
+        function updateAdminOrdersList() {
+            const list = document.getElementById('admin-orders-list');
+            document.getElementById('stat-orders-count').innerText = orders.length;
+            if(orders.length === 0) { list.innerHTML = '<p class="text-xs text-slate-500">Няма заявки.</p>'; return; }
+            let html = '';
+            orders.forEach(o => {
+                html += `<div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs space-y-1"><div class="flex justify-between font-bold text-white"><span>${o.name}</span><span class="text-red-400">${o.phone}</span></div><div class="text-red-300">Услуга: ${o.service}</div></div>`;
             });
             list.innerHTML = html;
         }
@@ -205,7 +428,8 @@
                 document.getElementById('admin-login-screen').classList.add('hidden');
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 document.getElementById('admin-error').classList.add('hidden');
-                fetchProjects();
+                updateAdminOrdersList();
+                updateAdminProjectsList();
             } else {
                 document.getElementById('admin-error').classList.remove('hidden');
             }
@@ -214,9 +438,14 @@
         function logoutAdmin() {
             document.getElementById('admin-dashboard').classList.add('hidden');
             document.getElementById('admin-login-screen').classList.remove('hidden');
+            document.getElementById('admin-user').value = '';
+            document.getElementById('admin-pass').value = '';
+            closeAdminModal();
         }
 
-        fetchProjects();
+        // Стартираме извличането на данните от облака
+        fetchProjectsFromCloud();
+        updateAdminOrdersList();
     </script>
 </body>
 </html>

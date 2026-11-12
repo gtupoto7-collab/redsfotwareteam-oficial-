@@ -5,16 +5,17 @@ const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 3000;
 
-// Vryzka s MongoDB Atlas v oblaka za vechno pazene
+// Връзка с MongoDB Atlas в облака за вечно пазине на проектите
 if (process.env.MONGO_URI) {
     mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log('MongoDB Atlas e svyrzan uspeshno!'))
-    .catch(err => console.error('Greshka pri vryzka s MongoDB:', err));
+    .then(() => console.log('MongoDB Atlas е свързан успешно!'))
+    .catch(err => console.error('Грешка при връзка с MongoDB:', err));
 }
 
+// Схема за услугите и проектите
 const ProjectSchema = new mongoose.Schema({
     title: String,
     tag: String,
@@ -33,13 +34,16 @@ const MIME_TYPES = {
     '.jpg': 'image/jpeg',
     '.jpeg': 'image/jpeg',
     '.png': 'image/png',
-    '.webp': 'image/webp'
+    '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.ico': 'image/x-icon',
+    '.svg': 'image/svg+xml'
 };
 
 const server = http.createServer(async (req, res) => {
     let safeUrl = req.url.split('?')[0];
 
-    // API: Vzemi vsichki proekti ot oblaka
+    // 1. API: Вземи всички проекти и услуги от облака (GET)
     if (safeUrl === '/api/projects' && req.method === 'GET') {
         try {
             const projects = await Project.find().sort({ createdAt: -1 });
@@ -47,54 +51,71 @@ const server = http.createServer(async (req, res) => {
             res.end(JSON.stringify(projects));
         } catch (err) {
             res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(JSON.stringify({ error: 'Greshka pri chetene' }));
+            res.end(JSON.stringify({ error: 'Грешка при четене на проектите' }));
         }
         return;
     }
 
-    // API: Zapishi nov proekt/snimka ot admin panela v oblaka
+    // 2. API: Запиши нов проект от панела на шефа в облака (POST)
     if (safeUrl === '/api/projects' && req.method === 'POST') {
         let body = '';
-        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
         req.on('end', async () => {
             try {
                 const data = JSON.parse(body);
                 const newProject = new Project({
-                    title: data.title || 'Nova usluga',
+                    title: data.title || 'Нова услуга',
                     tag: data.tag || '50 €',
                     description: data.description || '',
                     imageUrl: data.imageUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60'
                 });
-                await newProject.save();
+                await newProject.save(); // Записва се в MongoDB Atlas завинаги!
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: true, message: 'Zapisano v oblaka!' }));
+                res.end(JSON.stringify({ success: true, message: 'Проектът е запазен в облака!' }));
             } catch (err) {
                 res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ error: 'Greshka pri zapis' }));
+                res.end(JSON.stringify({ error: 'Грешка при запис в базата данни' }));
             }
         });
         return;
     }
 
-    if (safeUrl === '/') safeUrl = '/index.html';
+    if (safeUrl === '/') {
+        safeUrl = '/index.html';
+    }
+
     const filePath = path.join(__dirname, safeUrl);
     const extname = path.extname(filePath).toLowerCase();
 
     fs.stat(filePath, (err, stats) => {
         if (!err && stats.isFile()) {
+            const contentType = MIME_TYPES[extname] || 'application/octet-stream';
             fs.readFile(filePath, (readErr, data) => {
-                res.writeHead(200, { 'Content-Type': MIME_TYPES[extname] || 'application/octet-stream' });
-                res.end(data);
+                if (readErr) {
+                    res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+                    res.end('Грешка в сървъра');
+                } else {
+                    res.writeHead(200, { 'Content-Type': contentType });
+                    res.end(data);
+                }
             });
         } else {
-            fs.readFile(path.join(__dirname, 'index.html'), (indexErr, indexData) => {
-                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-                res.end(indexData);
+            const indexPath = path.join(__dirname, 'index.html');
+            fs.readFile(indexPath, (indexErr, indexData) => {
+                if (indexErr) {
+                    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+                    res.end('404 - Not Found');
+                } else {
+                    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                    res.end(indexData);
+                }
             });
         }
     });
 });
 
 server.listen(PORT, () => {
-    console.log(`Server raboti na port ${PORT}`);
+    console.log(`RED-SOFTWARE-TEAM-BG сървърът работи на порт ${PORT}`);
 });
