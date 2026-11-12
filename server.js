@@ -5,17 +5,17 @@ const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 3000;
 
-// Vruska kum MongoDB Atlas v oblaka
+// Връзка с MongoDB Atlas в облака за вечно пазине на проектите
 if (process.env.MONGO_URI) {
     mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log('MongoDB Atlas e svyazan uspeshno!'))
-    .catch(err => console.error('Greshka pri vruska s MongoDB:', err));
+    .then(() => console.log('MongoDB Atlas е свързан успешно!'))
+    .catch(err => console.error('Грешка при връзка с MongoDB:', err));
 }
 
-// Shema za 28-te uslugi i proekti
+// Схема за 28-те услуги и проекти
 const ProjectSchema = new mongoose.Schema({
     title: String,
     tag: String,
@@ -43,7 +43,7 @@ const MIME_TYPES = {
 const server = http.createServer(async (req, res) => {
     let safeUrl = req.url.split('?')[0];
 
-    // API: Vzemi vsichki 28+ uslugi i proekti ot oblaka
+    // 1. API: Вземи всички проекти и услуги от облака (GET)
     if (safeUrl === '/api/projects' && req.method === 'GET') {
         try {
             const projects = await Project.find().sort({ createdAt: -1 });
@@ -51,8 +51,34 @@ const server = http.createServer(async (req, res) => {
             res.end(JSON.stringify(projects));
         } catch (err) {
             res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(JSON.stringify({ error: 'Greshka pri chetene na proektite' }));
+            res.end(JSON.stringify({ error: 'Грешка при четене на проектите' }));
         }
+        return;
+    }
+
+    // 2. API: Запиши нов проект от панела на шефа в облака (POST)
+    if (safeUrl === '/api/projects' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        req.on('end', async () => {
+            try {
+                const data = JSON.parse(body);
+                const newProject = new Project({
+                    title: data.title || 'Нова услуга',
+                    tag: data.tag || 'VIP',
+                    description: data.description || 'Описание на проекта',
+                    imageUrl: data.imageUrl || '/logo.jpg'
+                });
+                await newProject.save(); // Записва се в MongoDB Atlas завинаги!
+                res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ success: true, message: 'Проектът е запазен в облака!' }));
+            } catch (err) {
+                res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ error: 'Грешка при запис в базата данни' }));
+            }
+        });
         return;
     }
 
@@ -69,7 +95,7 @@ const server = http.createServer(async (req, res) => {
             fs.readFile(filePath, (readErr, data) => {
                 if (readErr) {
                     res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-                    res.end('Greshka v survura');
+                    res.end('Грешка в сървъра');
                 } else {
                     res.writeHead(200, { 'Content-Type': contentType });
                     res.end(data);
@@ -91,5 +117,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`RED-SOFTWARE-TEAM-BG survurat raboti na port ${PORT}`);
+    console.log(`RED-SOFTWARE-TEAM-BG сървърът работи на порт ${PORT}`);
 });
