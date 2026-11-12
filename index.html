@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RED SOFTWARE TEAM | Софтуер, AI модели, Bot ферми и Безсмъртни Сайтове</title>
+    <!-- Facebook, Viber & Telegram Open Graph Meta Tags -->
+    <meta property="og:title" content="RED SOFTWARE TEAM | Софтуер, AI системи и Безсмъртни Сайтове">
+    <meta property="og:description" content="Еднократно плащане 50€. Работят вечно без такси на Render сървъри. Вземи сайт, линк и QR код до 30 минути!">
+    <meta property="og:image" content="https://redsoftwareteam-oficial.onrender.com/logo.jpg">
+    <meta property="og:url" content="https://redsoftwareteam-oficial.onrender.com">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RED SOFTWARE TEAM | Безсмъртни Сайтове и Софтуер">
+    <meta name="twitter:description" content="Сайт за 50€ с вечен хостинг, линк и QR код. Без месечни такси!">
+    <meta name="twitter:image" content="https://redsoftwareteam-oficial.onrender.com/logo.jpg">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -100,7 +111,7 @@
                 <div class="text-center mb-10">
                     <span class="text-xs uppercase tracking-widest text-red-500 font-extrabold">Модул за поръчки и конфигурация</span>
                     <h2 class="text-3xl font-extrabold text-white mt-1">Зглоби си сам твоя бизнес пакет</h2>
-                    <p class="text-slate-400 text-sm mt-2">Избери готова ниша от списъка или опиши своя личен бизнес и функционалност сам!</p>
+                    <p class="text-slate-400 text-sm mt-2">Избери готова ниша или опиши своя личен бизнес и функционалност сам!</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
@@ -134,7 +145,7 @@
                     </div>
                 </div>
 
-                <!-- Custom Business Input (Hidden by default unless CUSTOM is selected) -->
+                <!-- Custom Business Input -->
                 <div id="custom-business-box" class="hidden mb-8 p-6 rounded-2xl bg-slate-950 border border-red-500/40 space-y-4">
                     <h4 class="text-sm font-bold text-red-400 uppercase tracking-wider">🛠️ Опиши своя персонален бизнес</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -260,7 +271,7 @@
                         <input type="text" id="new-proj-badge" placeholder="Етикет / Цена (напр. 50 € • Модел #1)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white focus:border-red-500 focus:outline-none">
                     </div>
                     <textarea id="new-proj-desc" placeholder="Кратко описание на проекта..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white focus:border-red-500 focus:outline-none" rows="2"></textarea>
-                    <button onclick="addNewProject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-sm shadow-lg shadow-red-600/30 hover:scale-[1.01] transition">Публикувай проекта в портфолиото</button>
+                    <button onclick="addNewProject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-sm shadow-lg shadow-red-600/30 transition">Публикувай проекта в портфолиото</button>
                 </div>
 
                 <!-- MANAGED PROJECTS LIST & DELETE -->
@@ -284,7 +295,7 @@
 
     <!-- JavaScript -->
     <script>
-        let visitors = localStorage.getItem('rst_visitors') || 680;
+        let visitors = localStorage.getItem('rst_visitors') || 740;
         visitors = parseInt(visitors) + 1;
         localStorage.setItem('rst_visitors', visitors);
         document.getElementById('stat-visitors').innerText = visitors;
@@ -459,7 +470,7 @@
                         <span>👤 ${o.name}</span>
                         <span class="text-red-400">📞 ${o.phone}</span>
                     </div>
-                    <div class="text-300 text-red-300"><b>Услуга:</b> ${o.service}</div>
+                    <div class="text-red-300"><b>Услуга:</b> ${o.service}</div>
                     <div class="text-slate-400 text-[11px]"><b>Инфо:</b> ${o.notes || 'Няма'}</div>
                     <div class="text-[10px] text-slate-500 text-right">${o.date}</div>
                 </div>`;
@@ -479,7 +490,7 @@
                 updateAdminOrdersList();
                 updateAdminProjectsList();
             } else {
-                document.getElementById('admin-error').classList.add('hidden');
+                document.getElementById('admin-error').classList.remove('hidden');
             }
         }
         function logoutAdmin() {
