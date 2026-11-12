@@ -5,17 +5,17 @@ const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 3000;
 
-// Връзка с MongoDB Atlas в облака за вечно пазине на проектите
+// Vruska kum MongoDB Atlas v oblaka
 if (process.env.MONGO_URI) {
     mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log('MongoDB Atlas е свързан успешно!'))
-    .catch(err => console.error('Грешка при връзка с MongoDB:', err));
+    .then(() => console.log('MongoDB Atlas e svyazan uspeshno!'))
+    .catch(err => console.error('Greshka pri vruska s MongoDB:', err));
 }
 
-// Схема за 28-те услуги и проекти
+// Shema za proektite i snimkite
 const ProjectSchema = new mongoose.Schema({
     title: String,
     tag: String,
@@ -43,7 +43,7 @@ const MIME_TYPES = {
 const server = http.createServer(async (req, res) => {
     let safeUrl = req.url.split('?')[0];
 
-    // 1. API: Вземи всички проекти и услуги от облака (GET)
+    // API: Vzemi vsichki proekti ot oblaka za vsichki ustroistva
     if (safeUrl === '/api/projects' && req.method === 'GET') {
         try {
             const projects = await Project.find().sort({ createdAt: -1 });
@@ -51,12 +51,12 @@ const server = http.createServer(async (req, res) => {
             res.end(JSON.stringify(projects));
         } catch (err) {
             res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(JSON.stringify({ error: 'Грешка при четене на проектите' }));
+            res.end(JSON.stringify({ error: 'Greshka pri chetene na proektite' }));
         }
         return;
     }
 
-    // 2. API: Запиши нов проект от панела на шефа в облака (POST)
+    // API: Zapiši nov proekt i snimka ot panela direktno v oblaka
     if (safeUrl === '/api/projects' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => {
@@ -66,17 +66,17 @@ const server = http.createServer(async (req, res) => {
             try {
                 const data = JSON.parse(body);
                 const newProject = new Project({
-                    title: data.title || 'Нова услуга',
-                    tag: data.tag || 'VIP',
-                    description: data.description || 'Описание на проекта',
-                    imageUrl: data.imageUrl || '/logo.jpg'
+                    title: data.title || 'Nova usruga',
+                    tag: data.tag || '50 €',
+                    description: data.description || '',
+                    imageUrl: data.imageUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60'
                 });
-                await newProject.save(); // Записва се в MongoDB Atlas завинаги!
+                await newProject.save(); // Zapisva se v MongoDB Atlas zavinagi!
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: true, message: 'Проектът е запазен в облака!' }));
+                res.end(JSON.stringify({ success: true, message: 'Zapisano v oblaka!' }));
             } catch (err) {
                 res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ error: 'Грешка при запис в базата данни' }));
+                res.end(JSON.stringify({ error: 'Greshka pri zapis' }));
             }
         });
         return;
@@ -95,7 +95,7 @@ const server = http.createServer(async (req, res) => {
             fs.readFile(filePath, (readErr, data) => {
                 if (readErr) {
                     res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-                    res.end('Грешка в сървъра');
+                    res.end('Greshka v survura');
                 } else {
                     res.writeHead(200, { 'Content-Type': contentType });
                     res.end(data);
@@ -117,5 +117,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`RED-SOFTWARE-TEAM-BG сървърът работи на порт ${PORT}`);
+    console.log(`RED-SOFTWARE-TEAM-BG survurat raboti na port ${PORT}`);
 });
