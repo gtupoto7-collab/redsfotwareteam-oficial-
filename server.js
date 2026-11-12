@@ -6,32 +6,27 @@ const PORT = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
     let filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
-    let extname = String(path.extname(filePath)).toLowerCase();
-    let mimeTypes = {
-        '.html': 'text/html',
-        '.css': 'text/css',
-        '.js': 'text/javascript',
-        '.json': 'application/json',
-        '.png': 'image/png',
-        '.jpg': 'image/jpg',
-        '.gif': 'image/gif',
-        '.svg': 'image/svg+xml'
-    };
-
-    let contentType = mimeTypes[extname] || 'application/octet-stream';
-
+    
     fs.readFile(filePath, (error, content) => {
         if (error) {
-            if(error.code == 'ENOENT') {
-                fs.readFile(path.join(__dirname, 'index.html'), (err, content) => {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end(content, 'utf-8');
-                });
-            } else {
-                res.writeHead(500);
-                res.end('Server Error: '+error.code);
-            }
+            // Fallback to index.html for SPA / single page routes
+            fs.readFile(path.join(__dirname, 'index.html'), (err, data) => {
+                if (err) {
+                    res.writeHead(500);
+                    res.end('Error loading index.html');
+                } else {
+                    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                    res.end(data, 'utf-8');
+                }
+            });
         } else {
+            let ext = path.extname(filePath);
+            let contentType = 'text/html; charset=utf-8';
+            if (ext === '.css') contentType = 'text/css';
+            if (ext === '.js') contentType = 'text/javascript';
+            if (ext === '.png') contentType = 'image/png';
+            if (ext === '.jpg') contentType = 'image/jpeg';
+
             res.writeHead(200, { 'Content-Type': contentType });
             res.end(content, 'utf-8');
         }
