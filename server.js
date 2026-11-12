@@ -56,13 +56,24 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    // 2. API POST: Запиши нов проект/услуга от админ панела в облака
+    // 2. API POST: Запиши нов проект/услуга от админ панела в облака (с увеличен лимит до 15MB за снимки)
     if (safeUrl === '/api/projects' && req.method === 'POST') {
         let body = '';
+        let bodyTooLarge = false;
+
         req.on('data', chunk => {
             body += chunk.toString();
+            // Защита: лимит до 15MB за качени файлове/Base64
+            if (body.length > 15 * 1024 * 1024) {
+                bodyTooLarge = true;
+                res.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' });
+                res.end(JSON.stringify({ error: 'Файлът е прекалено голям (над 15MB)' }));
+                req.destroy();
+            }
         });
+
         req.on('end', async () => {
+            if (bodyTooLarge) return;
             try {
                 const data = JSON.parse(body);
                 const newProject = new Project({
@@ -75,6 +86,7 @@ const server = http.createServer(async (req, res) => {
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(JSON.stringify({ success: true, message: 'Записано успешно в облака!' }));
             } catch (err) {
+                console.error('Грешка при Mongoose save:', err);
                 res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(JSON.stringify({ error: 'Грешка при запис в базата данни' }));
             }
