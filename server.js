@@ -5,17 +5,16 @@ const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 3000;
 
-// Vruska kum MongoDB Atlas v oblaka
+// Vryzka s MongoDB Atlas v oblaka za vechno pazene
 if (process.env.MONGO_URI) {
     mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log('MongoDB Atlas e svyazan uspeshno!'))
-    .catch(err => console.error('Greshka pri vruska s MongoDB:', err));
+    .then(() => console.log('MongoDB Atlas e svyrzan uspeshno!'))
+    .catch(err => console.error('Greshka pri vryzka s MongoDB:', err));
 }
 
-// Shema za proektite i snimkite
 const ProjectSchema = new mongoose.Schema({
     title: String,
     tag: String,
@@ -34,16 +33,13 @@ const MIME_TYPES = {
     '.jpg': 'image/jpeg',
     '.jpeg': 'image/jpeg',
     '.png': 'image/png',
-    '.gif': 'image/gif',
-    '.webp': 'image/webp',
-    '.ico': 'image/x-icon',
-    '.svg': 'image/svg+xml'
+    '.webp': 'image/webp'
 };
 
 const server = http.createServer(async (req, res) => {
     let safeUrl = req.url.split('?')[0];
 
-    // API: Vzemi vsichki proekti ot oblaka za vsichki ustroistva
+    // API: Vzemi vsichki proekti ot oblaka
     if (safeUrl === '/api/projects' && req.method === 'GET') {
         try {
             const projects = await Project.find().sort({ createdAt: -1 });
@@ -51,27 +47,25 @@ const server = http.createServer(async (req, res) => {
             res.end(JSON.stringify(projects));
         } catch (err) {
             res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(JSON.stringify({ error: 'Greshka pri chetene na proektite' }));
+            res.end(JSON.stringify({ error: 'Greshka pri chetene' }));
         }
         return;
     }
 
-    // API: Zapiši nov proekt i snimka ot panela direktno v oblaka
+    // API: Zapishi nov proekt/snimka ot admin panela v oblaka
     if (safeUrl === '/api/projects' && req.method === 'POST') {
         let body = '';
-        req.on('data', chunk => {
-            body += chunk.toString();
-        });
+        req.on('data', chunk => { body += chunk.toString(); });
         req.on('end', async () => {
             try {
                 const data = JSON.parse(body);
                 const newProject = new Project({
-                    title: data.title || 'Nova usruga',
+                    title: data.title || 'Nova usluga',
                     tag: data.tag || '50 €',
                     description: data.description || '',
                     imageUrl: data.imageUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60'
                 });
-                await newProject.save(); // Zapisva se v MongoDB Atlas zavinagi!
+                await newProject.save();
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
                 res.end(JSON.stringify({ success: true, message: 'Zapisano v oblaka!' }));
             } catch (err) {
@@ -82,40 +76,25 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
-    if (safeUrl === '/') {
-        safeUrl = '/index.html';
-    }
-
+    if (safeUrl === '/') safeUrl = '/index.html';
     const filePath = path.join(__dirname, safeUrl);
     const extname = path.extname(filePath).toLowerCase();
 
     fs.stat(filePath, (err, stats) => {
         if (!err && stats.isFile()) {
-            const contentType = MIME_TYPES[extname] || 'application/octet-stream';
             fs.readFile(filePath, (readErr, data) => {
-                if (readErr) {
-                    res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-                    res.end('Greshka v survura');
-                } else {
-                    res.writeHead(200, { 'Content-Type': contentType });
-                    res.end(data);
-                }
+                res.writeHead(200, { 'Content-Type': MIME_TYPES[extname] || 'application/octet-stream' });
+                res.end(data);
             });
         } else {
-            const indexPath = path.join(__dirname, 'index.html');
-            fs.readFile(indexPath, (indexErr, indexData) => {
-                if (indexErr) {
-                    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-                    res.end('404 - Not Found');
-                } else {
-                    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-                    res.end(indexData);
-                }
+            fs.readFile(path.join(__dirname, 'index.html'), (indexErr, indexData) => {
+                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                res.end(indexData);
             });
         }
     });
 });
 
 server.listen(PORT, () => {
-    console.log(`RED-SOFTWARE-TEAM-BG survurat raboti na port ${PORT}`);
+    console.log(`Server raboti na port ${PORT}`);
 });
