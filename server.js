@@ -11,10 +11,11 @@ if (process.env.MONGO_URI) {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log('MongoDB Atlas свързан успешно!'))
+    .then(() => console.log('MongoDB Atlas е свързан успешно!'))
     .catch(err => console.error('Грешка при връзка с MongoDB:', err));
 }
 
+// Схема за съхранение на услугите и проектите в облака
 const ProjectSchema = new mongoose.Schema({
     title: String,
     tag: String,
@@ -33,13 +34,16 @@ const MIME_TYPES = {
     '.jpg': 'image/jpeg',
     '.jpeg': 'image/jpeg',
     '.png': 'image/png',
-    '.webp': 'image/webp'
+    '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.ico': 'image/x-icon',
+    '.svg': 'image/svg+xml'
 };
 
 const server = http.createServer(async (req, res) => {
     let safeUrl = req.url.split('?')[0];
 
-    // GET: Вземи всички проекти от облака
+    // 1. API GET: Вземи всички проекти/услуги от облака
     if (safeUrl === '/api/projects' && req.method === 'GET') {
         try {
             const projects = await Project.find().sort({ createdAt: -1 });
@@ -47,15 +51,17 @@ const server = http.createServer(async (req, res) => {
             res.end(JSON.stringify(projects));
         } catch (err) {
             res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-            res.end(JSON.stringify({ error: 'Грешка при четене' }));
+            res.end(JSON.stringify({ error: 'Грешка при четене от базата данни' }));
         }
         return;
     }
 
-    // POST: Запиши нов проект от админ панела в облака
+    // 2. API POST: Запиши нов проект/услуга от админ панела в облака
     if (safeUrl === '/api/projects' && req.method === 'POST') {
         let body = '';
-        req.on('data', chunk => { body += chunk.toString(); });
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
         req.on('end', async () => {
             try {
                 const data = JSON.parse(body);
@@ -67,34 +73,49 @@ const server = http.createServer(async (req, res) => {
                 });
                 await newProject.save();
                 res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ success: true, message: 'Записано в облака!' }));
+                res.end(JSON.stringify({ success: true, message: 'Записано успешно в облака!' }));
             } catch (err) {
                 res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
-                res.end(JSON.stringify({ error: 'Грешка при запис' }));
+                res.end(JSON.stringify({ error: 'Грешка при запис в базата данни' }));
             }
         });
         return;
     }
 
-    if (safeUrl === '/') safeUrl = '/index.html';
+    if (safeUrl === '/') {
+        safeUrl = '/index.html';
+    }
+
     const filePath = path.join(__dirname, safeUrl);
     const extname = path.extname(filePath).toLowerCase();
 
     fs.stat(filePath, (err, stats) => {
         if (!err && stats.isFile()) {
+            const contentType = MIME_TYPES[extname] || 'application/octet-stream';
             fs.readFile(filePath, (readErr, data) => {
-                res.writeHead(200, { 'Content-Type': MIME_TYPES[extname] || 'application/octet-stream' });
-                res.end(data);
+                if (readErr) {
+                    res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+                    res.end('Грешка при четене на файла');
+                } else {
+                    res.writeHead(200, { 'Content-Type': contentType });
+                    res.end(data);
+                }
             });
         } else {
-            fs.readFile(path.join(__dirname, 'index.html'), (indexErr, indexData) => {
-                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-                res.end(indexData);
+            const indexPath = path.join(__dirname, 'index.html');
+            fs.readFile(indexPath, (indexErr, indexData) => {
+                if (indexErr) {
+                    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+                    res.end('404 - Страницата не е намерена');
+                } else {
+                    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                    res.end(indexData);
+                }
             });
         }
     });
 });
 
 server.listen(PORT, () => {
-    console.log(`Сървърът работи на порт ${PORT}`);
+    console.log(`Сървърът на Red Software Team работи на порт ${PORT}`);
 });
