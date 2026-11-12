@@ -49,7 +49,7 @@
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center shadow-lg shadow-red-900/40 font-black text-xl tracking-wider text-white">R</div>
                 <div>
                     <span class="text-lg font-black tracking-wider text-white">RED SOFTWARE <span class="text-red-500">TEAM</span></span>
-                    <span class="block text-[10px] text-slate-400 uppercase tracking-widest">Enterprise, AI & Immortal Web</span>
+                    <span class="block text-[10px] text-slate-400 uppercase tracking-widest">Pernik, Bulgaria</span>
                 </div>
             </div>
             <div class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-300">
@@ -166,8 +166,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span class="text-xs uppercase tracking-widest text-red-500 font-extrabold">Модели и Портфолио</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Готови модели за разглеждане от клиентите</h2>
-                <p class="text-slate-400 max-w-2xl mx-auto mt-2">Клиентите могат да разглеждат моделите, а шефът ги качва ръчно през админ панела.</p>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Готови модели, снимки и видеоклипове</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto mt-2">Клиентите могат да разглеждат проекти, снимки и видео оферти на живо.</p>
             </div>
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </div>
@@ -188,7 +188,8 @@
     <div id="admin-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-3xl w-full p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
             <button onclick="closeAdminModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white text-xl font-bold">✕</button>
-            
+
+            <!-- LOGIN SCREEN (SKRIT ZA KLIENTI) -->
             <div id="admin-login-screen">
                 <div class="text-center mb-8">
                     <span class="text-xs uppercase tracking-widest text-red-500 font-bold">Secure Terminal</span>
@@ -208,13 +209,14 @@
                 </div>
             </div>
 
+            <!-- ADMIN DASHBOARD (SAMO SLED VALIDEN LOGIN) -->
             <div id="admin-dashboard" class="hidden space-y-8">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                     <div>
                         <h3 class="text-xl font-black text-white">⚙️ RED SOFTWARE - Панел на шефа</h3>
-                        <p class="text-xs text-slate-400">Капацитет 5000 сайта | Лимит 100/ден.</p>
+                        <p class="text-xs text-slate-400">Управление на проекти, снимки, видеоклипове и поръчки.</p>
                     </div>
-                    <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-bold">Изход</button>
+                    <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-bold">🚪 ИЗХОД</button>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -223,8 +225,8 @@
                         <div class="text-2xl font-black text-red-500 mt-2" id="stat-visitors">1</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5">
-                        <span class="text-xs text-slate-400 uppercase font-bold">Капацитет / Лимит</span>
-                        <div class="text-2xl font-black text-emerald-400 mt-2"><span id="stat-count">0</span> / 5000</div>
+                        <span class="text-xs text-slate-400 uppercase font-bold">Проекти / Оферти</span>
+                        <div class="text-2xl font-black text-emerald-400 mt-2" id="stat-count">0</div>
                     </div>
                     <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5">
                         <span class="text-xs text-slate-400 uppercase font-bold">Заявки</span>
@@ -232,24 +234,29 @@
                     </div>
                 </div>
 
+                <!-- KACHVANE NA SNIMKA ILI VIDEO S AVTO-BUTON -->
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <h4 class="text-sm font-bold text-white uppercase text-red-400">➕ Ръчно качване на нов проект / модел</h4>
+                    <h4 class="text-sm font-bold text-white uppercase text-red-400">➕ Ръчно качване на снимка или видеоклип (Авто-бутон)</h4>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input type="text" id="new-proj-title" placeholder="Заглавие (напр. Ремонт покриви)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
-                        <input type="text" id="new-proj-link" placeholder="Линк към демо (https://...)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input type="text" id="new-proj-img" placeholder="Линк към снимка (ImgBB линк)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
-                        <input type="text" id="new-proj-badge" placeholder="Етикет / Цена (напр. 50 €)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
+                        <input type="text" id="new-proj-title" placeholder="Заглавие (напр. Ремонт покриви / Видео преглед)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
+                        <input type="text" id="new-proj-badge" placeholder="Етикет / Цена (напр. 50 € / VIP)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
                     </div>
                     <textarea id="new-proj-desc" placeholder="Кратко описание..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white" rows="2"></textarea>
-                    <button onclick="addNewProject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-sm">Публикувай в портфолиото</button>
+                    
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Избери снимка или видео файл (Авто-бутон от устройството):</label>
+                        <input type="file" id="new-proj-file" accept="image/*,video/mp4" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-950 file:text-red-400 hover:file:bg-red-900">
+                    </div>
+
+                    <button onclick="addNewProject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-sm shadow-md">
+                        🚀 Автоматично качване и публикуване
+                    </button>
                 </div>
 
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
                     <h4 class="text-sm font-bold text-white uppercase text-amber-400">🗑️ Управление и изтриване на проекти</h4>
                     <div id="admin-projects-list" class="space-y-3 max-h-60 overflow-y-auto pr-2">
-                        <p class="text-xs text-slate-500 italic">Все още няма ръчно качени проекти.</p>
+                        <p class="text-xs text-slate-500 italic">Все още няма качени проекти.</p>
                     </div>
                 </div>
 
@@ -284,20 +291,25 @@
             document.getElementById('stat-count').innerText = customProjects.length;
             let html = '';
             customProjects.forEach((p, index) => {
+                let mediaHtml = p.type === 'video' 
+                    ? `<video src="${p.src}" controls class="w-full h-full object-cover group-hover:scale-105 transition duration-500"></video>`
+                    : `<img src="${p.src}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">`;
+
                 html += `
-                <div class="bg-slate-900 border border-red-500/40 rounded-2xl overflow-hidden shadow-xl group">
-                    <div class="h-48 overflow-hidden relative bg-slate-950">
-                        <img src="${p.img}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">${p.badge}</span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
-                        <p class="text-slate-400 text-sm mb-4">${p.desc}</p>
-                        <div class="mb-4 p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-red-400 font-semibold">🎁 Сайт + Линк + QR код!</div>
-                        <div class="flex items-center justify-between pt-4 border-t border-slate-800">
-                            <a href="${p.link}" target="_blank" class="text-red-400 hover:text-red-300 font-bold text-sm">🌐 Демо</a>
-                            <a href="#configurator" class="px-4 py-2 bg-slate-800 hover:bg-red-600 text-slate-200 text-xs font-bold rounded-lg">Поръчай</a>
+                <div class="bg-slate-900 border border-red-500/40 rounded-2xl overflow-hidden shadow-xl group flex flex-col justify-between">
+                    <div>
+                        <div class="h-48 overflow-hidden relative bg-slate-950">
+                            ${mediaHtml}
+                            <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">${p.badge}</span>
                         </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
+                            <p class="text-slate-400 text-sm mb-4">${p.desc}</p>
+                            <div class="mb-4 p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-red-400 font-semibold">🎁 Сайт + Линк + QR код!</div>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex items-center justify-between border-t border-slate-800">
+                        <a href="#configurator" class="w-full py-2 bg-slate-800 hover:bg-red-600 text-slate-200 text-xs font-bold rounded-lg text-center transition">Поръчай подобен</a>
                     </div>
                 </div>`;
             });
@@ -320,20 +332,37 @@
 
         function addNewProject() {
             const title = document.getElementById('new-proj-title').value;
-            const link = document.getElementById('new-proj-link').value;
-            const img = document.getElementById('new-proj-img').value;
             const badge = document.getElementById('new-proj-badge').value;
             const desc = document.getElementById('new-proj-desc').value;
-            if(!title || !link || !img) { alert('Попълнете заглавие, линк и снимка!'); return; }
-            customProjects.push({ title, link, img, badge: badge || '50 €', desc });
+            const fileInput = document.getElementById('new-proj-file');
+
+            if(!title) { alert('Попълнете поне заглавие на проекта!'); return; }
+            
+            let mediaSrc = "https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60";
+            let mediaType = "img";
+
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                mediaSrc = URL.createObjectURL(file);
+                if (file.type.startsWith('video/')) {
+                    mediaType = "video";
+                }
+            }
+
+            customProjects.push({ title, badge: badge || '50 €', desc, type: mediaType, src: mediaSrc });
             localStorage.setItem('rst_projects', JSON.stringify(customProjects));
             renderProjects();
             updateAdminProjectsList();
-            alert('Успешно качен проект!');
+            
+            document.getElementById('new-proj-title').value = '';
+            document.getElementById('new-proj-badge').value = '';
+            document.getElementById('new-proj-desc').value = '';
+            document.getElementById('new-proj-file').value = '';
+            alert('Успешно качен нов проект или видеоклип в системата!');
         }
 
         function deleteProject(index) {
-            if(confirm('Сигурни ли сте?')) {
+            if(confirm('Сигурни ли сте, че искате да изтриете този проект?')) {
                 customProjects.splice(index, 1);
                 localStorage.setItem('rst_projects', JSON.stringify(customProjects));
                 renderProjects();
@@ -346,7 +375,7 @@
             if(customProjects.length === 0) { list.innerHTML = '<p class="text-xs text-slate-500">Няма проекти.</p>'; return; }
             let html = '';
             customProjects.forEach((p, idx) => {
-                html += `<div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs flex justify-between items-center"><span class="text-white font-bold">${p.title}</span><button onclick="deleteProject(${idx})" class="px-3 py-1 bg-red-600 text-white font-bold rounded-lg">Изтрий</button></div>`;
+                html += `<div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs flex justify-between items-center"><span class="text-white font-bold">${p.title} (${p.type})</span><button onclick="deleteProject(${idx})" class="px-3 py-1 bg-red-600 text-white font-bold rounded-lg">Изтрий</button></div>`;
             });
             list.innerHTML = html;
         }
@@ -383,6 +412,7 @@
 
         function openAdminModal() { document.getElementById('admin-modal').classList.remove('hidden'); }
         function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+        
         function verifyAdmin() {
             if(document.getElementById('admin-user').value === 'admin123' && document.getElementById('admin-pass').value === '123456') {
                 document.getElementById('admin-login-screen').classList.add('hidden');
@@ -394,9 +424,13 @@
                 document.getElementById('admin-error').classList.remove('hidden');
             }
         }
+        
         function logoutAdmin() {
             document.getElementById('admin-dashboard').classList.add('hidden');
             document.getElementById('admin-login-screen').classList.remove('hidden');
+            document.getElementById('admin-user').value = '';
+            document.getElementById('admin-pass').value = '';
+            closeAdminModal();
         }
 
         renderProjects();
