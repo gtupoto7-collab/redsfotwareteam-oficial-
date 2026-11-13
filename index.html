@@ -43,6 +43,8 @@
             </div>
             <div class="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-300">
                 <a href="#showcase" class="hover:text-red-400 transition">Портфолио модели (28 услуги)</a>
+                <!-- ОРАНЖЕВ БУТОН ЗА ПОРТФОЛИО (MARKETPLACE) -->
+                <a href="https://hacker-conzole-obuchenie.onrender.com" target="_blank" class="text-amber-400 font-bold hover:text-amber-300 transition flex items-center gap-1 bg-amber-950/40 px-3 py-1.5 rounded-lg border border-amber-800/50">🔥 Портфолио (Marketplace)</a>
                 <a href="#configurator" class="hover:text-red-400 transition">Зглоби си сайт</a>
                 <a href="https://hacker-conzole-obuchenie.onrender.com" target="_blank" class="text-amber-400 font-bold hover:text-amber-300 transition flex items-center gap-1 bg-amber-950/40 px-3 py-1.5 rounded-lg border border-amber-800/50">💻 Hacker Console</a>
                 <a href="tel:0879813928" class="text-red-400 font-bold hover:text-red-300 transition flex items-center gap-1">📞 0879 813 928</a>
@@ -69,6 +71,8 @@
             </p>
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
                 <a href="#configurator" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-extrabold text-base shadow-xl shadow-red-600/30 hover:scale-105 transition text-center">🛠️ Зглоби своя сайт или система</a>
+                <!-- ДИРЕКТЕН БУТОН КЪМ ПОРТФОЛИО МАРКЕТПЛЕЙС В ОРАНЖЕВО -->
+                <a href="https://hacker-conzole-obuchenie.onrender.com" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-amber-950/60 border border-amber-600 text-amber-300 font-extrabold text-base hover:bg-amber-900/60 transition text-center flex items-center justify-center gap-2">🔥 Отвори Портфолио (Marketplace)</a>
                 <a href="tel:0879813928" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 font-bold text-base hover:bg-slate-800 transition text-center">📞 Обади се: 0879 813 928</a>
             </div>
         </div>
@@ -147,13 +151,18 @@
         </div>
     </section>
 
-    <!-- Showcase Section -->
+    <!-- Showcase Section (С описание на проектите) -->
     <section id="showcase" class="py-20 bg-slate-950">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <span class="text-xs uppercase tracking-widest text-red-500 font-extrabold">Портфолио и 28 кибер услуги</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Всички налични модели, софтуер и хардуер на живо</h2>
-                <p class="text-slate-400 max-w-2xl mx-auto mt-2">Синхронизирани в реално време от базата данни и облака.</p>
+                <p class="text-slate-400 max-w-2xl mx-auto mt-2">Синхронизирани в реално време от базата данни и облака с пълно описание.</p>
+                <div class="mt-6">
+                    <a href="https://hacker-conzole-obuchenie.onrender.com" target="_blank" class="inline-flex items-center gap-2 bg-amber-950/80 border border-amber-600 px-6 py-3 rounded-xl text-amber-300 font-extrabold text-sm hover:bg-amber-900 transition shadow-lg">
+                        🔥 Преглед на цялото Портфолио (Marketplace)
+                    </a>
+                </div>
             </div>
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </div>
@@ -280,15 +289,21 @@
 
                 if (!Array.isArray(projects) || projects.length === 0) {
                     grid.innerHTML = `
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-                        <div class="h-48 overflow-hidden relative bg-slate-950">
-                            <img src="https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60" alt="Проект" class="w-full h-full object-cover">
-                            <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">50 €</span>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between">
+                        <div>
+                            <div class="h-48 overflow-hidden relative bg-slate-950">
+                                <img src="https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60" alt="Проект" class="w-full h-full object-cover">
+                                <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">50 €</span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold text-white mb-2">Стандартен Кибер Проект</h3>
+                                <p class="text-slate-400 text-sm mb-4">Професионално изработен уебсайт с пълна облачна синхронизация, вграден QR код и готовност за работа на Render сървъри 24/7.</p>
+                                <div class="mb-4 p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-red-400 font-semibold">🎁 Включва Сайт + Линк + QR код!</div>
+                            </div>
                         </div>
-                        <div class="p-6">
-                            <h3 class="text-xl font-bold text-white mb-2">Стандартен Проект</h3>
-                            <p class="text-slate-400 text-sm mb-4">Няма все още качени файлове.</p>
-                            <a href="#configurator" class="px-4 py-2 bg-slate-800 hover:bg-red-600 text-white text-xs font-bold rounded-lg block text-center">Поръчай подобен</a>
+                        <div class="p-6 pt-0">
+                            <a href="https://hacker-conzole-obuchenie.onrender.com" target="_blank" class="w-full py-2.5 bg-amber-950/60 hover:bg-amber-900 text-amber-300 text-xs font-bold rounded-lg text-center transition block mb-2 border border-amber-800">🔥 Виж в Портфолио (Marketplace)</a>
+                            <a href="#configurator" class="w-full py-2 bg-slate-800 hover:bg-red-600 text-slate-200 text-xs font-bold rounded-lg text-center transition block">Поръчай подобен</a>
                         </div>
                     </div>`;
                     adminList.innerHTML = '<p class="text-xs text-slate-500">Няма качени проекти.</p>';
@@ -315,11 +330,13 @@
                             </div>
                             <div class="p-6">
                                 <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
+                                <p class="text-slate-400 text-sm mb-4">Персонализиран кибер проект, софтуерно решение или бизнес система с висока производителност и защита.</p>
                                 <div class="mb-4 p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-red-400 font-semibold">🎁 Сайт + Линк + QR код!</div>
                             </div>
                         </div>
-                        <div class="p-6 pt-0 flex items-center justify-between border-t border-slate-800">
-                            <a href="#configurator" class="w-full py-2 bg-slate-800 hover:bg-red-600 text-slate-200 text-xs font-bold rounded-lg text-center transition">Поръчай подобен</a>
+                        <div class="p-6 pt-0 space-y-2 border-t border-slate-800">
+                            <a href="https://hacker-conzole-obuchenie.onrender.com" target="_blank" class="w-full py-2.5 bg-amber-950/60 hover:bg-amber-900 text-amber-300 text-xs font-bold rounded-lg text-center transition block border border-amber-800">🔥 Виж в Портфолио (Marketplace)</a>
+                            <a href="#configurator" class="w-full py-2 bg-slate-800 hover:bg-red-600 text-slate-200 text-xs font-bold rounded-lg text-center transition block">Поръчай подобен</a>
                         </div>
                     </div>`;
 
