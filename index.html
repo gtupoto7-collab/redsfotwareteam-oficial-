@@ -153,7 +153,7 @@
             <div class="text-center mb-16">
                 <span class="text-xs uppercase tracking-widest text-red-500 font-extrabold">Портфолио и 28 кибер услуги</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Всички налични модели, софтуер и хардуер на живо</h2>
-                <p class="text-slate-400 max-w-2xl mx-auto mt-2">Синхронизирани в реално време от MongoDB Atlas за всички устройства и браузъри.</p>
+                <p class="text-slate-400 max-w-2xl mx-auto mt-2">Синхронизирани в реално време от базата данни и облака.</p>
             </div>
             <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </div>
@@ -200,7 +200,7 @@
                 <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                     <div>
                         <h3 class="text-xl font-black text-white">⚙️ RED SOFTWARE - Панел на шефа</h3>
-                        <p class="text-xs text-slate-400">Управление на 28 услуги, снимки и облачна синхронизация.</p>
+                        <p class="text-xs text-slate-400">Управление на 28 услуги, снимки и видеа в облака.</p>
                     </div>
                     <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-bold">🚪 ИЗХОД</button>
                 </div>
@@ -222,25 +222,26 @@
 
                 <!-- UPLOAD TO CLOUD -->
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <h4 class="text-sm font-bold text-white uppercase text-red-400">➕ Качване на услуга или снимка в ОБЛАКА (MongoDB)</h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input type="text" id="new-proj-title" placeholder="Заглавие (напр. Услуга / Хардуер)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
-                        <input type="text" id="new-proj-badge" placeholder="Цена / Етикет (напр. 50 € / VIP)" class="px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white">
-                    </div>
-                    <textarea id="new-proj-desc" placeholder="Описание на услугата или продукта..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white" rows="2"></textarea>
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Избери снимка или файл от устройството:</label>
-                        <input type="file" id="new-proj-file" accept="image/*,video/mp4" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-950 file:text-red-400 hover:file:bg-red-900">
-                    </div>
-                    <button onclick="addNewProject()" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-sm shadow-md">
-                        🚀 Запиши в облака (Видимо навсякъде)
-                    </button>
+                    <h4 class="text-sm font-bold text-white uppercase text-red-400">➕ Качване на проект / снимка / видео (в облака)</h4>
+                    <form id="uploadForm" class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Име на проекта / заглавие</label>
+                            <input type="text" id="cfg-proj-title" placeholder="напр. Кибер проект / Дърводелска услуга" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-sm text-white" required>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Избери снимка или видео от устройството</label>
+                            <input type="file" id="mediaFile" accept="image/*,video/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-red-950 file:text-red-400 hover:file:bg-red-900" required>
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-bold text-sm shadow-md">
+                            🚀 Качи в облака (Видимо навсякъде)
+                        </button>
+                    </form>
                 </div>
 
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <h4 class="text-sm font-bold text-white uppercase text-amber-400">🗑️ Управление на проектите в базата данни</h4>
+                    <h4 class="text-sm font-bold text-white uppercase text-amber-400">🗑️ Управление на проектите</h4>
                     <div id="admin-projects-list" class="space-y-3 max-h-60 overflow-y-auto pr-2">
-                        <p class="text-xs text-slate-500 italic">Зареждане от облака...</p>
+                        <p class="text-xs text-slate-500 italic">Зареждане от базата данни...</p>
                     </div>
                 </div>
 
@@ -254,7 +255,7 @@
         </div>
     </div>
 
-    <!-- JavaScript - Cloud Sync & 28 Services Integration -->
+    <!-- JavaScript -->
     <script>
         let visitors = localStorage.getItem('rst_visitors') || 790;
         visitors = parseInt(visitors) + 1;
@@ -262,7 +263,6 @@
         document.getElementById('stat-visitors').innerText = visitors;
 
         let orders = JSON.parse(localStorage.getItem('rst_orders') || '[]');
-        let customProjects = [];
 
         function checkCustomIndustry() {
             const val = document.getElementById('cfg-industry').value;
@@ -270,125 +270,92 @@
             if(val === 'CUSTOM') { box.classList.remove('hidden'); } else { box.classList.add('hidden'); }
         }
 
-        // ЗАРЕЖДАНЕ НА ВСИЧКИ ПРОЕКТИ И УСЛУГИ ОТ МОНГО ДБ ОБЛАКА НА ВСИЧКИ УСТРОЙСТВА
         async function fetchProjectsFromCloud() {
             try {
                 const response = await fetch('/api/projects');
-                const data = await response.json();
-                if (Array.isArray(data)) {
-                    customProjects = data.map(p => ({
-                        id: p._id,
-                        title: p.title,
-                        badge: p.tag || '50 €',
-                        desc: p.description,
-                        src: p.imageUrl || 'https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60'
-                    }));
-                    renderProjects();
-                    updateAdminProjectsList();
-                }
-            } catch (err) {
-                console.error("Грешка при зареждане от облака:", err);
-            }
-        }
+                const projects = await response.json();
+                const grid = document.getElementById('projects-grid');
+                const adminList = document.getElementById('admin-projects-list');
+                document.getElementById('stat-count').innerText = projects.length;
 
-        function renderProjects() {
-            const grid = document.getElementById('projects-grid');
-            document.getElementById('stat-count').innerText = customProjects.length;
-            let html = '';
-            
-            customProjects.forEach((p) => {
-                html += `
-                <div class="bg-slate-900 border border-red-500/40 rounded-2xl overflow-hidden shadow-xl group flex flex-col justify-between">
-                    <div>
+                if (!Array.isArray(projects) || projects.length === 0) {
+                    grid.innerHTML = `
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
                         <div class="h-48 overflow-hidden relative bg-slate-950">
-                            <img src="${p.src}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">${p.badge}</span>
+                            <img src="https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60" alt="Проект" class="w-full h-full object-cover">
+                            <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">50 €</span>
                         </div>
                         <div class="p-6">
-                            <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
-                            <p class="text-slate-400 text-sm mb-4">${p.desc}</p>
-                            <div class="mb-4 p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-red-400 font-semibold">🎁 Сайт + Линк + QR код!</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Стандартен Проект</h3>
+                            <p class="text-slate-400 text-sm mb-4">Няма все още качени файлове.</p>
+                            <a href="#configurator" class="px-4 py-2 bg-slate-800 hover:bg-red-600 text-white text-xs font-bold rounded-lg block text-center">Поръчай подобен</a>
                         </div>
-                    </div>
-                    <div class="p-6 pt-0 flex items-center justify-between border-t border-slate-800">
-                        <a href="#configurator" class="w-full py-2 bg-slate-800 hover:bg-red-600 text-slate-200 text-xs font-bold rounded-lg text-center transition">Поръчай подобен</a>
-                    </div>
-                </div>`;
-            });
+                    </div>`;
+                    adminList.innerHTML = '<p class="text-xs text-slate-500">Няма качени проекти.</p>';
+                    return;
+                }
 
-            if(customProjects.length === 0) {
-                html = `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-                    <div class="h-48 overflow-hidden relative bg-slate-950">
-                        <img src="https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60" alt="Ремонт покриви" class="w-full h-full object-cover">
-                        <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full">50 €</span>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-bold text-white mb-2">Ремонт на покриви</h3>
-                        <p class="text-slate-400 text-sm mb-4">Примерен модел сайт за майстори и бригади.</p>
-                        <a href="#configurator" class="px-4 py-2 bg-slate-800 hover:bg-red-600 text-white text-xs font-bold rounded-lg block text-center">Поръчай подобен</a>
-                    </div>
-                </div>`;
-            }
-            grid.innerHTML = html;
-        }
+                let html = '';
+                let adminHtml = '';
 
-        // КАЧВАНЕ НА НОВ ПРОЕКТ В ОБЛАКА НА МОНГО ДБ
-        async function addNewProject() {
-            const title = document.getElementById('new-proj-title').value;
-            const badge = document.getElementById('new-proj-badge').value;
-            const desc = document.getElementById('new-proj-desc').value;
-            const fileInput = document.getElementById('new-proj-file');
+                projects.forEach(p => {
+                    let mediaElement = '';
+                    if (p.filetype === 'video') {
+                        mediaElement = `<video width="100%" height="100%" controls src="${p.filename}" class="w-full h-full object-cover"></video>`;
+                    } else {
+                        mediaElement = `<img src="${p.filename}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">`;
+                    }
 
-            if(!title) { alert('Попълнете поне заглавие на услугата или проекта!'); return; }
+                    html += `
+                    <div class="bg-slate-900 border border-red-500/40 rounded-2xl overflow-hidden shadow-xl group flex flex-col justify-between">
+                        <div>
+                            <div class="h-48 overflow-hidden relative bg-slate-950">
+                                ${mediaElement}
+                                <span class="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">${p.filetype === 'video' ? 'ВИДЕО' : 'СНИМКА'}</span>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-xl font-bold text-white mb-2">${p.title}</h3>
+                                <div class="mb-4 p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-red-400 font-semibold">🎁 Сайт + Линк + QR код!</div>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0 flex items-center justify-between border-t border-slate-800">
+                            <a href="#configurator" class="w-full py-2 bg-slate-800 hover:bg-red-600 text-slate-200 text-xs font-bold rounded-lg text-center transition">Поръчай подобен</a>
+                        </div>
+                    </div>`;
 
-            let mediaSrc = "https://images.unsplash.com/photo-1541888946425-d0fbb18f2495?w=600&auto=format&fit=crop&q=60";
-
-            if (fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = async function(e) {
-                    mediaSrc = e.target.result; // Преобразува снимката в текстов низ за облака
-                    await sendToCloud(title, badge, desc, mediaSrc);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                await sendToCloud(title, badge, desc, mediaSrc);
-            }
-        }
-
-        async function sendToCloud(title, badge, desc, src) {
-            try {
-                const response = await fetch('/api/projects', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, tag: badge || '50 €', description: desc, imageUrl: src })
+                    adminHtml += `<div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs flex justify-between items-center"><span class="text-white font-bold">${p.title} (${p.filetype})</span><span class="text-slate-400">В облака ✅</span></div>`;
                 });
-                const res = await response.json();
-                if(res.success) {
-                    alert('Успешно записано в облака на MongoDB Atlas! Видимо навсякъде.');
-                    document.getElementById('new-proj-title').value = '';
-                    document.getElementById('new-proj-badge').value = '';
-                    document.getElementById('new-proj-desc').value = '';
-                    document.getElementById('new-proj-file').value = '';
+
+                grid.innerHTML = html;
+                adminList.innerHTML = adminHtml;
+            } catch (err) {
+                console.error("Грешка при зареждане:", err);
+            }
+        }
+
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('title', document.getElementById('cfg-proj-title').value);
+            formData.append('mediaFile', document.getElementById('mediaFile').files[0]);
+
+            try {
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert('Успешно качено в облака!');
+                    document.getElementById('uploadForm').reset();
                     fetchProjectsFromCloud();
                 } else {
-                    alert('Грешка при запис в базата данни.');
+                    alert('Грешка при качване: ' + result.error);
                 }
             } catch (err) {
-                alert('Мрежова грешка при връзка със сървъра.');
+                alert('Мрежова грешка.');
             }
-        }
-
-        function updateAdminProjectsList() {
-            const list = document.getElementById('admin-projects-list');
-            if(customProjects.length === 0) { list.innerHTML = '<p class="text-xs text-slate-500">Няма качени проекти в облака.</p>'; return; }
-            let html = '';
-            customProjects.forEach((p, idx) => {
-                html += `<div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs flex justify-between items-center"><span class="text-white font-bold">${p.title} (${p.badge})</span><span class="text-slate-400">В облака ✅</span></div>`;
-            });
-            list.innerHTML = html;
-        }
+        });
 
         function submitConfiguratorOrder() {
             let industry = document.getElementById('cfg-industry').value;
@@ -429,9 +396,9 @@
                 document.getElementById('admin-dashboard').classList.remove('hidden');
                 document.getElementById('admin-error').classList.add('hidden');
                 updateAdminOrdersList();
-                updateAdminProjectsList();
+                fetchProjectsFromCloud();
             } else {
-                document.getElementById('admin-error').classList.remove('hidden');
+                document.getElementById('admin-error').classList.add('hidden');
             }
         }
 
@@ -443,7 +410,6 @@
             closeAdminModal();
         }
 
-        // Стартираме извличането на данните от облака
         fetchProjectsFromCloud();
         updateAdminOrdersList();
     </script>
