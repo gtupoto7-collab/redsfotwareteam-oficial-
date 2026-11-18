@@ -29,22 +29,54 @@ if (fs.existsSync(DATA_FILE)) {
 }
 function saveDB() { fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), 'utf8'); }
 
+// API: Взми всички проекти
 app.get('/api/projects', (req, res) => {
     res.json(db.projects || []);
 });
 
+// API: Качи нов проект със заглавие и файл (снимка/видео)
 app.post('/api/upload', upload.single('mediaFile'), (req, res) => {
     try {
         const { title } = req.body;
-        if (!req.file) return res.json({ success: false, error: 'Няма качен файл!' });
-        
+        if (!req.file || !title) return res.json({ success: false, error: 'Липсва заглавие или качен файл!' });
+
         const filetype = req.file.mimetype.startsWith('video') ? 'video' : 'image';
         const filename = `/uploads/${req.file.filename}`;
+        const id = Date.now().toString();
 
-        db.projects.unshift({ title, filename, filetype, date: new Date().toLocaleString() });
+        db.projects.unshift({ id, title, filename, filetype, date: new Date().toLocaleString() });
         saveDB();
 
         res.json({ success: true });
+    } catch (err) {
+        res.json({ success: false, error: err.message });
+    }
+});
+
+// API: Изтрий проект по ID (включително физическия файл)
+app.delete('/api/projects/:id', (req, res) => {
+    try {
+        const projectId = req.params.id;
+        const projectIndex = db.projects.findIndex(p => p.id === projectId);
+        
+        if (projectIndex === -1) {
+            return res.json({ success: false, error: 'Проектът не е намерен!' });
+        }
+
+        const project = db.projects[projectIndex];
+        
+        // Изтриване на физическия файл от паметта, ако съществува
+        if (project.filename) {
+            const filePath = path.join(__dirname, 'public', project.filename);
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+        }
+
+        db.projects.splice(projectIndex, 1);
+        saveDB();
+
+        res.json({ success: true, message: 'Проектът е изтрит успешно!' });
     } catch (err) {
         res.json({ success: false, error: err.message });
     }
