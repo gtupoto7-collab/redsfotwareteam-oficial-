@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RED SOFTWARE TEAM BULGARIA | Custom Web Solutions, AI & Bot Development</title>
-    
+
     <!-- SEO Meta Tags за първо място в Google -->
     <meta name="description" content="Official website of RED SOFTWARE TEAM Bulgaria. Professional full-stack development, custom web platforms, automated backend systems, and bots in Pernik and Sofia.">
     <meta name="keywords" content="RED SOFTWARE TEAM, RED SOFTWARE TEAM BULGARIA, web development Pernik, custom software Bulgaria, бот ферми, изработка на сайтове">
@@ -99,7 +99,7 @@
                 Безсмъртни сайтове за <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-rose-400">50 €</span> & AI Системи
             </h1>
             <p class="max-w-3xl mx-auto text-lg sm:text-xl text-slate-300 mb-10 leading-relaxed">
-                Получаваш уебсайт, QR код и линк, който ще работи завинаги на Render сървъри. Пълна синхронизация в облака между лаптоп, телефон и Opera GX 24/7/365!
+                Получаваш уебсайт, QR код и линк, който ще работи завинаги на Render сървъри. Пълна синхронизация в облака между лаптоп, телефон и конзоли 24/7/365!
             </p>
 
             <div class="mb-8 flex justify-center">
@@ -255,7 +255,7 @@
                 <div class="flex items-center justify-between border-b border-slate-800 pb-4">
                     <div>
                         <h3 class="text-xl font-black text-white">⚙️ RED SOFTWARE - Панел на шефа</h3>
-                        <p class="text-xs text-slate-400">Управление на 28 услуги, снимки и видеа в облака.</p>
+                        <p class="text-xs text-slate-400">Управление на 28 услуги, снимки и видеа в облака с опция за изтриване.</p>
                     </div>
                     <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-bold">🚪 ИЗХОД</button>
                 </div>
@@ -294,7 +294,7 @@
                 </div>
 
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <h4 class="text-sm font-bold text-white uppercase text-amber-400">🗑️ Управление на проектите</h4>
+                    <h4 class="text-sm font-bold text-white uppercase text-amber-400">🗑️ Управление и изтриване на проектите</h4>
                     <div id="admin-projects-list" class="space-y-3 max-h-60 overflow-y-auto pr-2">
                         <p class="text-xs text-slate-500 italic">Зареждане от базата данни...</p>
                     </div>
@@ -386,13 +386,33 @@
                         </div>
                     </div>`;
 
-                    adminHtml += `<div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs flex justify-between items-center"><span class="text-white font-bold">${p.title} (${p.filetype})</span><span class="text-slate-400">В облака ✅</span></div>`;
+                    adminHtml += `
+                    <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs flex justify-between items-center">
+                        <span class="text-white font-bold truncate max-w-[180px]">${p.title} (${p.filetype})</span>
+                        <button onclick="deleteProject('${p.id}')" class="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg transition">🗑️ Изтрий</button>
+                    </div>`;
                 });
 
                 grid.innerHTML = html;
                 adminList.innerHTML = adminHtml;
             } catch (err) {
                 console.error("Грешка при зареждане:", err);
+            }
+        }
+
+        async function deleteProject(id) {
+            if(!confirm('Сигурни ли сте, че искате да изтриете този проект?')) return;
+            try {
+                const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+                const result = await res.json();
+                if(result.success) {
+                    alert('Проектът е изтрит успешно!');
+                    fetchProjectsFromCloud();
+                } else {
+                    alert('Грешка при триене: ' + result.error);
+                }
+            } catch(err) {
+                alert('Мрежова грешка при триене.');
             }
         }
 
