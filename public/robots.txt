@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://redsoftwareteam-oficial.onrender.com/sitemap.xml
