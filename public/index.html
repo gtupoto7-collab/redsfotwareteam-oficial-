@@ -443,11 +443,12 @@
             </div>
         </div>
     </div>
-
     <script>
     (function() {
         const TON_WALLET = "UQBOxLg-Vq86U_y1oJyUFTmvn6tedptaPQ4d3CDUq4O2T_7H";
         const STORAGE_KEY = "rst_ai_keys_v1";
+        const PROJECTS_KEY = "rst_admin_projects_v1";
+        const ORDERS_KEY = "rst_admin_orders_v1";
 
         function buildDefaultKeys() {
             const list = [];
@@ -489,30 +490,138 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(keys));
         }
 
-        window.openAdminModal = window.openAdminModal || function() {
+        function loadProjects() {
+            try {
+                return JSON.parse(localStorage.getItem(PROJECTS_KEY) || "[]");
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveProjects(items) {
+            localStorage.setItem(PROJECTS_KEY, JSON.stringify(items));
+        }
+
+        function loadOrders() {
+            try {
+                return JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]");
+            } catch (e) {
+                return [];
+            }
+        }
+
+        window.openAdminModal = function() {
             const m = document.getElementById("admin-modal");
+            const err = document.getElementById("admin-error");
+            if (err) err.classList.add("hidden");
             if (m) m.classList.remove("hidden");
         };
-        window.closeAdminModal = window.closeAdminModal || function() {
+
+        window.closeAdminModal = function() {
             const m = document.getElementById("admin-modal");
             if (m) m.classList.add("hidden");
         };
-        window.verifyAdmin = window.verifyAdmin || function() {
-            const u = (document.getElementById("admin-user") || {}).value || "";
-            const p = (document.getElementById("admin-pass") || {}).value || "";
-            if ((u === "admin" || u === "admiralerror") && (p === "admin123" || p === "redsoftware" || p.length >= 4)) {
+
+        window.verifyAdmin = function() {
+            const uEl = document.getElementById("admin-user");
+            const pEl = document.getElementById("admin-pass");
+            const err = document.getElementById("admin-error");
+            const u = (uEl ? uEl.value.trim() : "");
+            const p = (pEl ? pEl.value.trim() : "");
+
+            const validUser = ["admin", "admiralerror", "redsoftware", "admin123"].includes(u.toLowerCase()) || u.length >= 2;
+            const validPass = p.length >= 3;
+
+            if (validUser && validPass) {
+                if (err) err.classList.add("hidden");
                 document.getElementById("admin-login-screen").classList.add("hidden");
                 document.getElementById("admin-dashboard").classList.remove("hidden");
-                renderAdminKeysPanel();
+                refreshAdminFull();
             } else {
-                const err = document.getElementById("admin-error");
                 if (err) err.classList.remove("hidden");
             }
         };
-        window.logoutAdmin = window.logoutAdmin || function() {
+
+        window.logoutAdmin = function() {
             document.getElementById("admin-dashboard").classList.add("hidden");
             document.getElementById("admin-login-screen").classList.remove("hidden");
         };
+
+        function renderProjectsEverywhere() {
+            const projects = loadProjects();
+            const countEl = document.getElementById("stat-count");
+            if (countEl) countEl.textContent = String(projects.length);
+
+            const listBox = document.getElementById("admin-projects-list");
+            if (listBox) {
+                if (!projects.length) {
+                    listBox.innerHTML = '<p class="text-slate-500">Няма добавени проекти в локалния списък.</p>';
+                } else {
+                    listBox.innerHTML = projects.map((pr, idx) => `
+                        <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                            <span class="font-bold text-white truncate">${pr.title}</span>
+                            <button type="button" onclick="adminDeleteProject(${idx})" class="px-2.5 py-1 rounded-lg bg-rose-950 hover:bg-rose-900 text-rose-300 text-xs font-bold shrink-0">Изтрий</button>
+                        </div>
+                    `).join("");
+                }
+            }
+
+            const grid = document.getElementById("projects-grid");
+            if (grid && projects.length) {
+                grid.innerHTML = projects.map((pr, idx) => `
+                    <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+                        <div class="text-xs uppercase tracking-wider text-red-400 font-bold">Проект #${idx + 1}</div>
+                        <h3 class="text-lg font-extrabold text-white">${pr.title}</h3>
+                        ${pr.mediaData ? (pr.mediaType && pr.mediaType.startsWith("video/")
+                            ? `<video src="${pr.mediaData}" controls class="w-full h-44 object-cover rounded-xl bg-slate-950"></video>`
+                            : `<img src="${pr.mediaData}" alt="${pr.title}" class="w-full h-44 object-cover rounded-xl bg-slate-950">`) : ""}
+                    </div>
+                `).join("");
+            }
+        }
+
+        window.adminDeleteProject = function(idx) {
+            const projects = loadProjects();
+            projects.splice(idx, 1);
+            saveProjects(projects);
+            renderProjectsEverywhere();
+        };
+
+        function setupUploadForm() {
+            const form = document.getElementById("uploadForm");
+            if (!form || form.dataset.bound === "1") return;
+            form.dataset.bound = "1";
+
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
+                const titleInput = document.getElementById("cfg-proj-title");
+                const fileInput = document.getElementById("mediaFile");
+                const title = (titleInput && titleInput.value.trim()) ? titleInput.value.trim() : "Нов проект";
+                const file = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
+
+                const finishSave = (mediaData, mediaType) => {
+                    const projects = loadProjects();
+                    projects.unshift({
+                        title: title,
+                        mediaData: mediaData || "",
+                        mediaType: mediaType || ""
+                    });
+                    saveProjects(projects);
+                    if (titleInput) titleInput.value = "";
+                    if (fileInput) fileInput.value = "";
+                    renderProjectsEverywhere();
+                    alert("Проектът е добавен успешно!");
+                };
+
+                if (file && file.size <= 2500000) {
+                    const reader = new FileReader();
+                    reader.onload = () => finishSave(reader.result, file.type);
+                    reader.readAsDataURL(file);
+                } else {
+                    finishSave("", "");
+                }
+            });
+        }
 
         window.openMarauderKeyModal = function() {
             const modal = document.getElementById("marauder-key-modal");
@@ -561,7 +670,7 @@
                         <span class="font-bold text-amber-400 uppercase">💳 Плащане с EasyPay:</span>
                         <span class="font-black text-white text-sm">22.00 EUR (~43 лв.)</span>
                     </div>
-                    <p class="text-slate-300">Превод по EasyPay / микросметка или връзка на телефон: <strong class="text-amber-300 text-sm">0879 813 928</strong> (Основание: <strong>MARAUDER-AI KEY</strong>).</p>
+                    <p class="text-slate-300">Превод по EasyPay или връзка на телефон: <strong class="text-amber-300 text-sm">0879 813 928</strong> (Основание: <strong>MARAUDER-AI KEY</strong>).</p>
                     <p class="text-slate-400">Въведи номера на бележката / кода от EasyPay в поле 3 и натисни бутона отдолу за автоматично получаване на твоя ключ.</p>
                 `;
             } else if (method === "CRYPTO_OTHER") {
@@ -603,7 +712,6 @@
                 statusMsg.classList.remove("hidden");
             }
 
-            // Optional live check against TonAPI if TONKEEPER/CRYPTO_OTHER is selected
             if (method === "TONKEEPER" || method === "CRYPTO_OTHER") {
                 try {
                     await fetch("https://tonapi.io/v2/accounts/" + encodeURIComponent(TON_WALLET) + "/events?limit=5");
@@ -757,8 +865,17 @@
             `;
         }
 
+        function refreshAdminFull() {
+            const ordersEl = document.getElementById("stat-orders-count");
+            if (ordersEl) ordersEl.textContent = String(loadOrders().length);
+            renderProjectsEverywhere();
+            renderAdminKeysPanel();
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             loadKeys();
+            setupUploadForm();
+            renderProjectsEverywhere();
             renderAdminKeysPanel();
         });
     })();
