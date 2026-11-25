@@ -693,3 +693,58 @@ document.getElementById("btnDownloadHtml")?.addEventListener("click", () => {
   renderTorHosts();
   renderTorGuidance();
 })();
+
+(() => {
+  const genBtn = document.getElementById("btnGenerateSite");
+  if (!genBtn) return;
+
+  let trialTimer = null;
+
+  function showTrialExpiredPrompt() {
+    const out = document.getElementById("publishResult");
+    const msg = document.getElementById("workMsg");
+    if (msg) {
+      msg.textContent = "Временният линк от машината изтече — време е за плащане към съответната компания / избрания метод.";
+    }
+    if (out) {
+      out.innerHTML = "<div style=\"padding:12px;border-radius:10px;border:1px solid rgba(239,35,60,0.5);background:rgba(239,35,60,0.14);color:#fecdd3;\"><strong>Временният преглед изтече!</strong> За да остане сайтът активен или да се задвижи хостингът, извърши плащане към компанията / избрания метод.</div>";
+    }
+  }
+
+  async function startTrialLinkForCurrentProject() {
+    const info = document.getElementById("projectInfo");
+    const rawId = info && info.textContent ? info.textContent.replace(/^Проект:\s*/i, "").trim() : "";
+    if (!rawId) return;
+
+    try {
+      const res = await fetch("/api/projects/" + encodeURIComponent(rawId) + "/trial-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({})
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) return;
+
+      const out = document.getElementById("publishResult");
+      if (trialTimer) clearInterval(trialTimer);
+
+      const tick = () => {
+        const leftSec = Math.max(0, Math.ceil((data.expiresAt - Date.now()) / 1000));
+        if (out && leftSec > 0) {
+          out.innerHTML = "<div><strong>Временен линк от машината:</strong> <a href=\"" + data.trialUrl + "\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:#93c5fd;\">" + data.trialUrl + "</a> <span style=\"color:#86efac;\">(остават " + leftSec + " сек.)</span></div>";
+        }
+        if (leftSec <= 0) {
+          clearInterval(trialTimer);
+          showTrialExpiredPrompt();
+        }
+      };
+
+      tick();
+      trialTimer = setInterval(tick, 1000);
+    } catch (_) {}
+  }
+
+  genBtn.addEventListener("click", () => {
+    setTimeout(startTrialLinkForCurrentProject, 1100);
+  });
+})();

@@ -438,6 +438,52 @@ function runProjectTests(files) {
   return { ready, checks };
 }
 
+
+const trialSessions = new Map();
+const TRIAL_DURATION_MS = 180 * 1000;
+
+app.post("/api/projects/:id/trial-link", (req, res) => {
+  const dir = projectDir(req.params.id);
+  if (!dir || !fs.existsSync(dir)) {
+    return res.status(404).json({ ok: false, error: "Проектът не е намерен." });
+  }
+  const clean = safeId(req.params.id);
+  const token = crypto.randomBytes(6).toString("hex");
+  const expiresAt = Date.now() + TRIAL_DURATION_MS;
+  trialSessions.set(clean, { token, expiresAt });
+  const base = req.protocol + "://" + req.get("host");
+  res.json({
+    ok: true,
+    projectId: clean,
+    trialUrl: base + "/p/" + clean + "?t=" + token,
+    expiresAt: expiresAt,
+    ttlSeconds: Math.round(TRIAL_DURATION_MS / 1000)
+  });
+});
+
+app.get("/p/:id", (req, res) => {
+  const dir = projectDir(req.params.id);
+  if (!dir || !fs.existsSync(dir)) {
+    return res.status(404).send("Проектът не е намерен.");
+  }
+  const clean = safeId(req.params.id);
+  const session = trialSessions.get(clean);
+  const validToken = session && req.query.t === session.token;
+  const isActive = validToken && Date.now() < session.expiresAt;
+
+  if (!isActive) {
+    return res.status(402).send("<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Временният достъп изтече</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#090b10;color:#f8fafc;font-family:system-ui,sans-serif;padding:20px;}.box{max-width:520px;background:#121826;border:1px solid rgba(239,35,60,0.5);border-radius:16px;padding:26px;text-align:center;}h1{color:#ff6b7d;margin-bottom:10px;font-size:1.5rem;}p{color:#cbd5e1;line-height:1.5;margin-bottom:14px;}.btn{display:inline-block;padding:12px 20px;border-radius:10px;background:#ef233c;color:#fff;text-decoration:none;font-weight:800;}</style></head><body><div class="box"><h1>Временният тест приключи!</h1><p>Пробният линк от машината изтече, за да може да се порадваш на сайта на живо.</p><p>За да продължи онлайн или да финализираш хостинга/пакета, направи плащане към съответната компания / избрания метод.</p><a class="btn" href="/">Върни се в RED AUTO BUILDER</a></div></body></html>");
+  }
+
+  const files = readAllFiles(dir);
+  let html = files["index.html"] || "<h1>Проект</h1>";
+  const css = files["src/styles/main.css"] || "";
+  const js = files["src/app/main.js"] || "";
+  if (css) html = html.replace("</head>", "<style>" + css + "</style>\n</head>");
+  if (js) html = html.replace("</body>", "<script>" + js.replace(/</script>/gi, "<\/script>") + "</script>\n</body>");
+  res.send(html);
+});
+
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, service: "RED AUTO BUILDER", ts: new Date().toISOString() });
 });
