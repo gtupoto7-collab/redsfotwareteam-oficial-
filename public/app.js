@@ -1,64 +1,281 @@
-const mount = document.getElementById("pageMount");
-const apiState = document.getElementById("apiState");
-const routeLabel = document.getElementById("currentRouteLabel");
-
+const mount = document.getElementById("appMount");
 const YT_VIDEO_URL = "https://www.youtube.com/watch?v=JBYo4n9uTOM";
 const YT_EMBED_URL = "https://www.youtube-nocookie.com/embed/JBYo4n9uTOM?rel=0";
 
-const state = {
-  packageName: "150€ Пакет — Пълен комплект сайт + App приложение на сайта + Free hosting + SEO и Meta FULL",
-  basePrice: 150,
-  adBotType: "Bot реклама на вид пот",
-  permanentAdAddon: true,
-  customNote: "",
-  lastOutput: ""
-};
+const DIVISIONS = [
+  {
+    slug: "ai-rd",
+    department: "AI Research & Development",
+    specialization: "Изкуствен интелект",
+    summary: "Приложен изкуствен интелект, автоматизация на процеси, класификация, търсене и интеграция с фирмени системи.",
+    deliverables: [
+      "Интелигентни асистенти и вътрешни инструменти",
+      "Автоматизирана обработка на заявки и документи",
+      "API интеграции към съществуващи уеб и сървърни услуги"
+    ]
+  },
+  {
+    slug: "cybersecurity",
+    department: "Cybersecurity Division",
+    specialization: "Киберсигурност",
+    summary: "Защита на уеб приложения, проверка на конфигурации, контрол на достъпа и устойчивост на инфраструктурата.",
+    deliverables: [
+      "Преглед на HTTP заглавия, валидации и автентикация",
+      "Одит на уязвимости в конфигурации и зависимости",
+      "Препоръки и внедряване на защитни политики"
+    ]
+  },
+  {
+    slug: "software-engineering",
+    department: "Software Engineering",
+    specialization: "Софтуерна разработка",
+    summary: "Изграждане на уеб платформи, REST API услуги, административни панели и клиентски приложения.",
+    deliverables: [
+      "Модулни уеб приложения и сървърни API сървиси",
+      "Надеждно съхранение и обмен на данни",
+      "Поддръжка, рефакторинг и разширяване на функционалности"
+    ]
+  },
+  {
+    slug: "autonomous-systems",
+    department: "Autonomous Systems",
+    specialization: "Интелигентни системи",
+    summary: "Автоматизирани работни потоци, фонови задачи, наблюдение на събития и координирани скриптове.",
+    deliverables: [
+      "Сценарии за непрекъсната автоматизация",
+      "Сигнализация и реакция при промени в състоянието",
+      "Ясна оперативна логика без ръчна намеса"
+    ]
+  },
+  {
+    slug: "cloud-infrastructure",
+    department: "Cloud Infrastructure",
+    specialization: "Облачни технологии",
+    summary: "Подготовка, деплой и поддръжка на приложения в облачна среда с фокус върху достъпност и предвидимост.",
+    deliverables: [
+      "Конфигурация на среди и променливи за изпълнение",
+      "Непрекъснато пускане на обновления от Git репозитори",
+      "Диагностика на достъпност и логове"
+    ]
+  },
+  {
+    slug: "digital-innovation",
+    department: "Digital Innovation",
+    specialization: "Дигитални иновации",
+    summary: "Създаване на съвременни дигитални продукти, интерактивни интерфейси и нови бизнес формати.",
+    deliverables: [
+      "Проектиране на потребителски потоци и интерфейси",
+      "Бързо прототипиране до работещо решение",
+      "Свързване на уеб, мобилни и автоматизирани канали"
+    ]
+  }
+];
 
-let vizAnimId = null;
+const MARAUDER_TABS = [
+  {
+    id: "architecture",
+    label: "AI Architecture",
+    title: "AI Architecture — Модулна структура на MARAUDER-AI",
+    desc: "Слоеста архитектура, разделяща входящите заявки, логиката за обработка, инструментите и връзката с външни услуги.",
+    points: [
+      "Ясно разделение между интерфейс, оркестрация и изпълнение",
+      "Стандартизирани формати на данни и предвидими отговори",
+      "Готовност за разширяване с нови модули без пренаписване на ядрото"
+    ]
+  },
+  {
+    id: "agents",
+    label: "Agent Ecosystem",
+    title: "Agent Ecosystem — Специализирани агенти",
+    desc: "Координация на задачи между отделни модули за анализ, структуриране на информация и автоматизация.",
+    points: [
+      "Разбиване на сложни задачи на ясни стъпки",
+      "Повторно използваеми задачи за регулярни операции",
+      "Проследимост на всяка стъпка и резултат"
+    ]
+  },
+  {
+    id: "defense",
+    label: "Cyber Defense",
+    title: "Cyber Defense — Защитни механизми",
+    desc: "Фокус върху валидация на входни данни, ограничаване на грешки и защитена комуникация.",
+    points: [
+      "Контрол и проверка на данните преди обработка",
+      "Безопасна работа с конфигурации и достъпи",
+      "Намаляване на рисковете при външни заявки"
+    ]
+  },
+  {
+    id: "intelligence",
+    label: "Security Intelligence",
+    title: "Security Intelligence — Анализ и сигнали",
+    desc: "Събиране и подреждане на техническа информация за по-бързо откриване на аномалии и проблеми.",
+    points: [
+      "Структурирани записи за събития и грешки",
+      "Съпоставяне на състоянието на услугите във времето",
+      "Ясна основа за инженерни решения"
+    ]
+  },
+  {
+    id: "mission-control",
+    label: "Mission Control",
+    title: "Mission Control — Оперативно управление",
+    desc: "Централен преглед върху активните модули, статуса на системата и насочване към конкретни действия.",
+    points: [
+      "Бърз достъп до ключовите компоненти на платформата",
+      "Проверка на здравето на сървърните маршрути",
+      "Директна връзка с екипа при нужда от намеса"
+    ]
+  },
+  {
+    id: "overview",
+    label: "Technology Overview",
+    title: "Technology Overview — Практическо приложение",
+    desc: "MARAUDER-AI обединява инженерни практики за софтуерна разработка, автоматизация и защита в единна рамка.",
+    points: [
+      "Съвместимост с уеб интерфейси и Node.js бекенд услуги",
+      "Адаптация към реални бизнес и технически изисквания",
+      "Постепенно развитие на база реална употреба"
+    ]
+  }
+];
 
-function computePrice() {
-  return state.basePrice + (state.permanentAdAddon ? 30 : 0);
+const PROJECTS = [
+  {
+    id: "marauder-ai-core",
+    name: "MARAUDER-AI Platform",
+    division: "AI Research & Development • Cybersecurity",
+    summary: "Инженерна рамка за интелигентни агенти, автоматизация на работни потоци и структуриран анализ.",
+    stack: "Web UI • Modular Services • API Integration",
+    details: "Обединява модули за обработка на заявки, автоматизация на задачи и наблюдение на състоянието на системата."
+  },
+  {
+    id: "enterprise-web-suite",
+    name: "Enterprise Web & API Suite",
+    division: "Software Engineering • Cloud Infrastructure",
+    summary: "Многостранични уеб платформи и сървърни API услуги за прием на запитвания и управление на съдържание.",
+    stack: "HTML5 • CSS3 • JavaScript • Node.js",
+    details: "Изграден с фокус върху бързо зареждане, ясна навигация, стабилни маршрути и директна връзка с бекенд ендпойнти."
+  },
+  {
+    id: "workflow-automation-engine",
+    name: "Workflow Automation Engine",
+    division: "Autonomous Systems • Digital Innovation",
+    summary: "Автоматизирани сценарии за комуникация, структуриране на данни и синхронизация между процеси.",
+    stack: "Event Flows • Webhooks • Structured Data",
+    details: "Намалява ръчната работа при повторяеми операции и осигурява последователност на резултатите."
+  }
+];
+
+let animId = null;
+
+function stopCanvas() {
+  if (animId) {
+    cancelAnimationFrame(animId);
+    animId = null;
+  }
 }
 
-function summaryText() {
-  const total = computePrice();
-  const perm = state.permanentAdAddon
-    ? "+30€ за безплатна постоянна реклама (ВКЛЮЧЕНО)"
-    : "Без +30€ постоянна реклама";
-  return `${state.packageName} | ${state.adBotType} | ${perm} | Общо: ${total}€`;
-}
+function startCenterCanvas() {
+  stopCanvas();
+  const canvas = document.getElementById("archCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
 
-function videoBlockHtml() {
-  return `
-    <div class="video-card">
-      <div class="page-head" style="margin-bottom:8px;padding:12px 14px;">
-        <div>
-          <h2 style="font-size:1.05rem;color:var(--cyan);">RED-SOFTWARE-TEAM // OFFICIAL VIDEO</h2>
-          <p style="margin:2px 0 0;">Вградено видео в главната страница.</p>
-        </div>
-        <a href="${YT_VIDEO_URL}" target="_blank" rel="noopener noreferrer" class="btn-neon-cyan">ОТВОРИ В YOUTUBE</a>
-      </div>
-      <div class="video-frame-wrap">
-        <iframe
-          src="${YT_EMBED_URL}"
-          title="RED-SOFTWARE-TEAM"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </div>
-  `;
-}
+  let t = 0;
 
-if (apiState) {
-  fetch("/api/health")
-    .then((r) => r.json())
-    .then((d) => {
-      apiState.textContent = d && d.ok ? "ONLINE" : "READY";
-    })
-    .catch(() => {
-      apiState.textContent = "LOCAL";
-    });
+  function draw() {
+    t += 0.012;
+    const w = (canvas.width = canvas.clientWidth || 520);
+    const h = (canvas.height = canvas.clientHeight || 310);
+
+    ctx.fillStyle = "#0b0d11";
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+    ctx.lineWidth = 1;
+    const step = 32;
+    for (let x = 0; x <= w; x += step) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+      ctx.stroke();
+    }
+    for (let y = 0; y <= h; y += step) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+      ctx.stroke();
+    }
+
+    const cx = w * 0.5;
+    const cy = h * 0.54;
+    const bw = Math.min(w * 0.56, 260);
+    const bd = 54;
+    const bh = 92;
+    const tiltX = Math.sin(t) * 14;
+    const tiltY = Math.cos(t * 0.8) * 6;
+
+    const topCenter = { x: cx + tiltX * 0.4, y: cy - bh + tiltY * 0.4 };
+    const botCenter = { x: cx, y: cy + 16 };
+
+    const cornersTop = [
+      { x: topCenter.x - bw * 0.5, y: topCenter.y },
+      { x: topCenter.x + bw * 0.5, y: topCenter.y },
+      { x: topCenter.x + bw * 0.35, y: topCenter.y - bd * 0.6 },
+      { x: topCenter.x - bw * 0.35, y: topCenter.y - bd * 0.6 }
+    ];
+    const cornersBot = [
+      { x: botCenter.x - bw * 0.5, y: botCenter.y },
+      { x: botCenter.x + bw * 0.5, y: botCenter.y },
+      { x: botCenter.x + bw * 0.35, y: botCenter.y - bd * 0.6 },
+      { x: botCenter.x - bw * 0.35, y: botCenter.y - bd * 0.6 }
+    ];
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    cornersTop.forEach((p, idx) => (idx === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    for (let i = 0; i < 4; i++) {
+      ctx.strokeStyle = i === 1 ? "rgba(217, 43, 58, 0.65)" : "rgba(255, 255, 255, 0.16)";
+      ctx.beginPath();
+      ctx.moveTo(cornersTop[i].x, cornersTop[i].y);
+      ctx.lineTo(cornersBot[i].x, cornersBot[i].y);
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+    ctx.beginPath();
+    cornersBot.forEach((p, idx) => (idx === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+    ctx.closePath();
+    ctx.stroke();
+
+    const pulseY = botCenter.y - ((t * 36) % (bh + 10));
+    ctx.strokeStyle = "rgba(217, 43, 58, 0.55)";
+    ctx.beginPath();
+    ctx.moveTo(cx - bw * 0.42, pulseY);
+    ctx.lineTo(cx + bw * 0.42, pulseY);
+    ctx.stroke();
+
+    ctx.fillStyle = "#d92b3a";
+    ctx.beginPath();
+    ctx.arc(topCenter.x, topCenter.y - bd * 0.3, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#a4acb9";
+    ctx.font = "600 11px system-ui, sans-serif";
+    ctx.fillText("RED CENTER // SPATIAL ARCHITECTURE", 14, 22);
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  draw();
 }
 
 function normalizePath(pathname) {
@@ -66,24 +283,25 @@ function normalizePath(pathname) {
   const clean = pathname.replace(/\/+$/, "");
   const allowed = [
     "/",
-    "/canvas",
-    "/cyber-ai",
-    "/web-systems",
-    "/security-audit",
-    "/bots-auto",
-    "/diagnostics",
-    "/reports",
+    "/divisions",
+    "/marauder-ai",
+    "/projects",
+    "/company",
     "/contact"
   ];
   return allowed.includes(clean) ? clean : "/";
 }
 
-function navigate(path) {
+function navigate(path, extraState = {}) {
   const target = normalizePath(path);
+  if (extraState.subject) {
+    sessionStorage.setItem("rst_subject", extraState.subject);
+  }
   if (window.location.pathname !== target) {
     window.history.pushState({ route: target }, "", target);
   }
   renderRoute(target);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 window.addEventListener("popstate", () => {
@@ -93,122 +311,33 @@ window.addEventListener("popstate", () => {
 document.addEventListener("click", (e) => {
   const link = e.target.closest("[data-route]");
   if (!link) return;
-  const href = link.getAttribute("data-route");
-  if (href) {
+  const route = link.getAttribute("data-route");
+  const subject = link.getAttribute("data-subject") || "";
+  if (route) {
     e.preventDefault();
-    navigate(href);
+    navigate(route, { subject });
   }
 });
 
-function updateNavActive(activePath) {
-  if (routeLabel) routeLabel.textContent = activePath;
-  document.querySelectorAll(".nav-tab").forEach((el) => {
-    const r = el.getAttribute("data-route");
-    el.classList.toggle("active", r === activePath);
+function setActiveNav(path) {
+  document.querySelectorAll(".nav-link").forEach((el) => {
+    el.classList.toggle("active", el.getAttribute("data-route") === path);
   });
 }
 
-function stopViz() {
-  if (vizAnimId) {
-    cancelAnimationFrame(vizAnimId);
-    vizAnimId = null;
-  }
-}
-
-function startCanvasViz() {
-  stopViz();
-  const canvas = document.getElementById("vizCanvas");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  const nodes = Array.from({ length: 34 }, (_, i) => ({
-    x: ((i * 73) % 520) + 40,
-    y: ((i * 47) % 260) + 40,
-    vx: (((i % 5) - 2) * 0.45) || 0.35,
-    vy: (((i % 3) - 1) * 0.4) || -0.3,
-    color: i % 2 === 0 ? "#ff004c" : "#00f0ff"
-  }));
-
-  function frame() {
-    const w = (canvas.width = canvas.clientWidth || 640);
-    const h = (canvas.height = canvas.clientHeight || 340);
-
-    ctx.fillStyle = "#040208";
-    ctx.fillRect(0, 0, w, h);
-
-    ctx.strokeStyle = "rgba(0, 240, 255, 0.08)";
-    for (let x = 0; x < w; x += 36) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, h);
-      ctx.stroke();
-    }
-    for (let y = 0; y < h; y += 36) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(w, y);
-      ctx.stroke();
-    }
-
-    for (let i = 0; i < nodes.length; i++) {
-      const a = nodes[i];
-      a.x += a.vx;
-      a.y += a.vy;
-      if (a.x < 12 || a.x > w - 12) a.vx *= -1;
-      if (a.y < 12 || a.y > h - 12) a.vy *= -1;
-
-      for (let j = i + 1; j < nodes.length; j++) {
-        const b = nodes[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < 95) {
-          ctx.strokeStyle = `rgba(176, 38, 255, ${(1 - dist / 95) * 0.45})`;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.stroke();
-        }
-      }
-
-      ctx.fillStyle = a.color;
-      ctx.beginPath();
-      ctx.arc(a.x, a.y, 3.2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 13px monospace";
-    ctx.fillText("RED SOFTWARE TEAM // LIVE VISUAL CANVAS", 14, 24);
-    ctx.fillStyle = "#00ff88";
-    ctx.fillText(`TOTAL: ${computePrice()}€ | ${state.permanentAdAddon ? "+30€ PERM AD ACTIVE" : "BASE ONLY"}`, 14, h - 14);
-
-    vizAnimId = requestAnimationFrame(frame);
-  }
-
-  frame();
-}
-
 function renderRoute(path) {
-  stopViz();
-  updateNavActive(path);
+  stopCanvas();
+  setActiveNav(path);
   if (!mount) return;
 
-  if (path === "/canvas") {
-    renderCanvasPage();
-  } else if (path === "/cyber-ai") {
-    renderCyberAiPage();
-  } else if (path === "/web-systems") {
-    renderWebSystemsPage();
-  } else if (path === "/security-audit") {
-    renderSecurityAuditPage();
-  } else if (path === "/bots-auto") {
-    renderBotsAutoPage();
-  } else if (path === "/diagnostics") {
-    renderDiagnosticsPage();
-  } else if (path === "/reports") {
-    renderReportsPage();
+  if (path === "/divisions") {
+    renderDivisionsPage();
+  } else if (path === "/marauder-ai") {
+    renderMarauderPage();
+  } else if (path === "/projects") {
+    renderProjectsPage();
+  } else if (path === "/company") {
+    renderCompanyPage();
   } else if (path === "/contact") {
     renderContactPage();
   } else {
@@ -217,474 +346,418 @@ function renderRoute(path) {
 }
 
 function renderHomePage() {
+  const rowsHtml = DIVISIONS.map(
+    (d) => `
+      <tr>
+        <td><strong>${d.department}</strong></td>
+        <td>${d.specialization}</td>
+        <td style="text-align:right;">
+          <a href="/divisions" class="btn btn-ghost" data-route="/divisions" data-subject="${d.department}">Отвори отдел</a>
+        </td>
+      </tr>
+    `
+  ).join("");
+
+  const projectsHtml = PROJECTS.map(
+    (p) => `
+      <article class="card">
+        <div>
+          <h3>${p.name}</h3>
+          <p>${p.summary}</p>
+        </div>
+        <div>
+          <div class="card-meta">${p.division}</div>
+          <div class="hero-actions" style="margin-top:14px;">
+            <a href="/projects" class="btn btn-secondary" data-route="/projects" data-subject="${p.name}">Отвори проект</a>
+          </div>
+        </div>
+      </article>
+    `
+  ).join("");
+
   mount.innerHTML = `
-    <div class="page-head">
+    <section class="hero">
       <div>
-        <h1>RED-SOFTWARE-TEAM-BULGARIA // MULTI-PAGE COMMAND</h1>
-        <p>Всеки бутон отваря отделна страница със собствен код, функция и автоматизация. Горе вдясно е CANVAS менюто с цени и оферти.</p>
-      </div>
-      <div class="action-row">
-        <a href="/canvas" class="btn-neon-purple" data-route="/canvas">ОТВОРИ CANVAS &amp; МЕНЮ ЦЕНИ</a>
-        <a href="/contact" class="btn-neon-red" data-route="/contact">КЪМ ФОРМАТА</a>
-      </div>
-    </div>
+        <div class="hero-kicker">Enterprise Software &amp; AI Organization</div>
+        <h1>RED SOFTWARE TEAM</h1>
+        <p class="hero-tagline">Engineering Intelligence. Building Tomorrow.</p>
+        <p class="hero-pillars">Artificial Intelligence. Software Engineering. Cybersecurity. Advanced Digital Systems.</p>
 
-    <div class="grid-3">
-      <button type="button" class="route-card" data-route="/cyber-ai">
-        <strong>CYBER AI</strong>
-        <span>AI агент, генератор на код, промптове и автоматизации.</span>
-        <code>/cyber-ai</code>
-      </button>
-      <button type="button" class="route-card" data-route="/web-systems">
-        <strong>WEB SYSTEMS</strong>
-        <span>Пълен комплект сайт + App приложение на сайта + Free hosting + SEO &amp; Meta FULL.</span>
-        <code>/web-systems</code>
-      </button>
-      <button type="button" class="route-card" data-route="/security-audit">
-        <strong>SECURITY AUDIT</strong>
-        <span>Проверка на URL/headers, списък защити и генератор на audit скрипт.</span>
-        <code>/security-audit</code>
-      </button>
-      <button type="button" class="route-card" data-route="/bots-auto">
-        <strong>BOTS &amp; AUTO</strong>
-        <span>150€ пакет • Bot реклама на вид пот • +30€ за безплатна постоянна реклама.</span>
-        <code>/bots-auto</code>
-      </button>
-      <button type="button" class="route-card" data-route="/diagnostics">
-        <strong>DIAGNOSTICS</strong>
-        <span>Тест на /api/health, скорост на отговор и системни данни.</span>
-        <code>/diagnostics</code>
-      </button>
-      <button type="button" class="route-card" data-route="/reports">
-        <strong>REPORTS</strong>
-        <span>Генериране, копиране и изтегляне на JSON/TXT отчет за проекта.</span>
-        <code>/reports</code>
-      </button>
-    </div>
+        <div class="hero-actions">
+          <a href="/divisions" class="btn btn-primary" data-route="/divisions">Explore Our Technology</a>
+          <a href="/projects" class="btn btn-secondary" data-route="/projects">Our Solutions</a>
+          <a href="/contact" class="btn btn-ghost" data-route="/contact">Contact Our Team</a>
+        </div>
+      </div>
 
-    ${videoBlockHtml()}
+      <aside class="center-stage" aria-label="Архитектурна 3D визуализация на технологичен център">
+        <div class="stage-top">
+          <strong>Technology Center Model</strong>
+          <span>Architecture View</span>
+        </div>
+        <canvas id="archCanvas"></canvas>
+        <div class="stage-caption">
+          <span>Модулна структура на R&amp;D, софтуер и защита</span>
+          <span>RED SOFTWARE TEAM</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>Technology Divisions</h2>
+          <p>Организационна структура на инженерните отдели в RED SOFTWARE TEAM.</p>
+        </div>
+        <a href="/divisions" class="btn btn-secondary" data-route="/divisions">Всички отдели</a>
+      </div>
+
+      <div class="divisions-table-wrap">
+        <table class="divisions-table">
+          <thead>
+            <tr>
+              <th>Отдел</th>
+              <th>Специализация</th>
+              <th style="text-align:right;">Страница</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="flagship-box">
+        <div>
+          <span class="flagship-label">Flagship Technology</span>
+          <h2>MARAUDER-AI</h2>
+          <p>Advanced Artificial Intelligence &amp; Cyber Defense Platform.</p>
+          <div class="hero-actions">
+            <a href="/marauder-ai" class="btn btn-primary" data-route="/marauder-ai">Отвори MARAUDER-AI</a>
+            <a href="/contact" class="btn btn-secondary" data-route="/contact" data-subject="MARAUDER-AI Platform">Запитване за MARAUDER-AI</a>
+          </div>
+        </div>
+
+        <div class="pillar-list">
+          <div class="pillar-item">AI Architecture</div>
+          <div class="pillar-item">Agent Ecosystem</div>
+          <div class="pillar-item">Cyber Defense</div>
+          <div class="pillar-item">Security Intelligence</div>
+          <div class="pillar-item">Mission Control</div>
+          <div class="pillar-item">Technology Overview</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>Нашите проекти</h2>
+          <p>Решения с реални функционалности и техническа насоченост.</p>
+        </div>
+        <a href="/projects" class="btn btn-secondary" data-route="/projects">Всички проекти</a>
+      </div>
+
+      <div class="cards-3">
+        ${projectsHtml}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="video-panel">
+        <div class="section-header" style="margin-bottom:0;">
+          <div>
+            <h2>Видео представяне</h2>
+            <p>Официално видео на RED SOFTWARE TEAM.</p>
+          </div>
+          <a href="${YT_VIDEO_URL}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Отвори в YouTube</a>
+        </div>
+        <div class="video-frame">
+          <iframe
+            src="${YT_EMBED_URL}"
+            title="RED SOFTWARE TEAM"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
   `;
+
+  startCenterCanvas();
 }
 
-function renderCanvasPage() {
-  mount.innerHTML = `
-    <div class="page-head">
-      <div>
-        <h1>NEW PROJECT // CANVAS, ВИЗУАЛИЗАЦИЯ &amp; ПЪЛНО МЕНЮ НА УСЛУГИТЕ</h1>
-        <p>Пълен комплект сайт, App приложение на сайта, Free hosting, SEO &amp; Meta FULL, 150€ пакет, Bot реклама на вид пот и +30€ за безплатна постоянна реклама.</p>
-      </div>
-      <a href="/contact" class="btn-neon-red" data-route="/contact">ПРОДЪЛЖИ КЪМ КОНТАКТ</a>
-    </div>
+function renderDivisionsPage() {
+  let activeSlug = DIVISIONS[0].slug;
 
-    <div class="canvas-wrap">
-      <div class="box purple-box">
-        <h2>CANVAS ВИЗУАЛИЗАЦИЯ &amp; КОД</h2>
-        <canvas id="vizCanvas"></canvas>
-        <div class="code-block" id="canvasCodeOut">// RED SOFTWARE TEAM — CANVAS CONFIG
-const config = {
-  package: ${JSON.stringify(state.packageName)},
-  adBot: ${JSON.stringify(state.adBotType)},
-  permanentAdAddonEuro: ${state.permanentAdAddon ? 30 : 0},
-  totalEuro: ${computePrice()}
-};</div>
+  function drawDivisions() {
+    const current = DIVISIONS.find((d) => d.slug === activeSlug) || DIVISIONS[0];
+    const tabsHtml = DIVISIONS.map(
+      (d) =>
+        `<button type="button" class="tab-btn ${d.slug === current.slug ? "active" : ""}" data-div="${d.slug}">${d.department}</button>`
+    ).join("");
+
+    const pointsHtml = current.deliverables.map((item) => `<li>${item}</li>`).join("");
+
+    mount.innerHTML = `
+      <div class="subpage-hero">
+        <h1>Technology Divisions</h1>
+        <p>Изберете отдел, за да разгледате неговата специализация и основни инженерни направления.</p>
       </div>
 
-      <div class="box red-box">
-        <h2>ПЪЛНО МЕНЮ НА УСЛУГИТЕ И ЦЕНИТЕ (RED SOFTWARE TEAM)</h2>
+      <div class="tabs-bar">${tabsHtml}</div>
 
-        <div class="price-item">
-          <span>Пълен комплект сайт + App приложение на сайта + Free hosting + SEO &amp; Meta FULL</span>
-          <strong>ВКЛЮЧЕНО</strong>
-        </div>
-
-        <div class="price-item">
-          <span>Основен пакет система / бот / уеб конфигурация</span>
-          <strong>150€</strong>
-        </div>
-
-        <label class="check-row">
-          <input type="checkbox" id="permAdCheck" ${state.permanentAdAddon ? "checked" : ""}>
-          <span>+30€ се доплаща за безплатна постоянна реклама</span>
-        </label>
-
-        <label for="botKindSelect">Bot реклама на вид пот:</label>
-        <select id="botKindSelect">
-          <option value="Bot реклама на вид пот — Telegram промо пот" ${state.adBotType.includes("Telegram") ? "selected" : ""}>Bot реклама на вид пот — Telegram промо пот</option>
-          <option value="Bot реклама на вид пот — Discord / общности пот" ${state.adBotType.includes("Discord") ? "selected" : ""}>Bot реклама на вид пот — Discord / общности пот</option>
-          <option value="Bot реклама на вид пот — Автоматизиран lead / catalog пот" ${state.adBotType.includes("lead") ? "selected" : ""}>Bot реклама на вид пот — Автоматизиран lead / catalog пот</option>
-        </select>
-
-        <div class="total-banner">
-          <span>КРАЙНА СУМА:</span>
-          <b id="canvasTotalPrice">${computePrice()}€</b>
-        </div>
-
-        <div class="action-row">
-          <button type="button" id="saveCanvasToContact" class="btn-neon-red">ЗАПАЗИ В КОНТАКТ</button>
-          <button type="button" id="goBotsPage" class="btn-neon-cyan">СТРАНИЦА BOTS &amp; AUTO</button>
+      <div class="detail-panel">
+        <h2>${current.department} — ${current.specialization}</h2>
+        <p>${current.summary}</p>
+        <ul class="spec-list">${pointsHtml}</ul>
+        <div class="hero-actions">
+          <a href="/contact" class="btn btn-primary" data-route="/contact" data-subject="${current.department}">Свържи се с отдела</a>
+          <a href="/" class="btn btn-secondary" data-route="/">Начало</a>
         </div>
       </div>
-    </div>
-  `;
+    `;
 
-  startCanvasViz();
-
-  const permCheck = document.getElementById("permAdCheck");
-  const botSelect = document.getElementById("botKindSelect");
-  const totalEl = document.getElementById("canvasTotalPrice");
-  const codeOut = document.getElementById("canvasCodeOut");
-
-  function refreshCanvasState() {
-    if (permCheck) state.permanentAdAddon = permCheck.checked;
-    if (botSelect) state.adBotType = botSelect.value;
-    if (totalEl) totalEl.textContent = `${computePrice()}€`;
-    if (codeOut) {
-      codeOut.textContent = `// RED SOFTWARE TEAM — CANVAS CONFIG
-const config = {
-  package: ${JSON.stringify(state.packageName)},
-  adBot: ${JSON.stringify(state.adBotType)},
-  permanentAdAddonEuro: ${state.permanentAdAddon ? 30 : 0},
-  totalEuro: ${computePrice()}
-};`;
-    }
+    mount.querySelectorAll("[data-div]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activeSlug = btn.getAttribute("data-div");
+        drawDivisions();
+      });
+    });
   }
 
-  permCheck?.addEventListener("change", refreshCanvasState);
-  botSelect?.addEventListener("change", refreshCanvasState);
-
-  document.getElementById("saveCanvasToContact")?.addEventListener("click", () => {
-    refreshCanvasState();
-    state.lastOutput = summaryText();
-    navigate("/contact");
-  });
-
-  document.getElementById("goBotsPage")?.addEventListener("click", () => {
-    refreshCanvasState();
-    navigate("/bots-auto");
-  });
+  drawDivisions();
 }
 
-function renderCyberAiPage() {
-  mount.innerHTML = `
-    <div class="page-head">
-      <div>
-        <h1>CYBER AI // АВТОМАТИЗАЦИЯ И ГЕНЕРАТОР НА КОД</h1>
-        <p>Отделна страница за AI логика, сценарии и автоматизации на RED-SOFTWARE-TEAM-BULGARIA.</p>
-      </div>
-      <a href="/contact" class="btn-neon-red" data-route="/contact">ПРАТИ КЪМ КОНТАКТ</a>
-    </div>
+function renderMarauderPage() {
+  let activeTab = MARAUDER_TABS[0].id;
 
-    <div class="grid-2">
-      <div class="box">
-        <h2>AI AUTOMATION RUNNER</h2>
-        <input id="aiGoalInput" type="text" placeholder="Пример: AI асистент за запитвания + автоотговор">
-        <select id="aiModeSelect">
-          <option value="Node.js Express + AI Endpoint">Node.js Express + AI Endpoint</option>
-          <option value="Automated Lead & Bot Pipeline">Automated Lead &amp; Bot Pipeline</option>
-          <option value="SEO & Content Automation">SEO &amp; Content Automation</option>
-        </select>
-        <div class="action-row">
-          <button type="button" id="genAiCodeBtn" class="btn-neon-purple">ГЕНЕРИРАЙ КОД И АВТОМАТИЗАЦИЯ</button>
+  function drawMarauder() {
+    const current = MARAUDER_TABS.find((t) => t.id === activeTab) || MARAUDER_TABS[0];
+    const tabsHtml = MARAUDER_TABS.map(
+      (t) =>
+        `<button type="button" class="tab-btn ${t.id === current.id ? "active" : ""}" data-mtab="${t.id}">${t.label}</button>`
+    ).join("");
+    const pointsHtml = current.points.map((p) => `<li>${p}</li>`).join("");
+
+    mount.innerHTML = `
+      <div class="subpage-hero">
+        <span class="flagship-label">Flagship Technology</span>
+        <h1>MARAUDER-AI</h1>
+        <p>Advanced Artificial Intelligence &amp; Cyber Defense Platform.</p>
+      </div>
+
+      <div class="tabs-bar">${tabsHtml}</div>
+
+      <div class="detail-panel">
+        <h2>${current.title}</h2>
+        <p>${current.desc}</p>
+        <ul class="spec-list">${pointsHtml}</ul>
+        <div class="hero-actions">
+          <a href="/contact" class="btn btn-primary" data-route="/contact" data-subject="MARAUDER-AI — ${current.label}">Запитване за MARAUDER-AI</a>
+          <a href="/projects" class="btn btn-secondary" data-route="/projects">Нашите проекти</a>
         </div>
       </div>
+    `;
 
-      <div class="box purple-box">
-        <h2>ГЕНЕРИРАН КОД &amp; ЛОГИКА</h2>
-        <div class="code-block" id="aiCodeBox">// Click "ГЕНЕРИРАЙ КОД И АВТОМАТИЗАЦИЯ" to build automation code.</div>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("genAiCodeBtn")?.addEventListener("click", () => {
-    const goal = document.getElementById("aiGoalInput")?.value.trim() || "AI automation workflow";
-    const mode = document.getElementById("aiModeSelect")?.value || "Node.js Express + AI Endpoint";
-    const code = `export async function runCyberAutomation(inputPayload) {
-  const workflow = {
-    team: "RED-SOFTWARE-TEAM-BULGARIA",
-    mode: ${JSON.stringify(mode)},
-    goal: ${JSON.stringify(goal)},
-    timestamp: new Date().toISOString()
-  };
-  return { ok: true, workflow, received: inputPayload };
-}`;
-    const box = document.getElementById("aiCodeBox");
-    if (box) box.textContent = code;
-    state.lastOutput = `[CYBER AI] ${goal} (${mode})`;
-  });
-}
-
-function renderWebSystemsPage() {
-  mount.innerHTML = `
-    <div class="page-head">
-      <div>
-        <h1>WEB SYSTEMS // ПЪЛЕН КОМПЛЕКТ САЙТ + APP + FREE HOSTING + SEO &amp; META FULL</h1>
-        <p>Конфигуратор на уеб система, уеб App приложение, безплатен хостинг и пълни SEO / Meta тагове.</p>
-      </div>
-      <a href="/contact" class="btn-neon-red" data-route="/contact">ЗАЯВИ СИСТЕМАТА</a>
-    </div>
-
-    <div class="grid-2">
-      <div class="box">
-        <h2>МОДУЛИ НА КОМПЛЕКТА</h2>
-        <div class="price-item"><span>Пълен комплект сайт</span><strong>INCLUDED</strong></div>
-        <div class="price-item"><span>App приложение на сайта</span><strong>INCLUDED</strong></div>
-        <div class="price-item"><span>Free hosting</span><strong>INCLUDED</strong></div>
-        <div class="price-item"><span>SEO и Meta FULL</span><strong>INCLUDED</strong></div>
-        <input id="siteDomainInput" type="text" placeholder="Домейн / име на бранда (напр. red-software-team.bg)">
-        <button type="button" id="genWebMetaBtn" class="btn-neon-cyan">ГЕНЕРИРАЙ SEO / META &amp; APP КОД</button>
-      </div>
-
-      <div class="box red-box">
-        <h2>SEO, META FULL &amp; APP КОД</h2>
-        <div class="code-block" id="webCodeBox">&lt;meta name="robots" content="index, follow"&gt;
-&lt;meta property="og:site_name" content="RED-SOFTWARE-TEAM-BULGARIA"&gt;
-&lt;link rel="manifest" href="/manifest.webmanifest"&gt;</div>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("genWebMetaBtn")?.addEventListener("click", () => {
-    const brand = document.getElementById("siteDomainInput")?.value.trim() || "RED-SOFTWARE-TEAM-BULGARIA";
-    const out = `<!-- SEO & META FULL + WEB APP MANIFEST -->
-<title>${brand} | Web + App + Free Hosting</title>
-<meta name="description" content="Пълен комплект сайт, App приложение на сайта, Free hosting и SEO & Meta FULL от RED-SOFTWARE-TEAM-BULGARIA.">
-<meta property="og:title" content="${brand}">
-<meta property="og:type" content="website">
-<link rel="manifest" href="/manifest.webmanifest">`;
-    const box = document.getElementById("webCodeBox");
-    if (box) box.textContent = out;
-    state.lastOutput = `[WEB SYSTEMS] Full Suite + App + Free Hosting + SEO/Meta FULL for ${brand}`;
-  });
-}
-
-function renderSecurityAuditPage() {
-  mount.innerHTML = `
-    <div class="page-head">
-      <div>
-        <h1>SECURITY AUDIT // ПРОВЕРКА НА СИГУРНОСТ И ЗАГЛАВИЯ</h1>
-        <p>Отделна страница за проверка на URL/headers и генериране на одитен код.</p>
-      </div>
-      <a href="/contact" class="btn-neon-red" data-route="/contact">ЗАЯВИ ОДИТ</a>
-    </div>
-
-    <div class="grid-2">
-      <div class="box">
-        <h2>TARGET CHECK</h2>
-        <input id="auditUrlInput" type="text" value="https://redsoftwareteam-oficial.onrender.com">
-        <button type="button" id="runAuditBtn" class="btn-neon-red">ИЗПЪЛНИ AUDIT ПРОВЕРКА</button>
-      </div>
-      <div class="box">
-        <h2>AUDIT OUTPUT &amp; SCRIPT</h2>
-        <div class="code-block" id="auditOutBox">// Ready to run audit check.</div>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("runAuditBtn")?.addEventListener("click", async () => {
-    const target = document.getElementById("auditUrlInput")?.value.trim() || window.location.origin;
-    const outBox = document.getElementById("auditOutBox");
-    let healthStatus = "unknown";
-    try {
-      const r = await fetch("/api/health");
-      const j = await r.json().catch(() => ({}));
-      healthStatus = j && j.ok ? "200 OK (/api/health)" : String(r.status);
-    } catch {
-      healthStatus = "unreachable";
-    }
-    const text = `Target: ${target}
-Protocol: ${window.location.protocol}
-API Health: ${healthStatus}
-Check: TLS, CSP, X-Frame-Options, Rate Limit, Input Validation -> READY`;
-    if (outBox) outBox.textContent = text;
-    state.lastOutput = `[SECURITY AUDIT] ${target} (${healthStatus})`;
-  });
-}
-
-function renderBotsAutoPage() {
-  mount.innerHTML = `
-    <div class="page-head">
-      <div>
-        <h1>BOTS &amp; AUTO // 150€ ПАКЕТ • BOT РЕКЛАМА НА ВИД ПОТ • +30€ ПОСТОЯННА РЕКЛАМА</h1>
-        <p>Конфигуратор за ботове, автоматизация и реклама с опция за +30€ безплатна постоянна реклама.</p>
-      </div>
-      <a href="/contact" class="btn-neon-red" data-route="/contact">ПРАТИ ЗАЯВКА</a>
-    </div>
-
-    <div class="grid-2">
-      <div class="box purple-box">
-        <h2>ПАКЕТ &amp; РЕКЛАМНА КОНФИГУРАЦИЯ</h2>
-        <div class="price-item"><span>150€ пакет</span><strong>150€</strong></div>
-        <label class="check-row">
-          <input type="checkbox" id="botPermCheck" ${state.permanentAdAddon ? "checked" : ""}>
-          <span>+30€ се доплаща за безплатна постоянна реклама</span>
-        </label>
-        <input id="botPotInput" type="text" value="${state.adBotType}" placeholder="Bot реклама на вид пот...">
-        <button type="button" id="buildBotCodeBtn" class="btn-neon-green">ГЕНЕРИРАЙ BOT &amp; AD КОД</button>
-      </div>
-
-      <div class="box">
-        <h2>BOT &amp; AUTOMATION CODE</h2>
-        <div class="code-block" id="botCodeOut">Total: ${computePrice()}€ | ${state.adBotType}</div>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("buildBotCodeBtn")?.addEventListener("click", () => {
-    const chk = document.getElementById("botPermCheck");
-    const pot = document.getElementById("botPotInput");
-    if (chk) state.permanentAdAddon = chk.checked;
-    if (pot && pot.value.trim()) state.adBotType = pot.value.trim();
-
-    const total = computePrice();
-    const out = `const adCampaign = {
-  packageEuro: 150,
-  botType: ${JSON.stringify(state.adBotType)},
-  permanentFreeAdAddon: ${state.permanentAdAddon ? "+30€ (безплатна постоянна реклама)" : "none"},
-  totalEuro: ${total}
-};
-console.log("RED SOFTWARE TEAM BOT READY:", adCampaign);`;
-    const el = document.getElementById("botCodeOut");
-    if (el) el.textContent = out;
-    state.lastOutput = summaryText();
-  });
-}
-
-function renderDiagnosticsPage() {
-  mount.innerHTML = `
-    <div class="page-head">
-      <div>
-        <h1>DIAGNOSTICS // СИСТЕМЕН ТЕСТ И API СТАТУС</h1>
-        <p>Отделна страница за диагностика на връзката със сървъра и браузърната среда.</p>
-      </div>
-      <button type="button" id="runDiagBtn" class="btn-neon-cyan">ПУСНИ ДИАГНОСТИКА</button>
-    </div>
-
-    <div class="box">
-      <h2>DIAGNOSTIC OUTPUT</h2>
-      <div class="code-block" id="diagBox">Loading diagnostics...</div>
-    </div>
-  `;
-
-  async function runDiag() {
-    const start = performance.now();
-    let apiInfo = "No response";
-    try {
-      const res = await fetch("/api/health");
-      const ms = Math.round(performance.now() - start);
-      const data = await res.json().catch(() => ({}));
-      apiInfo = `HTTP ${res.status} in ${ms}ms -> ${JSON.stringify(data)}`;
-    } catch (e) {
-      apiInfo = `Error: ${e.message}`;
-    }
-
-    const box = document.getElementById("diagBox");
-    if (box) {
-      box.textContent = `Route: ${window.location.pathname}
-API Health: ${apiInfo}
-Viewport: ${window.innerWidth}x${window.innerHeight}
-Platform: ${navigator.platform}`;
-    }
+    mount.querySelectorAll("[data-mtab]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activeTab = btn.getAttribute("data-mtab");
+        drawMarauder();
+      });
+    });
   }
 
-  runDiag();
-  document.getElementById("runDiagBtn")?.addEventListener("click", runDiag);
+  drawMarauder();
 }
 
-function renderReportsPage() {
-  const reportObj = {
-    brand: "RED-SOFTWARE-TEAM-BULGARIA",
-    includes: [
-      "Пълен комплект сайт",
-      "App приложение на сайта",
-      "Free hosting",
-      "SEO и Meta FULL"
-    ],
-    basePackageEuro: state.basePrice,
-    adBotType: state.adBotType,
-    permanentAdAddonEuro: state.permanentAdAddon ? 30 : 0,
-    totalEuro: computePrice(),
-    lastAction: state.lastOutput || summaryText(),
-    contactPhone: "0879 813 928"
-  };
+function renderProjectsPage() {
+  let selectedId = PROJECTS[0].id;
 
-  const jsonStr = JSON.stringify(reportObj, null, 2);
+  function drawProjects() {
+    const activeProj = PROJECTS.find((p) => p.id === selectedId) || PROJECTS[0];
+    const cardsHtml = PROJECTS.map(
+      (p) => `
+        <article class="card">
+          <div>
+            <h3>${p.name}</h3>
+            <p>${p.summary}</p>
+          </div>
+          <div>
+            <div class="card-meta">${p.stack}</div>
+            <div class="hero-actions" style="margin-top:14px;">
+              <button type="button" class="btn btn-secondary" data-proj="${p.id}">Технически преглед</button>
+              <a href="/contact" class="btn btn-ghost" data-route="/contact" data-subject="${p.name}">Запитване</a>
+            </div>
+          </div>
+        </article>
+      `
+    ).join("");
 
-  mount.innerHTML = `
-    <div class="page-head">
-      <div>
-        <h1>REPORTS // ОТЧЕТ ЗА КОНФИГУРАЦИЯТА И ЦЕНИТЕ</h1>
-        <p>Отделна страница за преглед, копиране и изтегляне на JSON отчет.</p>
+    mount.innerHTML = `
+      <div class="subpage-hero">
+        <h1>Нашите проекти</h1>
+        <p>Технически профил на ключовите системи и платформи на RED SOFTWARE TEAM.</p>
       </div>
-      <div class="action-row">
-        <button type="button" id="copyReportBtn" class="btn-neon-cyan">КОПИРАЙ JSON</button>
-        <button type="button" id="dlReportBtn" class="btn-neon-green">СВАЛИ .JSON</button>
+
+      <div class="cards-3" style="margin-bottom:24px;">${cardsHtml}</div>
+
+      <div class="detail-panel">
+        <h2>${activeProj.name}</h2>
+        <p>${activeProj.details}</p>
+        <ul class="spec-list">
+          <li><strong>Направления:</strong> ${activeProj.division}</li>
+          <li><strong>Технологичен стек:</strong> ${activeProj.stack}</li>
+        </ul>
+        <a href="/contact" class="btn btn-primary" data-route="/contact" data-subject="${activeProj.name}">Обсъди подобен проект</a>
       </div>
-    </div>
+    `;
 
-    <div class="box">
-      <h2>JSON REPORT</h2>
-      <div class="code-block" id="reportJsonBox">${jsonStr}</div>
-    </div>
-  `;
+    mount.querySelectorAll("[data-proj]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        selectedId = btn.getAttribute("data-proj");
+        drawProjects();
+      });
+    });
+  }
 
-  document.getElementById("copyReportBtn")?.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(jsonStr);
-    } catch {
-      // ignore clipboard errors
+  drawProjects();
+}
+
+function renderCompanyPage() {
+  const sections = [
+    {
+      id: "about",
+      label: "About RED SOFTWARE TEAM",
+      title: "About RED SOFTWARE TEAM",
+      desc: "Технологична организация, фокусирана върху софтуерно инженерство, приложен изкуствен интелект, киберсигурност и дигитални системи.",
+      points: [
+        "Ясна инженерна отговорност и практичен подход към всеки продукт",
+        "Съчетаване на уеб технологии, автоматизация и защита",
+        "Директна комуникация и прозрачност при реализацията"
+      ]
+    },
+    {
+      id: "philosophy",
+      label: "Engineering Philosophy",
+      title: "Engineering Philosophy",
+      desc: "Пишем чист, поддържаем код и изграждаме системи с ясна архитектура вместо временни кръпки.",
+      points: [
+        "Стабилност, предвидимост и лесна поддръжка във времето",
+        "Измерване и проверка на реалното поведение на системата",
+        "Приоритет на сигурността и качеството на данните"
+      ]
+    },
+    {
+      id: "rd",
+      label: "Research & Development",
+      title: "Research & Development",
+      desc: "Изследваме и внедряваме нови подходи в автоматизацията, интелигентните агенти и уеб архитектурата.",
+      points: [
+        "Тестване на нови модели на работа и интеграции",
+        "Превръщане на експериментални идеи в работещи модули",
+        "Непрекъснато подобряване на производителността"
+      ]
+    },
+    {
+      id: "careers",
+      label: "Careers",
+      title: "Careers",
+      desc: "Работим с инженери, разработчици и специалисти с практичен опит и желание за реални продукти.",
+      points: [
+        "Фокус върху реални резултати и технически умения",
+        "Гъвкава инженерна среда и директна работа по задачи",
+        "Отворени сме към сътрудничество по конкретни проекти"
+      ]
     }
-  });
+  ];
 
-  document.getElementById("dlReportBtn")?.addEventListener("click", () => {
-    const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "red-software-team-report.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  });
+  let activeId = sections[0].id;
+
+  function drawCompany() {
+    const current = sections.find((s) => s.id === activeId) || sections[0];
+    const tabsHtml = sections
+      .map(
+        (s) =>
+          `<button type="button" class="tab-btn ${s.id === current.id ? "active" : ""}" data-csec="${s.id}">${s.label}</button>`
+      )
+      .join("");
+    const pointsHtml = current.points.map((p) => `<li>${p}</li>`).join("");
+
+    mount.innerHTML = `
+      <div class="subpage-hero">
+        <h1>За компанията</h1>
+        <p>About RED SOFTWARE TEAM, Engineering Philosophy, Research &amp; Development и Careers.</p>
+      </div>
+
+      <div class="tabs-bar">${tabsHtml}</div>
+
+      <div class="detail-panel">
+        <h2>${current.title}</h2>
+        <p>${current.desc}</p>
+        <ul class="spec-list">${pointsHtml}</ul>
+        <a href="/contact" class="btn btn-primary" data-route="/contact" data-subject="${current.label}">Свържи се с екипа</a>
+      </div>
+    `;
+
+    mount.querySelectorAll("[data-csec]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activeId = btn.getAttribute("data-csec");
+        drawCompany();
+      });
+    });
+  }
+
+  drawCompany();
 }
 
 function renderContactPage() {
-  const defaultSubject = summaryText();
-  const defaultMessage = [
-    "Пакет: Пълен комплект сайт + App приложение на сайта + Free hosting + SEO и Meta FULL",
-    "Базов пакет: 150€",
-    `Вид бот реклама: ${state.adBotType}`,
-    `Безплатна постоянна реклама (+30€): ${state.permanentAdAddon ? "ДА (+30€)" : "НЕ"}`,
-    `Обща сума: ${computePrice()}€`,
-    state.lastOutput ? `Последен модул/код: ${state.lastOutput}` : ""
-  ]
-    .filter(Boolean)
-    .join("\n");
+  const prefilledSubject = sessionStorage.getItem("rst_subject") || "";
+  sessionStorage.removeItem("rst_subject");
 
   mount.innerHTML = `
-    <div class="page-head">
-      <div>
-        <h1>CONTACT // ИЗПРАЩАНЕ НА ЗАЯВКА КЪМ /api/contact</h1>
-        <p>Директен контакт: <b>0879 813 928</b> • Записва заявката през сървъра.</p>
-      </div>
-      <a href="/canvas" class="btn-neon-purple" data-route="/canvas">ПРОМЕНИ В CANVAS</a>
+    <div class="subpage-hero">
+      <h1>Contact Our Team</h1>
+      <p>Свържете се с RED SOFTWARE TEAM за нови системи, MARAUDER-AI, инженерни консултации или сътрудничество.</p>
     </div>
 
-    <div class="box red-box">
-      <form id="contactForm" novalidate>
-        <div class="grid-2">
-          <input id="name" name="name" type="text" placeholder="Твоето име" required>
-          <input id="email" name="email" type="email" placeholder="imeil@primer.com" required>
+    <div class="contact-grid">
+      <div class="info-box">
+        <h2>Директен контакт</h2>
+        <p>Заявките през формата се изпращат към сървърния ендпойнт <code>/api/contact</code>.</p>
+        <div class="info-row">
+          <span>Телефон</span>
+          <a href="tel:0879813928">0879 813 928</a>
         </div>
-        <input id="subject" name="subject" type="text" value="${defaultSubject.replace(/"/g, "&quot;")}" required>
-        <textarea id="message" name="message" required>${defaultMessage}</textarea>
-        <button id="sendBtn" class="send-btn" type="submit">ИЗПРАТИ ЗАЯВКА</button>
-        <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
-      </form>
+        <div class="info-row">
+          <span>Направления</span>
+          <strong>AI • Software Engineering • Cybersecurity</strong>
+        </div>
+      </div>
+
+      <div class="form-box">
+        <h2>Изпрати запитване</h2>
+        <p>Попълнете полетата по-долу и ще се свържем с вас.</p>
+
+        <form id="contactForm" novalidate>
+          <div class="row-2">
+            <input id="name" name="name" type="text" placeholder="Вашето име или организация" required>
+            <input id="email" name="email" type="email" placeholder="name@company.com" required>
+          </div>
+          <input id="subject" name="subject" type="text" placeholder="Тема / отдел / проект" value="${prefilledSubject.replace(/"/g, "&quot;")}" required>
+          <textarea id="message" name="message" placeholder="Опишете накратко задачата, целите и техническите изисквания..." required></textarea>
+          <button type="submit" id="submitBtn" class="btn btn-primary">Изпрати запитване</button>
+          <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
     </div>
   `;
 
   const form = document.getElementById("contactForm");
-  const sendBtn = document.getElementById("sendBtn");
-  const statusEl = document.getElementById("formStatus");
+  const btn = document.getElementById("submitBtn");
+  const status = document.getElementById("formStatus");
 
   form?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -696,12 +769,18 @@ function renderContactPage() {
     };
 
     if (!payload.name || !payload.email || !payload.message) {
-      if (statusEl) statusEl.textContent = "Попълни име, имейл и съобщение.";
+      if (status) {
+        status.textContent = "Моля, попълнете име, имейл и съобщение.";
+        status.className = "form-status err";
+      }
       return;
     }
 
-    if (sendBtn) sendBtn.disabled = true;
-    if (statusEl) statusEl.textContent = "Изпращане към /api/contact...";
+    if (btn) btn.disabled = true;
+    if (status) {
+      status.textContent = "Изпращане...";
+      status.className = "form-status";
+    }
 
     try {
       const res = await fetch("/api/contact", {
@@ -711,14 +790,20 @@ function renderContactPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || (!data.ok && !data.success)) {
-        throw new Error(data.error || "Грешка при изпращане.");
+        throw new Error(data.error || "Възникна грешка при изпращане.");
       }
-      if (statusEl) statusEl.textContent = "Запитването е изпратено успешно.";
+      if (status) {
+        status.textContent = "Запитването е изпратено успешно.";
+        status.className = "form-status ok";
+      }
       form.reset();
     } catch (err) {
-      if (statusEl) statusEl.textContent = err.message || "Грешка при връзка.";
+      if (status) {
+        status.textContent = err.message || "Неуспешна връзка със сървъра.";
+        status.className = "form-status err";
+      }
     } finally {
-      if (sendBtn) sendBtn.disabled = false;
+      if (btn) btn.disabled = false;
     }
   });
 }
