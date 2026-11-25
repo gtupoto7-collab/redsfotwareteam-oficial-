@@ -13,7 +13,17 @@
       <h1>Какво искаш да създадем?</h1>
       <textarea id="promptBox" rows="3" placeholder="Искам модерен сайт за строителна компания с Home, Services, Projects и Contact. Черно-златен стил, премиум визия."></textarea>
 
+      <div class="photo-gen-box">
+        <label for="refPhotoInput" class="photo-gen-label">Или качи снимка (напр. AL / референтен стил) за автоматично генериране по визия:</label>
+        <input id="refPhotoInput" type="file" accept="image/*">
+        <div id="refPhotoPreviewWrap" style="display:none;margin-top:10px;align-items:center;gap:12px;flex-wrap:wrap;">
+          <img id="refPhotoPreview" alt="Референтна снимка" style="width:92px;height:64px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,0.2);">
+          <span id="refPhotoMeta" style="font-size:0.82rem;color:#cbd5e1;"></span>
+        </div>
+      </div>
+
       <div class="presets-row">
+        <button class="preset-chip" type="button" data-preset="Искам модерен сайт за AL (автоматизация и логика) с Home, Services, Projects и Contact. Модерен тъмен стил с ярък акцент.">AL — Автоматизация и решения</button>
         <button class="preset-chip" type="button" data-preset="Искам модерен сайт за строителна компания с Home, Services, Projects и Contact. Черно-златен стил, премиум визия.">Строителство (черно-златно)</button>
         <button class="preset-chip" type="button" data-preset="Искам сайт за пътна помощ 24/7 и автосервиз с бърза връзка, услуги и контакти.">Пътна помощ 24/7</button>
         <button class="preset-chip" type="button" data-preset="Искам модерен сайт за софтуерна и AI компания с услуги, решения и форма за запитване.">AI / Софтуер</button>

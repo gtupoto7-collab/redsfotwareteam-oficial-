@@ -232,3 +232,32 @@ document.getElementById("btnDownloadHtml")?.addEventListener("click", () => {
   const msg = document.getElementById("workMsg");
   if (msg) msg.textContent = "Файлът website.html е свален.";
 });
+
+(() => {
+  const fileInput = document.getElementById("refPhotoInput");
+  const promptBox = document.getElementById("promptBox");
+  const wrap = document.getElementById("refPhotoPreviewWrap");
+  const img = document.getElementById("refPhotoPreview");
+  const meta = document.getElementById("refPhotoMeta");
+
+  if (!fileInput) return;
+
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result !== "string") return;
+      if (img) img.src = reader.result;
+      if (wrap) wrap.style.display = "flex";
+      if (meta) meta.textContent = `Избрана снимка: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+
+      if (promptBox && !promptBox.value.trim()) {
+        const cleanName = file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
+        promptBox.value = `Искам модерен сайт вдъхновен от снимката (${cleanName || "AL стил"}) с Home, Services, About и Contact, ясна структура и силна визия.`;
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+})();
