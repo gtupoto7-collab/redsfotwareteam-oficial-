@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RED SOFTWARE TEAM — HD STUDIO</title>
+  <title>RED SOFTWARE TEAM — HD STUDIO &amp; 200 SOFTWARE HUB</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,104 +13,163 @@
         <span class="brand-badge">R</span>
         <div>
           <div class="brand-kicker">RED SOFTWARE TEAM // BULGARIA</div>
-          <div class="brand-title">HD BUSINESS &amp; VISUAL STUDIO</div>
+          <div class="brand-title">HD BUSINESS &amp; SOFTWARE ENGINE</div>
         </div>
       </div>
 
+      <nav class="main-tabs" aria-label="Rejimi">
+        <button id="navStudio" class="mode-tab active" type="button">STUDIO</button>
+        <button id="navSoftware" class="mode-tab" type="button">SOFTWARE (200)</button>
+      </nav>
+
       <div class="topbar-actions">
-        <button id="btnBoostVisual" class="btn btn-accent" type="button">НОВА HD ВИЗИЯ</button>
+        <button id="btnBoostVisual" class="btn btn-accent" type="button">NOVA HD VIZIQ</button>
         <button id="btnOneClickReady" class="btn btn-primary" type="button">ONE-CLICK READY</button>
-        <button id="btnOpenLive" class="btn btn-surface" type="button">ОТВОРИ НА ЖИВО</button>
-        <button id="btnDownloadAll" class="btn btn-surface" type="button">СВАЛИ ПРОЕКТА</button>
+        <button id="btnOpenLive" class="btn btn-surface" type="button">OTVORI NA JIVO</button>
+        <button id="btnDownloadAll" class="btn btn-surface" type="button">SVALI PROEKTA</button>
       </div>
     </div>
   </header>
 
   <main class="container main-shell">
-    <section class="panel hero-panel">
-      <div class="panel-header">
-        <div>
-          <span class="eyebrow">HD VISUAL ENGINE</span>
-          <h1>Избери бизнес, цветове и визия</h1>
+    <div id="studioView">
+      <section class="panel hero-panel">
+        <div class="panel-header">
+          <div>
+            <span class="eyebrow">HD VISUAL ENGINE</span>
+            <h1>Izberi biznes, cvetove i viziq</h1>
+          </div>
+          <span id="activeBadge" class="status-pill">HD READY</span>
         </div>
-        <span id="activeBadge" class="status-pill">HD READY</span>
-      </div>
 
-      <div id="bizTabs" class="biz-tabs"></div>
+        <div id="bizTabs" class="biz-tabs"></div>
 
-      <div class="form-grid-4">
-        <div class="field">
-          <label for="bizTitleInput">Име на бранда / фирмата</label>
-          <input id="bizTitleInput" type="text" placeholder="Напр. ПЪТНА МОЩ 24/7">
+        <div class="form-grid-4">
+          <div class="field">
+            <label for="bizTitleInput">Ime na branda / firmata</label>
+            <input id="bizTitleInput" type="text" placeholder="Napr. PUTNA MOSHT 24/7">
+          </div>
+          <div class="field">
+            <label for="bizCityInput">Grad / region v Bulgariq</label>
+            <input id="bizCityInput" type="text" placeholder="Napr. Pernik • Sofiq • Magistrali">
+          </div>
+          <div class="field">
+            <label for="paletteSelect">Cvetova sistema</label>
+            <select id="paletteSelect">
+              <option value="crimson-hd">Crimson HD (Grafit + Nasiteno cherveno)</option>
+              <option value="cobalt-hd">Cobalt HD (Tumen grafit + Elektrichesko sinio)</option>
+              <option value="emerald-hd">Emerald HD (Karbon + Izumrudeno zeleno)</option>
+              <option value="amber-hd">Amber HD (Tumen mramor + Zlatist kehlibar)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="customPhotoUrl">Snimka (URL ili fail)</label>
+            <div class="photo-inputs">
+              <input id="customPhotoUrl" type="text" placeholder="https://... snimka">
+              <input id="customPhotoFile" type="file" accept="image/*">
+            </div>
+          </div>
         </div>
-        <div class="field">
-          <label for="bizCityInput">Град / регион в България</label>
-          <input id="bizCityInput" type="text" placeholder="Напр. Перник • София • Магистрали">
+
+        <div class="prompt-bar">
+          <input id="promptBox" type="text" placeholder="Kratko opisanie ili kluchovi uslugi...">
+          <button id="btnAddPhoto" class="btn btn-surface" type="button">+ DOBAVI SNIMKA</button>
         </div>
-        <div class="field">
-          <label for="paletteSelect">Цветова система</label>
-          <select id="paletteSelect">
-            <option value="crimson-hd">Crimson HD (Графит + Наситено червено)</option>
-            <option value="cobalt-hd">Cobalt HD (Тъмен графит + Електрическо синьо)</option>
-            <option value="emerald-hd">Emerald HD (Карбон + Изумрудено зелено)</option>
-            <option value="amber-hd">Amber HD (Тъмен мрамор + Златист кехлибар)</option>
+
+        <div id="statusMsg" class="status-line"></div>
+      </section>
+
+      <section class="workspace-grid">
+        <div class="panel preview-panel">
+          <div class="panel-header">
+            <h2>Pregled na jivo (HD)</h2>
+            <span id="variantLabel" class="meta-pill">Variant #1</span>
+          </div>
+          <iframe id="liveFrame" class="preview-frame" title="HD Live Preview"></iframe>
+        </div>
+
+        <div class="panel code-panel">
+          <div class="panel-header">
+            <h2>Kod na proekta</h2>
+            <div class="file-tabs">
+              <button class="ftab active" data-f="index.html" type="button">index.html</button>
+              <button class="ftab" data-f="style.css" type="button">style.css</button>
+              <button class="ftab" data-f="app.js" type="button">app.js</button>
+            </div>
+          </div>
+          <textarea id="codeBox" class="code-area" spellcheck="false"></textarea>
+          <div class="code-actions">
+            <button id="btnApplyCode" class="btn btn-accent" type="button">PRILOJI PROMENITE</button>
+            <button id="btnDownloadFile" class="btn btn-surface" type="button">SVALI FAILA</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="softwareView" style="display:none;">
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <span class="eyebrow">SOFTWARE CATALOG • FREE LIVE DEMO</span>
+            <h1>200 Software moduli sus vizualizaciq, cena i bezplaten test</h1>
+          </div>
+          <span class="status-pill">200 SOFTUERA • FREE DEMO</span>
+        </div>
+
+        <div class="sw-filter-row">
+          <input id="swSearch" type="text" placeholder="Tursi ot 200-te softuera (napr. Vision, Traffic, CRM, Bot, Security, Billing)...">
+          <select id="swCategory">
+            <option value="ALL">Vsički kategorii (200)</option>
+            <option value="AI & Vision">AI &amp; Vision</option>
+            <option value="Automation & Bots">Automation &amp; Bots</option>
+            <option value="Cyber & Monitoring">Cyber &amp; Monitoring</option>
+            <option value="Business & ERP">Business &amp; ERP</option>
           </select>
         </div>
-        <div class="field">
-          <label for="customPhotoUrl">Снимка (URL или файл)</label>
-          <div class="photo-inputs">
-            <input id="customPhotoUrl" type="text" placeholder="https://... снимка">
-            <input id="customPhotoFile" type="file" accept="image/*">
-          </div>
-        </div>
-      </div>
 
-      <div class="prompt-bar">
-        <input id="promptBox" type="text" placeholder="Кратко описание или ключови услуги (напр. 24/7 реакция, пълна гаранция, бърза доставка)...">
-        <button id="btnAddPhoto" class="btn btn-surface" type="button">+ ДОБАВИ СНИМКА</button>
-      </div>
+        <div class="sw-split">
+          <div id="swListGrid" class="sw-grid"></div>
 
-      <div id="statusMsg" class="status-line"></div>
-    </section>
+          <aside id="swSidePlayer" class="sw-side-player">
+            <div class="panel-header" style="margin-bottom:10px;padding-bottom:10px;">
+              <div>
+                <span class="eyebrow">FREE LIVE REEL / DEMO</span>
+                <h2 id="swPlayerTitle">Izberi softuer za test</h2>
+              </div>
+              <span id="swPlayerPrice" class="status-pill">0 EUR TEST</span>
+            </div>
 
-    <section class="workspace-grid">
-      <div class="panel preview-panel">
-        <div class="panel-header">
-          <h2>Преглед на живо (HD)</h2>
-          <span id="variantLabel" class="meta-pill">Вариант #1</span>
-        </div>
-        <iframe id="liveFrame" class="preview-frame" title="HD Live Preview"></iframe>
-      </div>
+            <div id="swClipBox" class="sw-clip-box">
+              <div class="sw-clip-top">
+                <span id="swClipStatus">LIVE SIMULATION</span>
+                <span id="swClipMetric">FPS: 60 • LOAD: 14%</span>
+              </div>
+              <div id="swClipVisual" class="sw-clip-visual"></div>
+              <div id="swClipLog" class="sw-clip-log"></div>
+            </div>
 
-      <div class="panel code-panel">
-        <div class="panel-header">
-          <h2>Код на проекта</h2>
-          <div class="file-tabs">
-            <button class="ftab active" data-f="index.html" type="button">index.html</button>
-            <button class="ftab" data-f="style.css" type="button">style.css</button>
-            <button class="ftab" data-f="app.js" type="button">app.js</button>
-          </div>
+            <p id="swPlayerDesc" class="sw-desc"></p>
+            <div class="sw-side-actions">
+              <button id="btnReplayClip" class="btn btn-accent" type="button">PUKNI KLIPCHETO OTNOVO</button>
+              <button id="btnLoadIntoStudio" class="btn btn-primary" type="button">VUKARAI V STUDIO</button>
+            </div>
+          </aside>
         </div>
-        <textarea id="codeBox" class="code-area" spellcheck="false"></textarea>
-        <div class="code-actions">
-          <button id="btnApplyCode" class="btn btn-accent" type="button">ПРИЛОЖИ ПРОМЕНИТЕ</button>
-          <button id="btnDownloadFile" class="btn btn-surface" type="button">СВАЛИ ФАЙЛА</button>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <section class="panel contact-panel">
       <div class="panel-header">
-        <h2>Директно запитване / поръчка</h2>
+        <h2>Direktno zapitvane / porychka</h2>
         <span class="meta-pill">RED SOFTWARE TEAM</span>
       </div>
       <form id="contactForm" class="contact-form">
         <div class="contact-row">
-          <input id="cName" type="text" placeholder="Вашето име" required>
-          <input id="cEmail" type="email" placeholder="name@example.com" required>
+          <input id="cName" type="text" placeholder="Vashеto ime" required>
+          <input id="cEmail" type="email" placeholder="imeil@primer.com" required>
         </div>
-        <textarea id="cMsg" placeholder="Опишете желания проект, цветове и срокове..." class="contact-textarea" required></textarea>
-        <button class="btn btn-primary" type="submit">ИЗПРАТИ ЗАПИТВАНЕ</button>
+        <textarea id="cMsg" placeholder="Opishete jelaniq proekt, softuer, cvetove i srokove..." class="contact-textarea" required></textarea>
+        <button class="btn btn-primary" type="submit">IZPRATI ZAPITVANE</button>
         <div id="cStatus" class="status-line"></div>
       </form>
     </section>

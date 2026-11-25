@@ -448,3 +448,150 @@ cityInp.value = state.city;
 promptBox.value = state.note;
 renderBizTabs();
 compileProject();
+
+const SW_CATEGORIES = ["AI & Vision", "Automation & Bots", "Cyber & Monitoring", "Business & ERP"];
+const SW_BASES = [
+  "Traffic & Vision Analyzer", "Auto Lead Bot", "Threat Pulse Radar", "Smart Invoice Core",
+  "Inventory Sync Engine", "Order Dispatch Hub", "Auto Support Agent", "Log Sentinel Pro",
+  "Fleet Route Optimizer", "Catalog Price Sync", "Booking Flow Engine", "Alert Webhook Relay",
+  "Document Parser AI", "Warehouse Stock Grid", "Session Guard Core", "Report Builder Suite",
+  "Lead Scraper & Router", "Uptime Watchdog", "Client Portal Core", "Payment Status Sync"
+];
+
+const SOFTWARE_200 = Array.from({ length: 200 }, (_, idx) => {
+  const num = idx + 1;
+  const cat = SW_CATEGORIES[idx % SW_CATEGORIES.length];
+  const base = SW_BASES[idx % SW_BASES.length];
+  const priceEur = 29 + ((idx * 17) % 270);
+  return {
+    id: `SW-${String(num).padStart(3, "0")}`,
+    name: `${base} v${1 + (idx % 5)}.${idx % 10}`,
+    category: cat,
+    price: `${priceEur} EUR`,
+    summary: `Gotov modul (${cat}) sus vizualizaciq, nastroyki i burza integraciq — bezplatno testvane predi porychka.`
+  };
+});
+
+let selectedSoftware = SOFTWARE_200[0];
+let clipTimer = null;
+
+function switchMainView(mode) {
+  const studioView = document.getElementById("studioView");
+  const softwareView = document.getElementById("softwareView");
+  const navStudio = document.getElementById("navStudio");
+  const navSoftware = document.getElementById("navSoftware");
+
+  const isSw = mode === "software";
+  if (studioView) studioView.style.display = isSw ? "none" : "block";
+  if (softwareView) softwareView.style.display = isSw ? "block" : "none";
+  if (navStudio) navStudio.classList.toggle("active", !isSw);
+  if (navSoftware) navSoftware.classList.toggle("active", isSw);
+
+  if (isSw) {
+    renderSoftwareCatalog();
+    playSoftwareClip(selectedSoftware);
+  }
+}
+
+function playSoftwareClip(sw) {
+  if (!sw) return;
+  selectedSoftware = sw;
+  if (clipTimer) {
+    clearInterval(clipTimer);
+    clipTimer = null;
+  }
+
+  const titleEl = document.getElementById("swPlayerTitle");
+  const priceEl = document.getElementById("swPlayerPrice");
+  const descEl = document.getElementById("swPlayerDesc");
+  const visEl = document.getElementById("swClipVisual");
+  const logEl = document.getElementById("swClipLog");
+  const metricEl = document.getElementById("swClipMetric");
+
+  if (titleEl) titleEl.textContent = `${sw.id} • ${sw.name}`;
+  if (priceEl) priceEl.textContent = `${sw.price} • FREE DEMO`;
+  if (descEl) descEl.textContent = sw.summary;
+
+  const frames = [
+    { pct: 24, fps: "58 FPS", line: `[00:01] Zarejdane na ${sw.id} (${sw.category})...` },
+    { pct: 52, fps: "60 FPS", line: `[00:02] Aktivirane na vizualizaciq i potoci na danni...` },
+    { pct: 80, fps: "60 FPS", line: `[00:03] Test na izhodnite rezultati i obrabotka — OK` },
+    { pct: 100, fps: "60 FPS", line: `[00:04] Bezplatniqt demo-klip prikluchi. Gotov za vkarvane v Studio.` }
+  ];
+
+  let step = 0;
+  if (visEl) {
+    visEl.innerHTML = `<div style="font-size:0.8rem;font-weight:800;">${esc(sw.name)}</div>
+      <div style="font-size:0.74rem;color:#cbd5e1;">Kategoriiq: ${esc(sw.category)} | Cena: ${esc(sw.price)}</div>
+      <div class="sw-bar-track"><div id="swProgBar" class="sw-bar-fill" style="width:15%;"></div></div>`;
+  }
+  if (logEl) logEl.textContent = frames[0].line;
+
+  clipTimer = setInterval(() => {
+    const f = frames[step % frames.length];
+    const bar = document.getElementById("swProgBar");
+    if (bar) bar.style.width = `${f.pct}%`;
+    if (metricEl) metricEl.textContent = `${f.fps} • DEMO LIVE`;
+    if (logEl) logEl.textContent = f.line;
+    step += 1;
+    if (step >= frames.length) {
+      clearInterval(clipTimer);
+      clipTimer = null;
+    }
+  }, 650);
+}
+
+function renderSoftwareCatalog() {
+  const grid = document.getElementById("swListGrid");
+  if (!grid) return;
+
+  const q = (document.getElementById("swSearch")?.value || "").trim().toLowerCase();
+  const cat = document.getElementById("swCategory")?.value || "ALL";
+
+  const filtered = SOFTWARE_200.filter((item) => {
+    const catOk = cat === "ALL" || item.category === cat;
+    const qOk =
+      !q ||
+      item.name.toLowerCase().includes(q) ||
+      item.id.toLowerCase().includes(q) ||
+      item.category.toLowerCase().includes(q);
+    return catOk && qOk;
+  });
+
+  grid.innerHTML = "";
+  filtered.forEach((item) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `sw-card ${selectedSoftware && selectedSoftware.id === item.id ? "active" : ""}`;
+    btn.innerHTML = `
+      <div class="sw-card-top">
+        <span>${esc(item.id)} • ${esc(item.category)}</span>
+        <span class="sw-price">${esc(item.price)}</span>
+      </div>
+      <strong>${esc(item.name)}</strong>
+      <span style="font-size:0.76rem;color:#9aa6bc;">Bezplaten test-klip</span>
+    `;
+    btn.addEventListener("click", () => {
+      renderSoftwareCatalog();
+      playSoftwareClip(item);
+    });
+    grid.appendChild(btn);
+  });
+}
+
+document.getElementById("navStudio")?.addEventListener("click", () => switchMainView("studio"));
+document.getElementById("navSoftware")?.addEventListener("click", () => switchMainView("software"));
+document.getElementById("swSearch")?.addEventListener("input", renderSoftwareCatalog);
+document.getElementById("swCategory")?.addEventListener("change", renderSoftwareCatalog);
+document.getElementById("btnReplayClip")?.addEventListener("click", () => playSoftwareClip(selectedSoftware));
+
+document.getElementById("btnLoadIntoStudio")?.addEventListener("click", () => {
+  if (!selectedSoftware) return;
+  state.title = `${selectedSoftware.name.toUpperCase()} — ${selectedSoftware.price}`;
+  state.note = selectedSoftware.summary;
+  if (titleInp) titleInp.value = state.title;
+  if (promptBox) promptBox.value = state.note;
+  switchMainView("studio");
+  compileProject();
+  if (statusMsg) statusMsg.textContent = `Zareden softuer v Studio: ${selectedSoftware.id} (${selectedSoftware.name}).`;
+});
