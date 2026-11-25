@@ -175,6 +175,56 @@
         </div>
       </div>
 
+      
+      <div class="ads-bots-box" id="bot50EuroBox">
+        <div class="llm-top">
+          <span class="llm-title">АПЕТИТЕН ПАКЕТ: 50 EUR • РЕКЛАМЕН БОТ 24/7 (365 ДНИ)</span>
+          <span class="llm-pill">ТОКЕНИ &amp; ПЪЛНИ ИНСТРУКЦИИ</span>
+        </div>
+
+        <div class="llm-desc">
+          Пакетът за <strong>50 EUR</strong> пуска автоматизиран рекламен поток <strong>24/7 (365 дни)</strong> (при активен сървър/машина). Важно: <strong>не всички ботове работят еднакво</strong> — всяка платформа има свои токени/достъпи и лимити.
+        </div>
+
+        <div class="llm-grid">
+          <label class="llm-field">
+            <span>Telegram Bot Token (@BotFather):</span>
+            <input id="tokTelegram" class="mini-inp-dark" type="text" placeholder="123456:ABC-DEF... (или ще го добавиш на машината)">
+          </label>
+          <label class="llm-field">
+            <span>Gmail (App Password / SMTP / OAuth Token):</span>
+            <input id="tokGmail" class="mini-inp-dark" type="text" placeholder="gmail@domain.com / app-password-or-token">
+          </label>
+        </div>
+
+        <div class="llm-grid">
+          <label class="llm-field">
+            <span>Facebook (Page / App Access Token):</span>
+            <input id="tokFacebook" class="mini-inp-dark" type="text" placeholder="EAAG... token за страница/приложение">
+          </label>
+          <label class="llm-field">
+            <span>Discord (Bot Token от Developer Portal):</span>
+            <input id="tokDiscord" class="mini-inp-dark" type="text" placeholder="MTIz... discord bot token">
+          </label>
+        </div>
+
+        <div class="llm-grid">
+          <label class="llm-field">
+            <span>WhatsApp (Cloud API Token / Session ID):</span>
+            <input id="tokWhatsapp" class="mini-inp-dark" type="text" placeholder="EAAB... / instance-id">
+          </label>
+          <label class="llm-field">
+            <span>Име на клиент / профил на машината:</span>
+            <input id="clientProfileName" class="mini-inp-dark" type="text" value="client-50eur-247">
+          </label>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <button id="btnOpenClientGuide" class="preset-chip" type="button">Пълни инструкции за клиента (всички ботове)</button>
+          <button id="btnDownloadClientPack" class="btn-chip active" type="button">Свали инструкция + конфиг за машината</button>
+        </div>
+      </div>
+
       <button id="btnGenerateSite" class="btn-main" type="button">GENERATE MY WEBSITE</button>
       <div id="flowStatus" class="flow-status"></div>
     </section>
@@ -243,6 +293,25 @@
         <p><strong>1. Живо демо от машината / Full Stack Dev Port:</strong> Правиш сайта/модула на момента, пускаш го през Full Stack Dev Port и даваш временен линк на клиента да види как работи на живо с неговите цветове и ниша.</p>
         <p><strong>2. Моментът на „порадването“:</strong> Клиентът вижда готов резултат (AL автоматизация, строителство, пътна помощ, бот или маркетплейс) вместо празни обещания.</p>
         <p><strong>3. Затваряне на сделката и плащания:</strong> Като изтече пробният прозорец или иска постоянен хостинг / Tor build, минава през избрания метод — като карти/банки/крипто/PayPal/Revolut/EasyPay изискват официална верификация, а единственият поток без такава верификация е през Telegram бот → Keeper след 22 дни.</p>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="clientGuideModal" class="modal-backdrop" style="display:none;">
+    <div class="modal-card" style="max-width:740px;max-height:86vh;overflow-y:auto;">
+      <div class="modal-head">
+        <h2>Пълни инструкции за клиента — 50 EUR Рекламен бот 24/7 (365 дни)</h2>
+        <button id="btnCloseClientGuide" class="btn-chip" type="button">Затвори</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Защо не всички ботове работят еднакво?</strong> Всяка мрежа има отделно API, правила за честота на съобщенията и различен начин за автентикация. За да работи 24/7 (365 дни), конфигурацията стои на машина/сървър с автоматичен рестарт при срив.</p>
+        <p><strong>1. Telegram:</strong> Създаваш бот през <code>@BotFather</code>, взимаш <code>Bot Token</code>, добавяш бота/акаунта в целевите групи (до 3 пускания на ден в 1–5000 групи по ключови думи за бизнеса) и слагаш токена в конфигурацията на машината.</p>
+        <p><strong>2. Gmail:</strong> Не ползва обикновен „бот токен“ — настройва се с <code>App Password</code> / <code>OAuth2</code> или <code>SMTP</code>, с лимит до 500 писма на 24 часа по зададена аудитория и нови 500 на следващия ден (препоръчително с интервали, за да не попада в спам).</p>
+        <p><strong>3. Facebook:</strong> Изисква валиден <code>Access Token</code> (страница/приложение) и спазване на лимитите на платформата, за да не се ограничава профилът или страницата.</p>
+        <p><strong>4. Discord:</strong> Взимаш <code>Bot Token</code> от Discord Developer Portal, каниш бота в сървъра с права за писане в нужните канали и го записваш в конфигурацията на машината.</p>
+        <p><strong>5. WhatsApp:</strong> Връзва се през <code>WhatsApp Business API Token</code> / сесия за автоматични отговори и известия към контакти.</p>
+        <p><strong>Как се програмира на машината:</strong> Записваш токените в защитен конфиг файл (напр. <code>config/bots-client.json</code> или <code>.env</code> — никога не ги качваш публично в Git), стартираш worker скрипта под <code>systemd</code> или <code>PM2</code>, за да върти 24/7 (365 дни), и следиш логовете.</p>
       </div>
     </div>
   </div>
