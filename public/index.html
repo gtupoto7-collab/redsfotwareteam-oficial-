@@ -3,46 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RED SOFTWARE TEAM — AUTO BUILDER AI | One Click. One Idea. Complete Software.</title>
-  <meta name="description" content="RED SOFTWARE TEAM — AUTO BUILDER AI: автоматизирана фабрика за сайтове, уеб и мобилни приложения, AI Canvas и Auto Publish.">
+  <title>RED SOFTWARE TEAM — ONE-CLICK READY</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="/" class="brand" data-route="/">
-        <span class="brand-mark" aria-hidden="true">R</span>
-        <span class="brand-text">
-          <strong>RED SOFTWARE TEAM</strong>
-          <small>AUTO BUILDER AI • ONE CLICK. ONE IDEA. COMPLETE SOFTWARE.</small>
-        </span>
-      </a>
-
-      <nav class="main-nav" aria-label="Основна навигация">
-        <a href="/" class="nav-link" data-route="/">Auto Builder</a>
-        <a href="/divisions" class="nav-link" data-route="/divisions">Divisions</a>
-        <a href="/marauder-ai" class="nav-link" data-route="/marauder-ai">MARAUDER-AI</a>
-        <a href="/projects" class="nav-link" data-route="/projects">Projects</a>
-        <a href="/company" class="nav-link" data-route="/company">Company</a>
-        <a href="/contact" class="nav-link nav-cta" data-route="/contact">Order / Contact</a>
+  <header class="top">
+    <div class="wrap top-row">
+      <div class="logo"><strong>RED SOFTWARE TEAM</strong> <span>ONE-CLICK READY</span></div>
+      <nav class="nav">
+        <a href="#gen">Генератор</a>
+        <a href="#contact">Контакт</a>
       </nav>
     </div>
   </header>
 
-  <main id="appMount" class="app-mount" aria-live="polite"></main>
+  <main class="wrap main" id="gen">
+    <section class="box">
+      <div class="box-head">
+        <div>
+          <h1>ONE-CLICK READY</h1>
+          <p class="sub" style="margin-bottom:0;">Натискаш бутона, без обяснения — веднага готов продукт, отваряне на живо и сваляне.</p>
+        </div>
+        <label style="display:inline-flex;align-items:center;gap:8px;font-size:0.86rem;cursor:pointer;color:#e5e7eb;">
+          <input id="watchAssembleToggle" type="checkbox" style="width:auto;margin:0;">
+          <span>Гледай как го сглобява</span>
+        </label>
+      </div>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-col">
-        <strong>RED SOFTWARE TEAM — AUTO BUILDER AI</strong>
-        <p>One Click. One Idea. Complete Software.</p>
+      <textarea id="promptBox" placeholder="Напиши какво искаш да излезе готово..."></textarea>
+
+      <div class="row">
+        <select id="kindSelect">
+          <option value="auto">Автоматично от текста</option>
+          <option value="saas">AI / Софтуерна платформа</option>
+          <option value="shop">Онлайн магазин (количка)</option>
+          <option value="app">Уеб инструмент (задачи)</option>
+          <option value="portfolio">Портфолио / Услуги</option>
+        </select>
+
+        <select id="accentSelect">
+          <option value="#dc2638">Червен акцент (#dc2638)</option>
+          <option value="#2563eb">Син акцент (#2563eb)</option>
+          <option value="#16a34a">Зелен акцент (#16a34a)</option>
+          <option value="#d97706">Кехлибарен акцент (#d97706)</option>
+        </select>
+
+        <button id="btnOneClickReady" class="btn primary" type="button">ONE-CLICK READY</button>
+        <button id="btnOpenLive" class="btn secondary" type="button">ОТВОРИ НА ЖИВО</button>
+        <button id="btnDownloadAll" class="btn secondary" type="button">СВАЛИ ПРОЕКТА</button>
       </div>
-      <div class="footer-col">
-        <span>MARAUDER-AI • RED AUTO BUILDER • RED CLOUD • RED MARKETPLACE</span>
-        <span>Тел.: <a href="tel:0879813928">0879 813 928</a></span>
+
+      <div id="statusMsg" class="status"></div>
+      <div id="assembleFeed" style="display:none;margin-top:10px;padding:10px 12px;background:#090b0f;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.78rem;color:#9ca3af;max-height:130px;overflow-y:auto;"></div>
+    </section>
+
+    <section class="grid2">
+      <div class="box">
+        <div class="box-head">
+          <h2>Готов продукт (визуализация)</h2>
+          <span id="badgeInfo" class="badge">Готово</span>
+        </div>
+        <iframe id="liveFrame" class="preview-iframe" title="Ready Generated Product"></iframe>
       </div>
-    </div>
-  </footer>
+
+      <div class="box">
+        <div class="box-head">
+          <h2>Код на продукта</h2>
+          <div class="tabs">
+            <button class="tab active" data-f="index.html" type="button">index.html</button>
+            <button class="tab" data-f="style.css" type="button">style.css</button>
+            <button class="tab" data-f="app.js" type="button">app.js</button>
+          </div>
+        </div>
+        <textarea id="codeBox" class="code-box" spellcheck="false"></textarea>
+        <div class="row" style="margin-top:10px;">
+          <button id="btnApplyCode" class="btn secondary" type="button">Приложи промяната в кода</button>
+          <button id="btnDownloadFile" class="btn ghost" type="button">Свали текущия файл</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="box" id="contact" style="margin-top:20px;">
+      <h2>Изпрати запитване</h2>
+      <form id="contactForm" class="cform">
+        <div class="row">
+          <input id="cName" type="text" placeholder="Име" required>
+          <input id="cEmail" type="email" placeholder="Имейл" required>
+        </div>
+        <textarea id="cMsg" placeholder="Съобщение..." style="min-height:80px;" required></textarea>
+        <button class="btn primary" type="submit">Изпрати</button>
+        <div id="cStatus" class="status"></div>
+      </form>
+    </section>
+  </main>
 
   <script src="app.js" defer></script>
 </body>
