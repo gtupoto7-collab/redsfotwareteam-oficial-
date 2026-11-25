@@ -1,97 +1,136 @@
 const BIZ_TEMPLATES = [
   {
     id: "roadside",
-    name: "Putna mosht / Avtopomosh",
-    defaultTitle: "PUTNA MOSHT 24/7 — BULGARIA",
-    defaultCity: "Pernik • Sofiq • Magistrali",
+    name: "Пътна помощ / Автопомощ",
+    defaultTitle: "ПЪТНА МОЩ 24/7 — БЪЛГАРИЯ",
+    defaultCity: "Перник • София • Магистрали",
     services: [
-      { title: "Repatrak & Transport", desc: "Buzro natovarvane na leki koli, dzipove i busove." },
-      { title: "Podavane na tok & Gumi", desc: "Start na akumulator, smqna na guma i dostavka na gorivo." },
-      { title: "Izvazhdane ot kanavki", desc: "Tezhka tehnika i vadenie pri tezhki putni usloviq." }
+      { title: "Репатрак и транспорт", desc: "Бързо и безопасно натоварване на леки автомобили, джипове и ванове." },
+      { title: "Подаване на ток и гуми", desc: "Стартов ток при паднал акумулатор, смяна на гума и доставка на гориво." },
+      { title: "Изваждане при тежки условия", desc: "Професионална намеса при канавки, кал, сняг и аварирали превозни средства." }
     ],
     photos: [
-      "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=80"
+      "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1000&q=85",
+      "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1000&q=85"
     ]
   },
   {
     id: "construction",
-    name: "Stroitelstvo & Remonti",
-    defaultTitle: "STROITELEN CENTUR — BG",
-    defaultCity: "Pernik & Sofiq Oblast",
+    name: "Строителство и ремонти",
+    defaultTitle: "СТРОИТЕЛЕН ЦЕНТЪР — БГ",
+    defaultCity: "Перник & Софийска област",
     services: [
-      { title: "Grub stroezh & Pokrivi", desc: "Stabilni konstrukcii, zidariq i pokrivni sistemi." },
-      { title: "Vutreshni remonti & Zamazki", desc: "Gipsokarton, zamazki, shpaklovki i podovi naglasi." },
-      { title: "Toplolizolaciq & Fasadi", desc: "Energiina efektivnost i izdruzlivi fasadni resheniq." }
+      { title: "Груб строеж и покриви", desc: "Стабилни конструкции, зидария, кофраж и надеждни покривни системи." },
+      { title: "Вътрешни ремонти и замазки", desc: "Гипсокартон, шпакловки, машинни замазки и прецизни довършителни работи." },
+      { title: "Топлоизолация и фасади", desc: "Енергийна ефективност и дълготрайни фасадни покрития." }
     ],
     photos: [
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80"
+      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1000&q=85",
+      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1000&q=85"
     ]
   },
   {
     id: "autoservice",
-    name: "Avtoserviz & Detailing",
+    name: "Автосервиз и детайлинг",
     defaultTitle: "PRO AUTO LAB BULGARIA",
-    defaultCity: "Sofiq • Pernik",
+    defaultCity: "София • Перник",
     services: [
-      { title: "Diagnostika & Hodova chast", desc: "Kompyuturna diagnostika, spirachki i okachvane." },
-      { title: "Polirane & Keramika", desc: "Zashitni pokritiq, glanc i vutreshen detailing." },
-      { title: "Masla, filtri & Obzluzhvane", desc: "Pulen redoven servis za avtomobila." }
+      { title: "Диагностика и ходова част", desc: "Компютърна диагностика, спирачни системи, окачване и реглаж." },
+      { title: "Полиране и керамика", desc: "Многоетапно полиране, защитни покрития и интериорен детайлинг." },
+      { title: "Обслужване и масла", desc: "Смяна на масла, филтри и пълна техническа профилактика." }
     ],
     photos: [
-      "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=900&q=80"
+      "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1000&q=85",
+      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1000&q=85"
     ]
   },
   {
     id: "shop",
-    name: "Onlain Magazin BG",
+    name: "Онлайн магазин БГ",
     defaultTitle: "BG MARKET PRO",
-    defaultCity: "Dostavka v cqlata strana",
+    defaultCity: "Доставка в цяла България",
     services: [
-      { title: "Katalog s nalichnosti", desc: "Burzo tursene, filtrirane i poruchka." },
-      { title: "Kurierrska dostavka", desc: "Ekspresna dostavka s pregled i test." },
-      { title: "Promocii & Paketi", desc: "Komplekti i specialni oferti za klienti." }
+      { title: "Подбран каталог", desc: "Ясни категории, актуални наличности и прозрачни цени." },
+      { title: "Експресна доставка", desc: "Бърза куриерска доставка с опция за преглед и тест." },
+      { title: "Пакетни оферти", desc: "Изгодни комплекти и специални условия за редовни клиенти." }
     ],
     photos: [
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=900&q=80"
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1000&q=85",
+      "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1000&q=85"
+    ]
+  },
+  {
+    id: "hospitality",
+    name: "Ресторант и заведения",
+    defaultTitle: "LA TABLE & LOUNGE",
+    defaultCity: "София • Пловдив • Варна",
+    services: [
+      { title: "Авторско меню", desc: "Подбрани ястия, свежи съставки и балансирани вкусове." },
+      { title: "Резервации и събития", desc: "Организация на частни вечери, фирмени срещи и специални поводи." },
+      { title: "Доставка до врата", desc: "Бързо и грижливо опаковане за пълно запазване на качеството." }
+    ],
+    photos: [
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=85",
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1000&q=85"
     ]
   },
   {
     id: "ai-tech",
-    name: "AI & IT Kompaniq",
-    defaultTitle: "RED SOFTWARE TEAM — AI",
-    defaultCity: "Bulgaria • Global",
+    name: "AI и софтуерна компания",
+    defaultTitle: "RED SOFTWARE TEAM",
+    defaultCity: "България • Международни проекти",
     services: [
-      { title: "Ueb & Prilojeniq", desc: "Saitove, platformi i avtomatizirani sistemi." },
-      { title: "AI Avtomatizacii", desc: "Botove, asistenti i obrabotka na danni." },
-      { title: "Kibersigurnost & Hosting", desc: "Zashtita, stabilnost i upravlenie na proekti." }
+      { title: "Уеб системи и приложения", desc: "Модерни уеб платформи, интерфейси и сървърни API услуги." },
+      { title: "AI автоматизация", desc: "Интелигентни потоци, асистенти и автоматизация на процеси." },
+      { title: "Сигурност и хостинг", desc: "Надеждна инфраструктура, проверки и устойчива работа." }
     ],
     photos: [
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80",
-      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=900&q=80"
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=85",
+      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=85"
     ]
   }
 ];
 
 const PALETTES = {
-  "cyber-red": { primary: "#ff1e42", glow: "rgba(255, 30, 66, 0.35)", bg: "#05070d", card: "#0d1220" },
-  "electric-cyan": { primary: "#00e5ff", glow: "rgba(0, 229, 255, 0.32)", bg: "#040914", card: "#0a1628" },
-  "toxic-emerald": { primary: "#10b981", glow: "rgba(16, 185, 129, 0.32)", bg: "#040d0a", card: "#0a1d17" },
-  "royal-gold": { primary: "#f59e0b", glow: "rgba(245, 158, 11, 0.32)", bg: "#0c0905", card: "#1c150a" }
+  "crimson-hd": {
+    primary: "#ef233c",
+    glow: "rgba(239, 35, 60, 0.28)",
+    bg: "#07090e",
+    surface: "#101624",
+    border: "rgba(239, 35, 60, 0.45)"
+  },
+  "cobalt-hd": {
+    primary: "#38bdf8",
+    glow: "rgba(56, 189, 248, 0.26)",
+    bg: "#060a12",
+    surface: "#0e1729",
+    border: "rgba(56, 189, 248, 0.45)"
+  },
+  "emerald-hd": {
+    primary: "#10b981",
+    glow: "rgba(16, 185, 129, 0.26)",
+    bg: "#050c09",
+    surface: "#0c1d17",
+    border: "rgba(16, 185, 129, 0.45)"
+  },
+  "amber-hd": {
+    primary: "#f59e0b",
+    glow: "rgba(245, 158, 11, 0.26)",
+    bg: "#0c0905",
+    surface: "#1b1409",
+    border: "rgba(245, 158, 11, 0.45)"
+  }
 };
 
-const paletteOrder = Object.keys(PALETTES);
+const paletteKeys = Object.keys(PALETTES);
 
 const state = {
   bizId: "roadside",
-  title: "PUTNA MOSHT 24/7 — BULGARIA",
-  city: "Pernik • Sofiq • Magistrali",
-  paletteKey: "cyber-red",
+  title: "ПЪТНА МОЩ 24/7 — БЪЛГАРИЯ",
+  city: "Перник • София • Магистрали",
+  paletteKey: "crimson-hd",
   variantNum: 1,
-  note: "24/7 reakciq, burz priem na obazhdaniq i zayavki.",
+  note: "Денонощна реакция, професионално обслужване и ясни условия за клиенти.",
   photos: [...BIZ_TEMPLATES[0].photos],
   files: {},
   activeFile: "index.html",
@@ -122,55 +161,70 @@ function getCurrentBiz() {
   return BIZ_TEMPLATES.find((b) => b.id === state.bizId) || BIZ_TEMPLATES[0];
 }
 
+function applyRootPalette(key) {
+  const pal = PALETTES[key] || PALETTES["crimson-hd"];
+  document.documentElement.style.setProperty("--accent", pal.primary);
+  document.documentElement.style.setProperty("--accent-glow", pal.glow);
+}
+
 function compileProject() {
   const biz = getCurrentBiz();
-  const pal = PALETTES[state.paletteKey] || PALETTES["cyber-red"];
+  const pal = PALETTES[state.paletteKey] || PALETTES["crimson-hd"];
+  applyRootPalette(state.paletteKey);
 
   const css = `* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   background: ${pal.bg};
   color: #f8fafc;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  padding: 20px;
-  background-image: radial-gradient(circle at 20% 0%, ${pal.glow}, transparent 45%);
-}
-.shell { max-width: 1120px; margin: 0 auto; }
-.hero {
-  background: ${pal.card};
-  border: 1px solid ${pal.primary};
-  box-shadow: 0 0 28px ${pal.glow};
-  border-radius: 14px;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
   padding: 24px;
+  background-image: radial-gradient(circle at 18% 0%, ${pal.glow}, transparent 42%);
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+.hero {
+  background: linear-gradient(145deg, ${pal.surface}, rgba(10, 14, 24, 0.96));
+  border: 1px solid ${pal.border};
+  box-shadow: 0 18px 42px ${pal.glow};
+  border-radius: 18px;
+  padding: 28px;
   margin-bottom: 18px;
 }
-.tag { color: ${pal.primary}; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
-h1 { font-size: 2rem; margin: 6px 0 8px; }
-.sub { color: #cbd5e1; font-size: 0.96rem; margin-bottom: 14px; }
-.cta-btn {
-  background: ${pal.primary}; color: #05070c; border: 0; border-radius: 8px;
-  padding: 10px 18px; font-weight: 900; cursor: pointer; font-size: 0.88rem;
+.kicker {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: ${pal.primary};
+  margin-bottom: 8px;
 }
-.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+h1 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
+.sub { color: #cbd5e1; font-size: 0.96rem; max-width: 720px; margin-bottom: 18px; }
+.cta {
+  background: ${pal.primary}; color: #ffffff; border: 0; border-radius: 10px;
+  padding: 11px 20px; font-size: 0.86rem; font-weight: 800; cursor: pointer;
+}
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
 .card {
-  background: ${pal.card}; border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 12px; padding: 16px;
+  background: ${pal.surface}; border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 18px;
 }
-.card h3 { color: ${pal.primary}; font-size: 1.02rem; margin-bottom: 6px; }
-.card p { color: #cbd5e1; font-size: 0.86rem; }
-.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
-.gallery img {
-  width: 100%; height: 170px; object-fit: cover; border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.16);
+.card h3 { color: ${pal.primary}; font-size: 1rem; margin-bottom: 6px; }
+.card p { color: #cbd5e1; font-size: 0.88rem; }
+.media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.media-grid img {
+  width: 100%; height: 190px; object-fit: cover; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.14);
 }
-@media (max-width: 820px) { .grid3 { grid-template-columns: 1fr; } }`;
+@media (max-width: 820px) { .cards { grid-template-columns: 1fr; } }`;
 
   const cardsHtml = biz.services
     .map((s) => `<div class="card"><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p></div>`)
-    .join("\n      ");
+    .join("\n    ");
 
-  const galleryHtml = state.photos
-    .map((src, i) => `<img src="${esc(src)}" alt="Snimka ${i + 1} za ${esc(state.title)}">`)
-    .join("\n      ");
+  const imgsHtml = state.photos
+    .map((src, i) => `<img src="${esc(src)}" alt="${esc(state.title)} — кадър ${i + 1}">`)
+    .join("\n    ");
 
   const html = `<!DOCTYPE html>
 <html lang="bg">
@@ -181,30 +235,30 @@ h1 { font-size: 2rem; margin: 6px 0 8px; }
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="shell">
+  <div class="wrap">
     <section class="hero">
-      <div class="tag">${esc(biz.name)} • ${esc(state.city)} • V${state.variantNum}</div>
+      <div class="kicker">${esc(biz.name)} • ${esc(state.city)} • HD V${state.variantNum}</div>
       <h1>${esc(state.title)}</h1>
       <p class="sub">${esc(state.note)}</p>
-      <button id="actionPing" class="cta-btn" type="button">ZAQVI USLUGA / KONTAKT</button>
-      <div id="pingOut" style="margin-top:10px;font-size:0.86rem;color:#e2e8f0;"></div>
+      <button id="ctaBtn" class="cta" type="button">СВЪРЖИ СЕ С НАС</button>
+      <div id="ctaOut" style="margin-top:12px;font-size:0.88rem;color:#e2e8f0;"></div>
     </section>
 
-    <section class="grid3">
+    <section class="cards">
       ${cardsHtml}
     </section>
 
-    <section class="gallery">
-      ${galleryHtml}
+    <section class="media-grid">
+      ${imgsHtml}
     </section>
   </div>
   <script src="app.js"></script>
 </body>
 </html>`;
 
-  const js = `document.getElementById("actionPing")?.addEventListener("click", () => {
-  const el = document.getElementById("pingOut");
-  if (el) el.textContent = "Aktivna zayavka za ${esc(state.title)} (${esc(state.city)}) — tel. 0879 813 928.";
+  const js = `document.getElementById("ctaBtn")?.addEventListener("click", () => {
+  const out = document.getElementById("ctaOut");
+  if (out) out.textContent = "Активна връзка за ${esc(state.title)} (${esc(state.city)}) — тел. 0879 813 928.";
 });`;
 
   state.files = {
@@ -213,14 +267,12 @@ h1 { font-size: 2rem; margin: 6px 0 8px; }
     "app.js": js
   };
   state.lastPreviewUrl = "";
-  variantLabel.textContent = `Variant #${state.variantNum} (${state.paletteKey})`;
+  variantLabel.textContent = `Вариант #${state.variantNum} • ${state.paletteKey}`;
   codeBox.value = state.files[state.activeFile] || "";
 
-  const standalone = html
+  liveFrame.srcdoc = html
     .replace(/<link[^>]*href=["']style\.css["'][^>]*>/i, `<style>${css}</style>`)
     .replace(/<script[^>]*src=["']app\.js["'][^>]*><\/script>/i, `<script>${js}<\/script>`);
-
-  liveFrame.srcdoc = standalone;
 }
 
 function renderBizTabs() {
@@ -239,38 +291,38 @@ function renderBizTabs() {
       cityInp.value = state.city;
       renderBizTabs();
       compileProject();
-      statusMsg.textContent = `Zareden shablon: ${b.name}`;
+      statusMsg.textContent = `Зареден шаблон: ${b.name}`;
     });
     bizTabsEl.appendChild(btn);
   });
 }
 
-function syncInputsToState() {
+function syncInputs() {
   if (titleInp.value.trim()) state.title = titleInp.value.trim();
   if (cityInp.value.trim()) state.city = cityInp.value.trim();
   if (promptBox.value.trim()) state.note = promptBox.value.trim();
   state.paletteKey = paletteSel.value;
 }
 
-titleInp.addEventListener("input", () => { syncInputsToState(); compileProject(); });
-cityInp.addEventListener("input", () => { syncInputsToState(); compileProject(); });
-promptBox.addEventListener("input", () => { syncInputsToState(); compileProject(); });
-paletteSel.addEventListener("change", () => { syncInputsToState(); compileProject(); });
+titleInp.addEventListener("input", () => { syncInputs(); compileProject(); });
+cityInp.addEventListener("input", () => { syncInputs(); compileProject(); });
+promptBox.addEventListener("input", () => { syncInputs(); compileProject(); });
+paletteSel.addEventListener("change", () => { syncInputs(); compileProject(); });
 
 document.getElementById("btnBoostVisual")?.addEventListener("click", () => {
-  syncInputsToState();
-  const nextIdx = (paletteOrder.indexOf(state.paletteKey) + 1) % paletteOrder.length;
-  state.paletteKey = paletteOrder[nextIdx];
+  syncInputs();
+  const next = (paletteKeys.indexOf(state.paletteKey) + 1) % paletteKeys.length;
+  state.paletteKey = paletteKeys[next];
   paletteSel.value = state.paletteKey;
   state.variantNum += 1;
   compileProject();
-  statusMsg.textContent = `Nova viziq #${state.variantNum} s cvetova shema ${state.paletteKey}.`;
+  statusMsg.textContent = `Нова HD визия #${state.variantNum} (${state.paletteKey}).`;
 });
 
 document.getElementById("btnOneClickReady")?.addEventListener("click", () => {
-  syncInputsToState();
+  syncInputs();
   compileProject();
-  statusMsg.textContent = "ONE-CLICK READY — produktut e gotov na jivo i za svalqne.";
+  statusMsg.textContent = "ONE-CLICK READY — проектът е готов за преглед и сваляне.";
 });
 
 document.getElementById("btnAddPhoto")?.addEventListener("click", () => {
@@ -279,7 +331,7 @@ document.getElementById("btnAddPhoto")?.addEventListener("click", () => {
     state.photos.unshift(url);
     photoUrlInp.value = "";
     compileProject();
-    statusMsg.textContent = "Dobavena e nova snimka kum vizijata.";
+    statusMsg.textContent = "Добавена е снимка към проекта.";
   }
 });
 
@@ -291,7 +343,7 @@ photoFileInp.addEventListener("change", () => {
     if (typeof reader.result === "string") {
       state.photos.unshift(reader.result);
       compileProject();
-      statusMsg.textContent = `Kachena snimka: ${file.name}`;
+      statusMsg.textContent = `Качена снимка: ${file.name}`;
     }
   };
   reader.readAsDataURL(file);
@@ -314,7 +366,7 @@ document.getElementById("btnApplyCode")?.addEventListener("click", () => {
   liveFrame.srcdoc = html
     .replace(/<link[^>]*href=["']style\.css["'][^>]*>/i, `<style>${css}</style>`)
     .replace(/<script[^>]*src=["']app\.js["'][^>]*><\/script>/i, `<script>${js}<\/script>`);
-  statusMsg.textContent = `Prilojeni promeni ot ${state.activeFile}.`;
+  statusMsg.textContent = `Приложени промени от ${state.activeFile}.`;
 });
 
 document.getElementById("btnDownloadFile")?.addEventListener("click", () => {
@@ -326,7 +378,7 @@ document.getElementById("btnDownloadFile")?.addEventListener("click", () => {
   a.download = state.activeFile;
   a.click();
   URL.revokeObjectURL(url);
-  statusMsg.textContent = `Svalen fail: ${state.activeFile}`;
+  statusMsg.textContent = `Свален файл: ${state.activeFile}`;
 });
 
 document.getElementById("btnDownloadAll")?.addEventListener("click", () => {
@@ -338,15 +390,15 @@ document.getElementById("btnDownloadAll")?.addEventListener("click", () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${state.bizId}-fullhd.html`;
+  a.download = `${state.bizId}-hd.html`;
   a.click();
   URL.revokeObjectURL(url);
-  statusMsg.textContent = `Svalen gotov sait: ${state.bizId}-fullhd.html`;
+  statusMsg.textContent = `Свален проект: ${state.bizId}-hd.html`;
 });
 
 document.getElementById("btnOpenLive")?.addEventListener("click", async () => {
   compileProject();
-  statusMsg.textContent = "Zapazvane i otvarqne na jivo...";
+  statusMsg.textContent = "Записване и отваряне на живо...";
   try {
     const res = await fetch("/api/generate-save", {
       method: "POST",
@@ -354,12 +406,12 @@ document.getElementById("btnOpenLive")?.addEventListener("click", async () => {
       body: JSON.stringify({ name: state.title, files: state.files })
     });
     const data = await res.json();
-    if (!res.ok || !data.ok || !data.previewUrl) throw new Error(data.error || "Greshka");
+    if (!res.ok || !data.ok || !data.previewUrl) throw new Error(data.error || "Грешка");
     state.lastPreviewUrl = data.previewUrl;
-    statusMsg.textContent = `Otvoreno: ${data.previewUrl}`;
+    statusMsg.textContent = `Отворено: ${data.previewUrl}`;
     window.open(data.previewUrl, "_blank", "noopener,noreferrer");
   } catch (e) {
-    statusMsg.textContent = e.message || "Nema vruzka sus survura.";
+    statusMsg.textContent = e.message || "Няма връзка със сървъра.";
   }
 });
 
@@ -383,8 +435,8 @@ document.getElementById("contactForm")?.addEventListener("submit", async (e) => 
       })
     });
     const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || "Greshka");
-    cStatus.textContent = "Zapitvaneto e izprateno.";
+    if (!res.ok || !data.ok) throw new Error(data.error || "Грешка");
+    cStatus.textContent = "Запитването е изпратено.";
     e.target.reset();
   } catch (err) {
     cStatus.textContent = err.message;
