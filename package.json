@@ -1,17 +1,16 @@
 {
-  "name": "redsoftwareteam",
+  "name": "red-software-team-auto-builder",
   "version": "1.0.0",
-  "description": "Red Software Team Official website",
+  "description": "RED SOFTWARE TEAM — AUTO BUILDER AI & MARAUDER-AI platform",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node -e \"const fs=require('fs'); if(!fs.existsSync('server.js')||!fs.existsSync('public/app.js')||!fs.existsSync('public/index.html')) process.exit(1); console.log('OK');\""
   },
   "dependencies": {
-    "cloudinary": "^1.41.3",
-    "express": "^4.22.3",
-    "mongoose": "^8.3.0",
-    "multer": "^2.5.0",
-    "multer-storage-cloudinary": "^4.0.0",
-    "sqlite3": "^6.0.1"
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -1,85 +1,129 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 43242;
+const PORT = process.env.PORT || 3000;
+const PUBLIC_DIR = path.join(__dirname, "public");
+const DATA_DIR = path.join(__dirname, "data");
+const SUBMISSIONS_FILE = path.join(DATA_DIR, "submissions.json");
 
-const UPLOADS_DIR = path.join(__dirname, 'public', 'uploads');
-const DATA_FILE = path.join(__dirname, 'database.json');
+app.use(express.json({ limit: "2mb" }));
+app.use(express.static(PUBLIC_DIR));
 
-if (!fs.existsSync(UPLOADS_DIR)) {
-    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+function ensureDataDir() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(SUBMISSIONS_FILE)) {
+    fs.writeFileSync(SUBMISSIONS_FILE, "[]", "utf8");
+  }
 }
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, UPLOADS_DIR),
-    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
-});
-const upload = multer({ storage: storage });
-
-let db = { projects: [], orders: [] };
-if (fs.existsSync(DATA_FILE)) {
-    try { db = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')); } catch (e) {}
+function appendSubmission(record) {
+  ensureDataDir();
+  let list = [];
+  try {
+    list = JSON.parse(fs.readFileSync(SUBMISSIONS_FILE, "utf8"));
+    if (!Array.isArray(list)) list = [];
+  } catch (_) {
+    list = [];
+  }
+  list.push(record);
+  fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(list, null, 2), "utf8");
 }
-function saveDB() { fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), 'utf8'); }
 
-// API: Взми всички проекти
-app.get('/api/projects', (req, res) => {
-    res.json(db.projects || []);
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "RED SOFTWARE TEAM — AUTO BUILDER AI",
+    timestamp: new Date().toISOString()
+  });
 });
 
-// API: Качи нов проект със заглавие и файл (снимка/видео)
-app.post('/api/upload', upload.single('mediaFile'), (req, res) => {
-    try {
-        const { title } = req.body;
-        if (!req.file || !title) return res.json({ success: false, error: 'Липсва заглавие или качен файл!' });
+app.post("/api/contact", (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  const email = String(req.body?.email || "").trim();
+  const subject = String(req.body?.subject || "AUTO BUILDER AI").trim();
+  const message = String(req.body?.message || "").trim();
 
-        const filetype = req.file.mimetype.startsWith('video') ? 'video' : 'image';
-        const filename = `/uploads/${req.file.filename}`;
-        const id = Date.now().toString();
+  if (!name || !email || !message) {
+    return res.status(400).json({
+      ok: false,
+      success: false,
+      error: "Моля, попълнете име, имейл и съобщение."
+    });
+  }
 
-        db.projects.unshift({ id, title, filename, filetype, date: new Date().toLocaleString() });
-        saveDB();
+  const record = {
+    id: `sub_${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    name,
+    email,
+    subject,
+    message,
+    projectSnapshot: req.body?.projectSnapshot || null
+  };
 
-        res.json({ success: true });
-    } catch (err) {
-        res.json({ success: false, error: err.message });
-    }
+  try {
+    appendSubmission(record);
+  } catch (err) {
+    return res.status(500).json({
+      ok: false,
+      success: false,
+      error: "Грешка при запис на заявката на сървъра."
+    });
+  }
+
+  return res.status(200).json({
+    ok: true,
+    success: true,
+    id: record.id,
+    message: "Запитването е получено и записано."
+  });
 });
 
-// API: Изтрий проект по ID (включително физическия файл)
-app.delete('/api/projects/:id', (req, res) => {
-    try {
-        const projectId = req.params.id;
-        const projectIndex = db.projects.findIndex(p => p.id === projectId);
-        
-        if (projectIndex === -1) {
-            return res.json({ success: false, error: 'Проектът не е намерен!' });
-        }
+app.post("/api/build", (req, res) => {
+  const { prompt = "", productType = "AI Platform", targetType = "WEBSITE", files = {} } = req.body || {};
+  const fileNames = Object.keys(files);
+  const issues = [];
 
-        const project = db.projects[projectIndex];
-        
-        // Изтриване на физическия файл от паметта, ако съществува
-        if (project.filename) {
-            const filePath = path.join(__dirname, 'public', project.filename);
-            if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-            }
-        }
+  if (!fileNames.includes("index.html")) issues.push("Липсва index.html");
+  if (!fileNames.includes("app.js")) issues.push("Липсва app.js");
+  if (!String(prompt).trim()) issues.push("Липсва входно описание на проекта");
 
-        db.projects.splice(projectIndex, 1);
-        saveDB();
-
-        res.json({ success: true, message: 'Проектът е изтрит успешно!' });
-    } catch (err) {
-        res.json({ success: false, error: err.message });
-    }
+  res.json({
+    ok: true,
+    productType,
+    targetType,
+    fileCount: fileNames.length,
+    files: fileNames,
+    testsPassed: issues.length === 0,
+    issues,
+    verifiedAt: new Date().toISOString()
+  });
 });
 
-app.listen(PORT, () => console.log(`[RED TEAM SERVER RUNNING] http://localhost:${PORT}`));
+app.post("/api/export", (req, res) => {
+  const project = req.body?.project || {};
+  const safeName = String(project.productType || "project")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || "red-software-project";
+
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Content-Disposition", `attachment; filename="${safeName}-bundle.json"`);
+  res.send(JSON.stringify(project, null, 2));
+});
+
+app.get("*", (req, res) => {
+  const indexPath = path.join(PUBLIC_DIR, "index.html");
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  return res.status(404).send("Not found");
+});
+
+app.listen(PORT, () => {
+  console.log(`RED SOFTWARE TEAM server listening on port ${PORT}`);
+});
