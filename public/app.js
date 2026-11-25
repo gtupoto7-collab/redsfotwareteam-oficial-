@@ -34,7 +34,7 @@ function videoBlockHtml() {
       <div class="page-head" style="margin-bottom:8px;padding:12px 14px;">
         <div>
           <h2 style="font-size:1.05rem;color:var(--cyan);">RED-SOFTWARE-TEAM // OFFICIAL VIDEO</h2>
-          <p style="margin:2px 0 0;">Вградено видео директно в платформата.</p>
+          <p style="margin:2px 0 0;">Вградено видео в главната страница.</p>
         </div>
         <a href="${YT_VIDEO_URL}" target="_blank" rel="noopener noreferrer" class="btn-neon-cyan">ОТВОРИ В YOUTUBE</a>
       </div>
@@ -325,8 +325,6 @@ const config = {
         </div>
       </div>
     </div>
-
-    ${videoBlockHtml()}
   `;
 
   startCanvasViz();
