@@ -1070,3 +1070,79 @@ window.playSoftwareClip = function (sw) {
 };
 
 applyMaxHdToCurrentProject();
+
+let scriptAnimInterval = null;
+
+function ensureScriptMotionWidget() {
+  const codePanel = document.querySelector(".code-panel");
+  if (!codePanel || document.getElementById("scriptMotionWidget")) return;
+
+  const widget = document.createElement("div");
+  widget.id = "scriptMotionWidget";
+  widget.className = "script-motion-box";
+  widget.innerHTML = `
+    <div class="script-motion-head">
+      <span id="scriptMotionFile">SCRIPT ENGINE • app.js</span>
+      <span id="scriptMotionCycle">CYCLE #1</span>
+    </div>
+    <div class="script-motion-bar"><div class="script-motion-fill"></div></div>
+    <div id="scriptMotionLine" class="script-motion-line">Iniciralizirane na skriptoviq potok...</div>
+  `;
+
+  const actions = codePanel.querySelector(".code-actions");
+  codePanel.insertBefore(widget, actions || null);
+}
+
+function startScriptMotionLoop() {
+  ensureScriptMotionWidget();
+  if (scriptAnimInterval) {
+    clearInterval(scriptAnimInterval);
+    scriptAnimInterval = null;
+  }
+
+  let cycle = 1;
+  scriptAnimInterval = setInterval(() => {
+    const fileLabel = document.getElementById("scriptMotionFile");
+    const cycleLabel = document.getElementById("scriptMotionCycle");
+    const lineLabel = document.getElementById("scriptMotionLine");
+    const rawCode = (codeBox && codeBox.value) || "";
+    const lines = rawCode
+      .split("\n")
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0);
+
+    if (fileLabel) fileLabel.textContent = `SCRIPT STREAM • ${state.activeFile || "app.js"}`;
+    if (cycleLabel) cycleLabel.textContent = `CYCLE #${cycle}`;
+    if (lineLabel) {
+      if (lines.length > 0) {
+        const picked = lines[(cycle - 1) % lines.length];
+        lineLabel.textContent = `> ${picked}`;
+      } else {
+        lineLabel.textContent = `> Running script tick #${cycle}`;
+      }
+    }
+    cycle += 1;
+  }, 700);
+}
+
+document.querySelectorAll(".ftab").forEach((t) => {
+  t.addEventListener("click", () => {
+    startScriptMotionLoop();
+  });
+});
+
+const origCompileRich = window.compileRichGeneratorOutput;
+if (typeof origCompileRich === "function") {
+  window.compileRichGeneratorOutput = function () {
+    origCompileRich();
+    if (state.files && state.files["app.js"]) {
+      state.files["app.js"] = `${state.files["app.js"]}\nsetInterval(() => { const s = document.getElementById("ctaOut"); if (s && !s.textContent) s.dataset.pulse = String(Date.now()); }, 2000);`;
+      if (state.activeFile === "app.js" && codeBox) {
+        codeBox.value = state.files["app.js"];
+      }
+    }
+    startScriptMotionLoop();
+  };
+}
+
+startScriptMotionLoop();
