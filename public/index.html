@@ -3,23 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RED AUTO BUILDER — AL &amp; ПОЛК / МОДУЛИ</title>
+  <title>RED AUTO BUILDER — FULL STACK DEV PORT &amp; AL</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="wrap">
     <section id="startScreen" class="start-card">
-      <div class="start-badge">RED AUTO BUILDER • AL ENGINE</div>
+      <div class="start-badge">RED AUTO BUILDER • FULL STACK DEV PORT</div>
       <h1>Какво искаш да създадем?</h1>
       <textarea id="promptBox" rows="3" placeholder="Пример: Строителство и Пътна помощ като AL софтуер, автоматизация и решения с визия, модули и плащания."></textarea>
 
       <div class="type-row" id="productTypeRow">
         <button class="type-chip active" type="button" data-ptype="AL — Автоматизация и решения">AL — Автоматизация и решения</button>
+        <button class="type-chip" type="button" data-ptype="SOFTWARE">SOFTWARE</button>
+        <button class="type-chip" type="button" data-ptype="FULL LLM JIV MODEL">FULL LLM JIV MODEL</button>
+        <button class="type-chip" type="button" data-ptype="FULL STACK DEV PORT">FULL STACK DEV PORT</button>
         <button class="type-chip" type="button" data-ptype="BOT">BOT</button>
         <button class="type-chip" type="button" data-ptype="FULL APP">FULL APP</button>
         <button class="type-chip" type="button" data-ptype="WEB SITE">WEB SITE</button>
         <button class="type-chip" type="button" data-ptype="WEBMARKETPLACE">WEBMARKETPLACE</button>
         <button class="type-chip" type="button" data-ptype="TOOLS (KALI LINUX / PYTHON / JS)">TOOLS (KALI LINUX / PYTHON / JS)</button>
+      </div>
+
+      <div class="biz-promo-box">
+        <div class="biz-promo-info">
+          <div class="biz-promo-title">Реклама на бизнеса — как работи „врътката“?</div>
+          <div class="biz-promo-sub">Показваш на клиента работещ сайт/демо от машината, оставяш го да му се порадва и при изтичане или заявка минавате към реална сделка и хостинг.</div>
+        </div>
+        <button id="btnOpenVrutkaModal" class="preset-chip" type="button">Как става врътката?</button>
+      </div>
+
+      <div class="llm-box" id="llmBox">
+        <div class="llm-top">
+          <span class="llm-title">FULL LLM JIV MODEL — AKU2.3 SDE (offline.live локално)</span>
+          <span class="llm-pill" id="llmLevelBadge">Ниво: AKU2.3 SDE • До 8.3 MEGATRON</span>
+        </div>
+        <div class="llm-grid">
+          <label class="llm-field">
+            <span>Ниво на развитие (до 8.3 MEGATRON награждане):</span>
+            <select id="llmLevelSelect">
+              <option value="AKU2.3 SDE (Базов жив AL)">AKU2.3 SDE (Базов жив AL)</option>
+              <option value="AKU2.3 SDE (Много говорещ offline.live)" selected>AKU2.3 SDE (Много говорещ offline.live)</option>
+              <option value="5.0 Advanced AL Core">5.0 Advanced AL Core</option>
+              <option value="7.2 High Autonomy AL">7.2 High Autonomy AL</option>
+              <option value="8.3 MEGATRON НАГРАЖДАНЕ">8.3 MEGATRON НАГРАЖДАНЕ</option>
+            </select>
+          </label>
+          <label class="llm-field">
+            <span>Режим / Платформа / Dev Port:</span>
+            <select id="llmTargetSelect">
+              <option value="Full Stack Dev Port (:3000 / :8080)">Full Stack Dev Port (:3000 / :8080)</option>
+              <option value="Android (Офлайн режим)" selected>Android (Офлайн режим)</option>
+              <option value="Конзола">Конзола</option>
+              <option value="Web">Web</option>
+              <option value="iOS">iOS</option>
+            </select>
+          </label>
+        </div>
+        <div class="llm-desc" id="llmStatusText">
+          Ти си AKU2.3 SDE — работещ, жив и много говорещ AL (offline.live локално), готов за Full Stack Dev Port, Конзола, Android офлайн, Web и iOS до ниво 8.3 MEGATRON награждане.
+        </div>
       </div>
 
       <div class="photo-gen-box">
@@ -33,9 +76,8 @@
 
       <div class="presets-row">
         <button class="preset-chip" type="button" data-preset="AL — Автоматизация и решения за Строителство и Пътна помощ 24/7 с модули, табло, звънене и достъп.">Строителство и Пътна помощ (AL)</button>
+        <button class="preset-chip" type="button" data-preset="FULL STACK DEV PORT — frontend, backend API, база и live preview на dev порт.">Full Stack Dev Port сценарий</button>
         <button class="preset-chip" type="button" data-preset="Пълен BOT + FULL APP + WEB SITE пакет за автоматизация и заявки.">BOT + FULL APP + WEB SITE</button>
-        <button class="preset-chip" type="button" data-preset="WEBMARKETPLACE платформа за услуги, инструменти и модули.">WEBMARKETPLACE</button>
-        <button class="preset-chip" type="button" data-preset="TOOLS KALI LINUX PYTHON JS — набор от инструменти, скриптове и конзолни модули.">TOOLS KALI LINUX / PYTHON / JS</button>
       </div>
 
       <div class="pay-box">
@@ -111,6 +153,20 @@
       <div id="publishResult" class="publish-result"></div>
     </section>
   </main>
+
+  <div id="vrutkaModal" class="modal-backdrop" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2>Как става врътката — Реклама на бизнеса &amp; Full Stack Dev Port</h2>
+        <button id="btnCloseVrutkaModal" class="btn-chip" type="button">Затвори</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>1. Живо демо от машината / Full Stack Dev Port:</strong> Правиш сайта/модула на момента, пускаш го през Full Stack Dev Port и даваш временен линк на клиента да види как работи на живо с неговите цветове и ниша.</p>
+        <p><strong>2. Моментът на „порадването“:</strong> Клиентът вижда готов резултат (AL автоматизация, строителство, пътна помощ, бот или маркетплейс) вместо празни обещания.</p>
+        <p><strong>3. Затваряне на сделката и плащания:</strong> Като изтече пробният прозорец или иска постоянен хостинг / Tor build, минава през избрания метод — като карти/банки/крипто/PayPal/Revolut/EasyPay изискват официална верификация, а единственият поток без такава верификация е през Telegram бот → Keeper след 22 дни.</p>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js" defer></script>
 </body>

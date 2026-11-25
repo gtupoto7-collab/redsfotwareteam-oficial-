@@ -519,6 +519,9 @@ function buildRichProjectFiles({ brandName, targetType, stylePreset, prompt, pal
   } else if (pType.toUpperCase().includes("TOOLS")) {
     nicheLabel = "TOOLS • KALI LINUX / PYTHON / JS";
     nicheSummary = "Практически инструменти, автоматизационни скриптове и конзолни модули.";
+  } else if (pType.toUpperCase().includes("DEV PORT")) {
+    nicheLabel = "FULL STACK DEV PORT";
+    nicheSummary = "Локален/сървърен full-stack dev port с frontend, API и моментален live preview.";
   } else if (pType.toUpperCase().includes("FULL APP")) {
     nicheLabel = "FULL APPLICATION SUITE";
     nicheSummary = "Цялостно уеб приложение с модули, табло и потребителски потоци.";
