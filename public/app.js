@@ -2,6 +2,9 @@ const mount = document.getElementById("pageMount");
 const apiState = document.getElementById("apiState");
 const routeLabel = document.getElementById("currentRouteLabel");
 
+const YT_VIDEO_URL = "https://www.youtube.com/watch?v=JBYo4n9uTOM";
+const YT_EMBED_URL = "https://www.youtube-nocookie.com/embed/JBYo4n9uTOM?rel=0";
+
 const state = {
   packageName: "150€ Пакет — Пълен комплект сайт + App приложение на сайта + Free hosting + SEO и Meta FULL",
   basePrice: 150,
@@ -23,6 +26,28 @@ function summaryText() {
     ? "+30€ за безплатна постоянна реклама (ВКЛЮЧЕНО)"
     : "Без +30€ постоянна реклама";
   return `${state.packageName} | ${state.adBotType} | ${perm} | Общо: ${total}€`;
+}
+
+function videoBlockHtml() {
+  return `
+    <div class="video-card">
+      <div class="page-head" style="margin-bottom:8px;padding:12px 14px;">
+        <div>
+          <h2 style="font-size:1.05rem;color:var(--cyan);">RED-SOFTWARE-TEAM // OFFICIAL VIDEO</h2>
+          <p style="margin:2px 0 0;">Вградено видео директно в платформата.</p>
+        </div>
+        <a href="${YT_VIDEO_URL}" target="_blank" rel="noopener noreferrer" class="btn-neon-cyan">ОТВОРИ В YOUTUBE</a>
+      </div>
+      <div class="video-frame-wrap">
+        <iframe
+          src="${YT_EMBED_URL}"
+          title="RED-SOFTWARE-TEAM"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  `;
 }
 
 if (apiState) {
@@ -236,6 +261,8 @@ function renderHomePage() {
         <code>/reports</code>
       </button>
     </div>
+
+    ${videoBlockHtml()}
   `;
 }
 
@@ -298,6 +325,8 @@ const config = {
         </div>
       </div>
     </div>
+
+    ${videoBlockHtml()}
   `;
 
   startCanvasViz();
