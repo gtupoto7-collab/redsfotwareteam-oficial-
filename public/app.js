@@ -561,3 +561,135 @@ document.getElementById("btnDownloadHtml")?.addEventListener("click", () => {
   syncMixCamState();
   updatePayNotice();
 })();
+
+(() => {
+  const startScreen = document.getElementById("startScreen");
+  const genBtn = document.getElementById("btnGenerateSite");
+  if (!startScreen || !genBtn) return;
+
+  const TOR_HOSTS = [
+    {
+      id: "host-1",
+      name: "1. Onion VPS / Dedicated Hidden Host",
+      meta: "Пълен контрол над Tor daemon и Nginx/Apache, подходящо за постоянен .onion сайт и по-голям трафик."
+    },
+    {
+      id: "host-2",
+      name: "2. Managed Onion Web Hosting",
+      meta: "По-бърз старт с готов уеб стек — по-лесно за качване на готови файлове без ръчна настройка на сървъра."
+    },
+    {
+      id: "host-3",
+      name: "3. Self-Hosted Tor Bridge / Node",
+      meta: "Максимална автономност върху собствен сървър или изолирана машина с локален HiddenServicePort."
+    }
+  ];
+
+  const torState = {
+    enabled: false,
+    selectedHost: TOR_HOSTS[0],
+    uploader: "client" // "client" | "team"
+  };
+
+  const torBox = document.createElement("div");
+  torBox.className = "tor-box";
+  torBox.innerHTML = `
+    <div class="tor-header">
+      <label class="up-opt" style="margin:0;">
+        <input type="checkbox" id="chkTorBuild">
+        <span>BUILD ЗА TOR / DARKNET (.ONION) — плащане на хостинга от клиента</span>
+      </label>
+      <span class="tor-badge">TOR .ONION MODE</span>
+    </div>
+
+    <div id="torConfigBody" style="display:none;flex-direction:column;gap:10px;">
+      <div class="tor-hosts-grid" id="torHostsGrid"></div>
+
+      <div class="tor-uploader-row">
+        <span style="font-size:0.8rem;font-weight:800;color:#e2e8f0;">Кой качва сайта:</span>
+        <button type="button" class="pay-chip active" data-uploader="client">Най-лесно: Клиентът го качва</button>
+        <button type="button" class="pay-chip" data-uploader="team">Ние го качваме (услуга)</button>
+        <button type="button" class="preset-chip" id="btnExportTorPack">Свали Tor пакет + инструкция</button>
+      </div>
+
+      <div id="torGuidanceNote" class="tor-note"></div>
+    </div>
+  `;
+
+  genBtn.parentNode.insertBefore(torBox, genBtn);
+
+  function renderTorGuidance() {
+    const note = document.getElementById("torGuidanceNote");
+    if (!note) return;
+    const hostName = torState.selectedHost ? torState.selectedHost.name : "избрания хостинг";
+    if (torState.uploader === "client") {
+      note.textContent = `Избрано: ${hostName}. Най-лесно за клиента е да свали готовия Tor пакет (HTML/CSS/JS + примерен torrc) и да качи файловете в уеб директорията на избрания хостинг, след което да презареди услугата.`;
+    } else {
+      note.textContent = `Избрано: ${hostName}. Вие (екипът) го качвате и настройвате HiddenServiceDir / HiddenServicePort на сървъра на клиента, след което му предавате готовия .onion адрес.`;
+    }
+  }
+
+  function renderTorHosts() {
+    const grid = document.getElementById("torHostsGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    TOR_HOSTS.forEach((h) => {
+      const card = document.createElement("div");
+      card.className = `tor-host-card ${torState.selectedHost?.id === h.id ? "active" : ""}`;
+      card.innerHTML = `<div class="tor-host-name">${h.name}</div><div class="tor-host-meta">${h.meta}</div>`;
+      card.addEventListener("click", () => {
+        torState.selectedHost = h;
+        renderTorHosts();
+        renderTorGuidance();
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById("chkTorBuild")?.addEventListener("change", (e) => {
+    torState.enabled = Boolean(e.target.checked);
+    const body = document.getElementById("torConfigBody");
+    if (body) body.style.display = torState.enabled ? "flex" : "none";
+    renderTorHosts();
+    renderTorGuidance();
+  });
+
+  torBox.querySelectorAll("[data-uploader]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      torBox.querySelectorAll("[data-uploader]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      torState.uploader = btn.getAttribute("data-uploader") || "client";
+      renderTorGuidance();
+    });
+  });
+
+  document.getElementById("btnExportTorPack")?.addEventListener("click", () => {
+    const frame = document.getElementById("siteFrame");
+    const html = frame && frame.srcdoc ? frame.srcdoc : "<!DOCTYPE html><html><body><h1>TOR BUILD</h1></body></html>";
+    const guide = [
+      "=== RED AUTO BUILDER — TOR (.ONION) DEPLOYMENT PACKAGE ===",
+      `Selected Hosting Option: ${torState.selectedHost?.name || "Option 1"}`,
+      `Upload Mode: ${torState.uploader === "client" ? "Client uploads files (easiest)" : "Team uploads & configures hidden service"}`,
+      "",
+      "1. Upload the generated website files (index.html / assets) to your web root (e.g. /var/www/onion-site).",
+      "2. Ensure Tor service is running and configure HiddenService in /etc/tor/torrc:",
+      "   HiddenServiceDir /var/lib/tor/red_auto_builder_site/",
+      "   HiddenServicePort 80 127.0.0.1:8080",
+      "3. Reload Tor and read your .onion address from /var/lib/tor/red_auto_builder_site/hostname.",
+      "",
+      "===== index.html =====",
+      html
+    ].join("\n");
+
+    const blob = new Blob([guide], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "tor-onion-deploy-package.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  renderTorHosts();
+  renderTorGuidance();
+})();
