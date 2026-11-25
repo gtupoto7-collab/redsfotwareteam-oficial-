@@ -3,157 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RED AUTO BUILDER — CREATE → IMPROVE → TEST → PUBLISH</title>
+  <title>RED AUTO BUILDER AI</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="wrap topbar-flex">
-      <div class="brand-box">
-        <span class="brand-mark">R</span>
-        <div>
-          <div class="brand-sub">RED AUTO BUILDER</div>
-          <div class="brand-name">CREATE → IMPROVE → TEST → PUBLISH</div>
-        </div>
+  <header class="top">
+    <div class="wrap top-row">
+      <div class="brand">RED AUTO BUILDER AI</div>
+      <div class="view-switch">
+        <button id="tabPreview" class="vtab active" type="button">LIVE PREVIEW</button>
+        <button id="tabCode" class="vtab" type="button">CODE</button>
       </div>
-
-      <div class="pipeline-steps" id="pipelineBar">
-        <span class="p-step active" data-step="create">1. GENERATE</span>
-        <span class="p-step" data-step="improve">2. IMPROVE</span>
-        <span class="p-step" data-step="test">3. TEST</span>
-        <span class="p-step" data-step="publish">4. PUBLISH</span>
-      </div>
-
-      <div class="top-meta">
-        <span id="projectBadge" class="badge-chip">Няма активен проект</span>
-      </div>
+      <span id="projTag" class="proj-tag">Няма проект</span>
     </div>
   </header>
 
-  <main class="wrap workspace">
-    <!-- 1. GENERATE -->
-    <section class="panel" id="createSection">
-      <div class="panel-head">
-        <h2>1. GENERATE</h2>
-        <span class="muted-tag">Създава реални файлове на сървъра</span>
+  <main class="wrap main">
+    <!-- GENERATE -->
+    <section class="gen-box">
+      <label for="promptInput">Какво искаш да създадеш?</label>
+      <div class="gen-row">
+        <input id="promptInput" type="text" placeholder="Искам професионален сайт за AI компания">
+        <button id="btnGenerate" class="btn-go" type="button">GENERATE</button>
       </div>
+      <div id="statusLine" class="status-line">Въведи описание и натисни GENERATE.</div>
+    </section>
 
-      <div class="gen-grid">
-        <div class="field">
-          <label for="brandNameInp">Име на проект / бранд</label>
-          <input id="brandNameInp" type="text" placeholder="Напр. Red Core Studio">
+    <!-- PAGES + LIVE PREVIEW / CODE -->
+    <section class="stage-grid">
+      <aside class="pages-col">
+        <div class="col-title">PAGES</div>
+        <div id="pagesList" class="pages-list">
+          <button class="page-btn active" data-page="home" type="button">Home</button>
+          <button class="page-btn" data-page="about" type="button">About</button>
+          <button class="page-btn" data-page="services" type="button">Services</button>
+          <button class="page-btn" data-page="pricing" type="button">Pricing</button>
+          <button class="page-btn" data-page="contact" type="button">Contact</button>
         </div>
+      </aside>
 
-        <div class="field">
-          <label for="targetTypeSel">Тип продукт</label>
-          <select id="targetTypeSel">
-            <option value="Website">Website</option>
-            <option value="Web App">Web App</option>
-            <option value="PWA">PWA</option>
-            <option value="Mobile App">Mobile App</option>
-          </select>
+      <div class="center-col">
+        <iframe id="previewFrame" class="preview-frame" title="Live Preview"></iframe>
+
+        <div id="codeDrawer" class="code-drawer" style="display:none;">
+          <div class="code-top">
+            <select id="fileSelect"></select>
+            <button id="btnSaveFile" class="btn-mini" type="button">Запази</button>
+          </div>
+          <textarea id="codeEditor" spellcheck="false"></textarea>
         </div>
-
-        <div class="field">
-          <label for="stylePresetSel">Стил</label>
-          <select id="stylePresetSel">
-            <option value="Modern Dark">Modern Dark</option>
-            <option value="Clean Light">Clean Light</option>
-            <option value="Corporate Slate">Corporate Slate</option>
-          </select>
-        </div>
-
-        <div class="field gen-btn-col">
-          <label>&nbsp;</label>
-          <button id="btnGenerate" class="btn btn-primary" type="button">GENERATE</button>
-        </div>
-      </div>
-
-      <div class="field" style="margin-top:10px;">
-        <label for="promptInp">Описание от клиента</label>
-        <textarea id="promptInp" rows="2" placeholder="Искам модерен сайт за софтуерна компания с Home, Services, About, Contact."></textarea>
       </div>
     </section>
 
-    <!-- 2. AI IMPROVE + 3. TEST + 4. PUBLISH -->
-    <section class="panel" id="actionsSection">
-      <div class="improve-test-grid">
-        <div>
-          <div class="panel-head">
-            <h2>2. AI IMPROVE</h2>
-            <span class="muted-tag">Модифицира реалните файлове и обновява Canvas</span>
-          </div>
-          <div class="improve-btns" id="improveBtns">
-            <button class="btn btn-ghost" data-act="MAKE PREMIUM" type="button">MAKE PREMIUM</button>
-            <button class="btn btn-ghost" data-act="REDESIGN" type="button">REDESIGN</button>
-            <button class="btn btn-ghost" data-act="IMPROVE UI" type="button">IMPROVE UI</button>
-            <button class="btn btn-ghost" data-act="IMPROVE MOBILE" type="button">IMPROVE MOBILE</button>
-            <button class="btn btn-ghost" data-act="FIX BUGS" type="button">FIX BUGS</button>
-            <button class="btn btn-ghost" data-act="ADD PAGE" type="button">ADD PAGE</button>
-            <button class="btn btn-ghost" data-act="ADD FEATURE" type="button">ADD FEATURE</button>
-            <button class="btn btn-ghost" data-act="OPTIMIZE" type="button">OPTIMIZE</button>
-            <button class="btn btn-ghost" data-act="MAKE FASTER" type="button">MAKE FASTER</button>
-            <button class="btn btn-ghost" data-act="SEO OPTIMIZE" type="button">SEO OPTIMIZE</button>
-          </div>
-        </div>
-
-        <div class="test-publish-box">
-          <div class="panel-head">
-            <h2>3. TEST &amp; 4. PUBLISH</h2>
-            <span id="testStatusTag" class="muted-tag">Нетестван</span>
-          </div>
-
-          <div class="tp-actions">
-            <button id="btnRunTest" class="btn btn-secondary" type="button">RUN TEST</button>
-            <button id="btnPublish" class="btn btn-primary" type="button">PUBLISH</button>
-          </div>
-
-          <div id="testChecklist" class="test-list"></div>
-          <div id="publishDeliveryBox" class="delivery-box" style="display:none;"></div>
-        </div>
+    <!-- EDIT WITH AI + PUBLISH -->
+    <section class="edit-bar">
+      <div class="ai-cmd-row">
+        <input id="aiCmdInput" type="text" placeholder="Напр.: Направи header-а по-премиум и добави pricing page">
+        <button id="btnAiCmd" class="btn-mini primary" type="button">EDIT WITH AI</button>
       </div>
 
-      <div id="statusBar" class="status-bar">Готов за старт. Натисни GENERATE.</div>
-    </section>
-
-    <!-- LIVE CANVAS + FILE EXPLORER + CODE EDITOR -->
-    <section class="builder-grid">
-      <div class="panel canvas-panel">
-        <div class="panel-head">
-          <h2>LIVE CANVAS</h2>
-          <div class="vp-switch">
-            <button class="vp-btn active" data-vp="100%" type="button">Desktop</button>
-            <button class="vp-btn" data-vp="768px" type="button">Tablet</button>
-            <button class="vp-btn" data-vp="390px" type="button">Mobile</button>
-          </div>
-        </div>
-
-        <div class="canvas-stage">
-          <iframe id="canvasFrame" class="canvas-frame" title="Live Canvas Preview"></iframe>
-        </div>
+      <div class="quick-row">
+        <button class="btn-mini" data-act="MAKE PREMIUM" type="button">Improve</button>
+        <button class="btn-mini" data-act="ADD PAGE" type="button">Add Page</button>
+        <button class="btn-mini" data-act="REDESIGN" type="button">Redesign</button>
+        <button class="btn-mini" data-act="FIX BUGS" type="button">Fix</button>
+        <button id="btnPublish" class="btn-mini publish" type="button">Publish</button>
       </div>
 
-      <div class="panel code-panel">
-        <div class="panel-head">
-          <h2>CODE &amp; FILES</h2>
-          <span id="activeFileName" class="muted-tag">index.html</span>
-        </div>
-
-        <div class="code-split">
-          <aside class="file-explorer">
-            <div class="explorer-title">PROJECT</div>
-            <div id="fileTree" class="file-tree"></div>
-          </aside>
-
-          <div class="editor-col">
-            <textarea id="fileEditor" class="file-editor" spellcheck="false"></textarea>
-            <div class="editor-actions">
-              <button id="btnSaveFile" class="btn btn-secondary" type="button">Запази файла</button>
-              <button id="btnDownloadSource" class="btn btn-ghost" type="button">Download Source</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div id="publishOut" class="publish-out"></div>
     </section>
   </main>
 

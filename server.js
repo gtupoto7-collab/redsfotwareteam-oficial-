@@ -471,7 +471,16 @@ app.post("/api/projects/:id/improve", (req, res) => {
   if (!dir || !fs.existsSync(dir)) {
     return res.status(404).json({ ok: false, error: "Проектът не е намерен." });
   }
-  const action = String(req.body?.action || "MAKE PREMIUM").trim();
+  const rawAction = String(req.body?.action || "").trim();
+  const instruction = String(req.body?.instruction || "").trim().toLowerCase();
+  let action = rawAction || "MAKE PREMIUM";
+  if (!rawAction && instruction) {
+    if (instruction.includes("pricing") || instruction.includes("страниц")) action = "ADD PAGE";
+    else if (instruction.includes("header") || instruction.includes("хедър") || instruction.includes("премиум")) action = "MAKE PREMIUM";
+    else if (instruction.includes("redesign") || instruction.includes("дизайн")) action = "REDESIGN";
+    else if (instruction.includes("fix") || instruction.includes("греш")) action = "FIX BUGS";
+    else action = "ADD FEATURE";
+  }
   const current = readAllFiles(dir);
   const updated = applyImprovementAction(current, action);
   writeFiles(dir, updated);
