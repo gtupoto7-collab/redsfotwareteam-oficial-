@@ -96,6 +96,85 @@
         </div>
       </div>
 
+      
+      <div class="ads-bots-box" id="adsBotsBox">
+        <div class="llm-top">
+          <span class="llm-title">РЕКЛАМНИ БОТОВЕ 24/7 • 365 ДНИ (БЕЗПЛАТНИ И ПЛАТЕНИ)</span>
+          <span class="llm-pill">GMAIL • TELEGRAM • FB • DISCORD • WHATSAPP</span>
+        </div>
+
+        <div class="llm-grid">
+          <label class="llm-field">
+            <span>Режим на ботовете:</span>
+            <select id="botTierSelect">
+              <option value="Безплатен (базов / лимитиран)" selected>Безплатен (базов / лимитиран)</option>
+              <option value="Платен (PRO / 24-7 365 дни)">Платен (PRO / 24-7 365 дни)</option>
+              <option value="Комбиниран (Безплатен + Платен)">Комбиниран (Безплатен + Платен)</option>
+            </select>
+          </label>
+          <label class="llm-field">
+            <span>Аудитория / Бизнес за Gmail (500 / 24ч + нови 500/ден):</span>
+            <input id="gmailAudienceInput" class="mini-inp-dark" type="text" value="Строителство, Пътна помощ и локални бизнеси">
+          </label>
+        </div>
+
+        <div class="llm-grid">
+          <label class="llm-field">
+            <span>Telegram групи на ден (1–5000, до 3 пъти/ден):</span>
+            <input id="tgGroupsInput" class="mini-inp-dark" type="number" min="1" max="5000" value="250">
+          </label>
+          <label class="llm-field">
+            <span>Търсене в описанието на групи (по бизнеса):</span>
+            <input id="tgKeywordsInput" class="mini-inp-dark" type="text" value="строителство, пътна помощ, услуги, бизнес">
+          </label>
+        </div>
+
+        <div class="bot-channels-grid">
+          <label class="up-opt"><input type="checkbox" id="botGmail" checked> Gmail (500/24ч + нови 500/ден)</label>
+          <label class="up-opt"><input type="checkbox" id="botTelegram" checked> Telegram (до 3x/ден, 1–5000 групи)</label>
+          <label class="up-opt"><input type="checkbox" id="botFacebook" checked> Facebook</label>
+          <label class="up-opt"><input type="checkbox" id="botDiscord" checked> Discord</label>
+          <label class="up-opt"><input type="checkbox" id="botWhatsapp" checked> WhatsApp</label>
+        </div>
+
+        <div class="llm-desc" id="botsSummaryText">
+          Gmail: до 500 писма на 24ч по зададена аудитория и нови 500 всеки ден. Telegram: до 3 пъти на ден в 1–5000 групи според ключови думи в описанието за бизнеса. Facebook, Discord и WhatsApp: автоматизирана комуникация, отговори и кампании 24/7 (365 дни).
+        </div>
+      </div>
+
+      <div class="casino-box" id="casinoBox">
+        <div class="llm-top">
+          <span class="llm-title">КАЗИНО МОДУЛ &amp; ПРАВИЛА ЗА ЛИЦЕНЗ (БЪЛГАРИЯ / ЮЖНА АМЕРИКА)</span>
+          <span class="llm-pill" id="casinoLicenseBadge">Лиценз статус</span>
+        </div>
+
+        <div class="llm-grid">
+          <label class="llm-field">
+            <span>Вид казино:</span>
+            <select id="casinoTypeSelect">
+              <option value="none" selected>Без казино модул</option>
+              <option value="telegram-casino">Telegram казино</option>
+              <option value="crypto-casino">Crypto казино</option>
+              <option value="crypto-instant">Crypto казино с моментно изплащане</option>
+              <option value="standard-casino">Стандартно казино</option>
+            </select>
+          </label>
+          <label class="llm-field">
+            <span>Пазар / Вариант:</span>
+            <select id="casinoMarketSelect">
+              <option value="global-crypto" selected>Crypto / Telegram (без БГ лиценз)</option>
+              <option value="bulgaria-strict">България (стандартно — само с лиценз)</option>
+              <option value="south-america-licensed">Южна Америка — с лиценз (~450–1000 EUR)</option>
+              <option value="south-america-unlicensed">Южна Америка — без лиценз (~80–150 EUR)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="llm-desc" id="casinoRulesText">
+          Избери вид казино, за да видиш правилата за лиценз: стандартно / българско казино без лиценз не се генерира, докато за Crypto и Telegram казино може да се генерира без такъв лиценз (ориентировъчно в Южна Америка: с лиценз ~450–1000 EUR, без лиценз ~80–150 EUR).
+        </div>
+      </div>
+
       <button id="btnGenerateSite" class="btn-main" type="button">GENERATE MY WEBSITE</button>
       <div id="flowStatus" class="flow-status"></div>
     </section>

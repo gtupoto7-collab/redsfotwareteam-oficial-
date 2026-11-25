@@ -663,3 +663,30 @@ select:focus {
   color: #e2e8f0;
   line-height: 1.5;
 }
+
+.ads-bots-box,
+.casino-box {
+  background: rgba(13, 19, 32, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bot-channels-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mini-inp-dark {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(5, 8, 15, 0.85);
+  color: #f8fafc;
+  font-size: 0.82rem;
+}
