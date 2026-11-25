@@ -742,3 +742,58 @@ input:focus, select:focus, textarea:focus {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@keyframes scriptPulseLine {
+  0%, 100% { border-color: rgba(255, 255, 255, 0.14); background: rgba(7, 9, 14, 0.9); }
+  50% { border-color: var(--accent); background: rgba(239, 35, 60, 0.08); }
+}
+
+@keyframes scriptTick {
+  0% { transform: scaleX(0.15); opacity: 0.5; }
+  50% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(0.35); opacity: 0.65; }
+}
+
+.script-motion-box {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(7, 9, 14, 0.9);
+  animation: scriptPulseLine 2.4s ease-in-out infinite;
+}
+
+.script-motion-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.script-motion-bar {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.script-motion-fill {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: var(--accent);
+  animation: scriptTick 1.5s ease-in-out infinite;
+}
+
+.script-motion-line {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75rem;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
