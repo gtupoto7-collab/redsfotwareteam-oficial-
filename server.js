@@ -61,11 +61,16 @@ function buildStarterFiles({ prompt, targetType, stylePreset, brandName }) {
   const title = (brandName || prompt || "RED AUTO BUILDER PROJECT").trim().slice(0, 80);
   const desc = (prompt || "Модерен уеб проект, генериран от RED AUTO BUILDER.").trim();
   const mode = targetType || "Website";
-  const style = stylePreset || "Modern Dark";
+  const lowerPrompt = String(prompt || "").toLowerCase();
+  let style = stylePreset || "Modern Dark";
+  if (lowerPrompt.includes("черно-злат") || lowerPrompt.includes("злат")) style = "Black Gold";
+  else if (lowerPrompt.includes("светл") || lowerPrompt.includes("бял")) style = "Clean Light";
+  else if (lowerPrompt.includes("син") || lowerPrompt.includes("корпоратив")) style = "Corporate Slate";
 
   const accentMap = {
     "Modern Dark": { primary: "#ef233c", bg: "#090c12", card: "#121826", text: "#f8fafc" },
     "Clean Light": { primary: "#dc2626", bg: "#f8fafc", card: "#ffffff", text: "#0f172a" },
+    "Black Gold": { primary: "#eab308", bg: "#09090b", card: "#141418", text: "#fafaf9" },
     "Corporate Slate": { primary: "#2563eb", bg: "#0b1120", card: "#131c31", text: "#f1f5f9" }
   };
   const pal = accentMap[style] || accentMap["Modern Dark"];
