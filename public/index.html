@@ -3,18 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RED AUTO BUILDER</title>
+  <title>RED AUTO BUILDER — AL &amp; ПОЛК / МОДУЛИ</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="wrap">
     <section id="startScreen" class="start-card">
-      <div class="start-badge">RED AUTO BUILDER</div>
+      <div class="start-badge">RED AUTO BUILDER • AL ENGINE</div>
       <h1>Какво искаш да създадем?</h1>
-      <textarea id="promptBox" rows="3" placeholder="Искам модерен сайт за строителна компания с Home, Services, Projects и Contact. Черно-златен стил, премиум визия."></textarea>
+      <textarea id="promptBox" rows="3" placeholder="Пример: Строителство и Пътна помощ като AL софтуер, автоматизация и решения с визия, модули и плащания."></textarea>
+
+      <div class="type-row" id="productTypeRow">
+        <button class="type-chip active" type="button" data-ptype="AL — Автоматизация и решения">AL — Автоматизация и решения</button>
+        <button class="type-chip" type="button" data-ptype="BOT">BOT</button>
+        <button class="type-chip" type="button" data-ptype="FULL APP">FULL APP</button>
+        <button class="type-chip" type="button" data-ptype="WEB SITE">WEB SITE</button>
+        <button class="type-chip" type="button" data-ptype="WEBMARKETPLACE">WEBMARKETPLACE</button>
+        <button class="type-chip" type="button" data-ptype="TOOLS (KALI LINUX / PYTHON / JS)">TOOLS (KALI LINUX / PYTHON / JS)</button>
+      </div>
 
       <div class="photo-gen-box">
-        <label for="refPhotoInput" class="photo-gen-label">Или качи снимка (напр. AL / референтен стил) за автоматично генериране по визия:</label>
+        <label for="refPhotoInput" class="photo-gen-label">Снимка за реални цветове (AL / Строителство / Пътна помощ):</label>
         <input id="refPhotoInput" type="file" accept="image/*">
         <div id="refPhotoPreviewWrap" style="display:none;margin-top:10px;align-items:center;gap:12px;flex-wrap:wrap;">
           <img id="refPhotoPreview" alt="Референтна снимка" style="width:92px;height:64px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,0.2);">
@@ -23,10 +32,26 @@
       </div>
 
       <div class="presets-row">
-        <button class="preset-chip" type="button" data-preset="Искам модерен сайт за AL (автоматизация и логика) с Home, Services, Projects и Contact. Модерен тъмен стил с ярък акцент.">AL — Автоматизация и решения</button>
-        <button class="preset-chip" type="button" data-preset="Искам модерен сайт за строителна компания с Home, Services, Projects и Contact. Черно-златен стил, премиум визия.">Строителство (черно-златно)</button>
-        <button class="preset-chip" type="button" data-preset="Искам сайт за пътна помощ 24/7 и автосервиз с бърза връзка, услуги и контакти.">Пътна помощ 24/7</button>
-        <button class="preset-chip" type="button" data-preset="Искам модерен сайт за софтуерна и AI компания с услуги, решения и форма за запитване.">AI / Софтуер</button>
+        <button class="preset-chip" type="button" data-preset="AL — Автоматизация и решения за Строителство и Пътна помощ 24/7 с модули, табло, звънене и достъп.">Строителство и Пътна помощ (AL)</button>
+        <button class="preset-chip" type="button" data-preset="Пълен BOT + FULL APP + WEB SITE пакет за автоматизация и заявки.">BOT + FULL APP + WEB SITE</button>
+        <button class="preset-chip" type="button" data-preset="WEBMARKETPLACE платформа за услуги, инструменти и модули.">WEBMARKETPLACE</button>
+        <button class="preset-chip" type="button" data-preset="TOOLS KALI LINUX PYTHON JS — набор от инструменти, скриптове и конзолни модули.">TOOLS KALI LINUX / PYTHON / JS</button>
+      </div>
+
+      <div class="pay-box">
+        <div class="pay-title">Начини на плащане и верификация:</div>
+        <div class="pay-chips" id="payMethodsRow">
+          <button class="pay-chip active" type="button" data-pay="telegram-keeper">Telegram Bot → Keeper (след 22 дни)</button>
+          <button class="pay-chip" type="button" data-pay="card-bank">Карта / Банка</button>
+          <button class="pay-chip" type="button" data-pay="crypto">Crypto</button>
+          <button class="pay-chip" type="button" data-pay="telegram">Telegram</button>
+          <button class="pay-chip" type="button" data-pay="paypal">PayPal</button>
+          <button class="pay-chip" type="button" data-pay="revolut">Revolut</button>
+          <button class="pay-chip" type="button" data-pay="easypay">EasyPay</button>
+        </div>
+        <div id="payNotice" class="pay-notice pay-ok">
+          Единствената опция без верификация: през Telegram бот и от там вадене в Keeper след 22 дни — надежден начин за получаване на реални средства.
+        </div>
       </div>
 
       <button id="btnGenerateSite" class="btn-main" type="button">GENERATE MY WEBSITE</button>
@@ -54,7 +79,20 @@
         <textarea id="codeArea" spellcheck="false"></textarea>
       </div>
 
-      <div class="action-bar">
+      <div class="bottom-dock">
+        <div class="up-menu-wrap">
+          <div id="upwardMenu" class="upward-menu" style="display:none;">
+            <div class="upward-title">Опции за сайта (излизат нагоре):</div>
+            <label class="up-opt"><input type="checkbox" id="optMixCam" checked> MIX CAM (само при AL)</label>
+            <label class="up-opt"><input type="checkbox" id="optCall" checked> ЗВЪНЕНЕ</label>
+            <label class="up-opt"><input type="checkbox" id="optDashboard" checked> DASHBOARD</label>
+            <label class="up-opt"><input type="checkbox" id="optRegister" checked> РЕГИСТРАЦИЯ</label>
+            <label class="up-opt"><input type="checkbox" id="optAdmin" checked> ADMIN PASS / ADMIN ACC</label>
+            <button id="btnApplyUpMenu" class="btn-chip active" type="button" style="width:100%;margin-top:6px;">Приложи избраното в сайта</button>
+          </div>
+          <button id="btnToggleUpMenu" class="btn-chip active" type="button">▲ МЕНЮ ОПЦИИ ЗА САЙТА</button>
+        </div>
+
         <button class="btn-chip" data-act="MAKE PREMIUM" type="button">MAKE PREMIUM</button>
         <button class="btn-chip" data-act="REDESIGN" type="button">CHANGE DESIGN</button>
         <button class="btn-chip" data-act="ADD PAGE" type="button">ADD PAGE</button>

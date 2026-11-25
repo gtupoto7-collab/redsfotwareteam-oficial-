@@ -415,3 +415,149 @@ document.getElementById("btnDownloadHtml")?.addEventListener("click", () => {
     observer.observe(frame, { attributes: true, attributeFilter: ["srcdoc"] });
   }
 })();
+
+(() => {
+  const extraState = {
+    productType: "AL — Автоматизация и решения",
+    paymentMethod: "telegram-keeper",
+    siteOptions: {
+      mixCam: true,
+      call: true,
+      dashboard: true,
+      register: true,
+      admin: true
+    }
+  };
+
+  const PAY_MESSAGES = {
+    "telegram-keeper": {
+      cls: "pay-ok",
+      text: "Единствената опция без верификация: плащане през Telegram бот и изтегляне в Keeper след 22 дни — надежден начин за получаване на реални средства."
+    },
+    "card-bank": {
+      cls: "pay-warn",
+      text: "Карта / Банка: изисква верификация с официална банка или финансова институция. За поток без такава верификация се ползва Telegram бот → Keeper след 22 дни."
+    },
+    "crypto": {
+      cls: "pay-warn",
+      text: "Crypto: изисква верификация с официална банка или финансова институция при превод/обмен. Единствената опция без такава верификация е през Telegram бот и изтегляне в Keeper след 22 дни."
+    },
+    "telegram": {
+      cls: "pay-ok",
+      text: "Telegram: чрез Telegram бот средствата могат да се получават и след 22 дни да се вадят в Keeper без официална банкова/финансова верификация."
+    },
+    "paypal": {
+      cls: "pay-warn",
+      text: "PayPal: изисква верификация с официална банка или финансова институция. Без такава верификация надеждният път е Telegram бот → Keeper след 22 дни."
+    },
+    "revolut": {
+      cls: "pay-warn",
+      text: "Revolut: изисква верификация с официална банка или финансова институция. Без такава верификация единствената опция е през Telegram бот и вадене в Keeper след 22 дни."
+    },
+    "easypay": {
+      cls: "pay-warn",
+      text: "EasyPay: изисква верификация с официална банка или финансова институция. Без такава верификация единствената опция е през Telegram бот и вадене в Keeper след 22 дни."
+    }
+  };
+
+  function updatePayNotice() {
+    const notice = document.getElementById("payNotice");
+    if (!notice) return;
+    const info = PAY_MESSAGES[extraState.paymentMethod] || PAY_MESSAGES["telegram-keeper"];
+    notice.className = `pay-notice ${info.cls}`;
+    notice.textContent = info.text;
+  }
+
+  function syncMixCamState() {
+    const chk = document.getElementById("optMixCam");
+    if (!chk) return;
+    const isAl = extraState.productType.startsWith("AL");
+    chk.disabled = !isAl;
+    if (!isAl) chk.checked = false;
+    extraState.siteOptions.mixCam = chk.checked;
+  }
+
+  document.querySelectorAll("[data-ptype]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-ptype]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      extraState.productType = btn.getAttribute("data-ptype") || "AL — Автоматизация и решения";
+      syncMixCamState();
+    });
+  });
+
+  document.querySelectorAll("[data-pay]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("[data-pay]").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      extraState.paymentMethod = btn.getAttribute("data-pay") || "telegram-keeper";
+      updatePayNotice();
+    });
+  });
+
+  document.getElementById("btnToggleUpMenu")?.addEventListener("click", () => {
+    const menu = document.getElementById("upwardMenu");
+    if (!menu) return;
+    syncMixCamState();
+    menu.style.display = menu.style.display === "none" ? "flex" : "none";
+  });
+
+  function readUpOptions() {
+    syncMixCamState();
+    extraState.siteOptions = {
+      mixCam: Boolean(document.getElementById("optMixCam")?.checked),
+      call: Boolean(document.getElementById("optCall")?.checked),
+      dashboard: Boolean(document.getElementById("optDashboard")?.checked),
+      register: Boolean(document.getElementById("optRegister")?.checked),
+      admin: Boolean(document.getElementById("optAdmin")?.checked)
+    };
+  }
+
+  function injectModulesIntoFrame() {
+    const frame = document.getElementById("siteFrame");
+    if (!frame || !frame.srcdoc || frame.srcdoc.includes('id="redModulesDock"')) return;
+    readUpOptions();
+    const o = extraState.siteOptions;
+    const payInfo = PAY_MESSAGES[extraState.paymentMethod] || PAY_MESSAGES["telegram-keeper"];
+
+    const blockHtml = `
+<section id="redModulesDock" style="max-width:1120px;margin:24px auto;padding:18px;border-radius:14px;background:rgba(15,23,42,0.88);border:1px solid rgba(255,255,255,0.16);color:#f8fafc;font-family:system-ui,sans-serif;">
+  <div style="font-size:12px;font-weight:800;letter-spacing:0.08em;opacity:0.8;margin-bottom:8px;">МОДУЛИ (${extraState.productType}) • СТРОИТЕЛСТВО &amp; ПЪТНА ПОМОЩ</div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+    ${o.mixCam ? `<div style="padding:8px 12px;border-radius:8px;background:rgba(239,35,60,0.18);border:1px solid #ef233c;font-weight:700;">MIX CAM (AL Live Feed)</div>` : ""}
+    ${o.call ? `<a href="tel:0879813928" style="padding:8px 14px;border-radius:8px;background:#ef233c;color:#fff;text-decoration:none;font-weight:700;">ЗВЪНЕНЕ</a>` : ""}
+    ${o.dashboard ? `<div style="padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.08);font-weight:700;">DASHBOARD</div>` : ""}
+    ${o.register ? `<div style="padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.08);font-weight:700;">РЕГИСТРАЦИЯ</div>` : ""}
+    ${o.admin ? `<div style="padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.08);font-weight:700;">ADMIN PASS / ADMIN ACC</div>` : ""}
+  </div>
+  <div style="padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.05);font-size:13px;">
+    <strong>Плащания:</strong> ${payInfo.text}
+  </div>
+</section>`;
+
+    if (frame.srcdoc.includes("</body>")) {
+      frame.srcdoc = frame.srcdoc.replace("</body>", `${blockHtml}\n</body>`);
+    }
+  }
+
+  document.getElementById("btnApplyUpMenu")?.addEventListener("click", () => {
+    readUpOptions();
+    const frame = document.getElementById("siteFrame");
+    if (frame && frame.srcdoc) {
+      frame.srcdoc = frame.srcdoc.replace(/<section id="redModulesDock"[\s\S]*?<\/section>/i, "");
+      injectModulesIntoFrame();
+    }
+    const menu = document.getElementById("upwardMenu");
+    if (menu) menu.style.display = "none";
+    const msg = document.getElementById("workMsg");
+    if (msg) msg.textContent = "Опциите от менюто нагоре са приложени в сайта.";
+  });
+
+  document.getElementById("btnGenerateSite")?.addEventListener("click", () => {
+    readUpOptions();
+    setTimeout(injectModulesIntoFrame, 900);
+  });
+
+  syncMixCamState();
+  updatePayNotice();
+})();
