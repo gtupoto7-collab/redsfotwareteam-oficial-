@@ -3,96 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RED SOFTWARE TEAM — ONE-CLICK READY</title>
+  <title>RED SOFTWARE TEAM — FULL HD BUSINESS TEMPLATE ENGINE</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="top">
-    <div class="wrap top-row">
-      <div class="logo"><strong>RED SOFTWARE TEAM</strong> <span>ONE-CLICK READY</span></div>
-      <nav class="nav">
-        <a href="#gen">Генератор</a>
-        <a href="#contact">Контакт</a>
-      </nav>
+  <header class="hud-top">
+    <div class="hud-wrap">
+      <div class="hud-brand">
+        <span class="hud-tag">RED SOFTWARE TEAM // BULGARIA</span>
+        <strong>FULL HD BUSINESS &amp; VISUAL ENGINE</strong>
+      </div>
+      <div class="hud-actions">
+        <button id="btnBoostVisual" class="btn-hud btn-hot" type="button">PODOBRI VIZIQTA (NEW VARIANT)</button>
+        <button id="btnOneClickReady" class="btn-hud btn-cyan" type="button">ONE-CLICK READY</button>
+        <button id="btnOpenLive" class="btn-hud" type="button">OTVORI NA JIVO</button>
+        <button id="btnDownloadAll" class="btn-hud" type="button">SVALI PROEKTA</button>
+      </div>
     </div>
   </header>
 
-  <main class="wrap main" id="gen">
-    <section class="box">
-      <div class="box-head">
+  <main class="hud-wrap hud-main">
+    <section class="hud-panel">
+      <div class="panel-bar">
+        <h2>1. IZBERI BIZNES V BULGARIA &amp; BROTALEN SHABLON</h2>
+        <span id="activeBadge" class="pill-live">FULL HD MODE</span>
+      </div>
+
+      <div id="bizTabs" class="biz-tabs"></div>
+
+      <div class="controls-grid">
         <div>
-          <h1>ONE-CLICK READY</h1>
-          <p class="sub" style="margin-bottom:0;">Натискаш бутона, без обяснения — веднага готов продукт, отваряне на живо и сваляне.</p>
+          <label for="bizTitleInput">Ime na firmata / uslugata</label>
+          <input id="bizTitleInput" type="text" placeholder="Napr. PUTNA MOSHT BULGARIA 24/7">
         </div>
-        <label style="display:inline-flex;align-items:center;gap:8px;font-size:0.86rem;cursor:pointer;color:#e5e7eb;">
-          <input id="watchAssembleToggle" type="checkbox" style="width:auto;margin:0;">
-          <span>Гледай как го сглобява</span>
-        </label>
-      </div>
-
-      <textarea id="promptBox" placeholder="Напиши какво искаш да излезе готово..."></textarea>
-
-      <div class="row">
-        <select id="kindSelect">
-          <option value="auto">Автоматично от текста</option>
-          <option value="saas">AI / Софтуерна платформа</option>
-          <option value="shop">Онлайн магазин (количка)</option>
-          <option value="app">Уеб инструмент (задачи)</option>
-          <option value="portfolio">Портфолио / Услуги</option>
-        </select>
-
-        <select id="accentSelect">
-          <option value="#dc2638">Червен акцент (#dc2638)</option>
-          <option value="#2563eb">Син акцент (#2563eb)</option>
-          <option value="#16a34a">Зелен акцент (#16a34a)</option>
-          <option value="#d97706">Кехлибарен акцент (#d97706)</option>
-        </select>
-
-        <button id="btnOneClickReady" class="btn primary" type="button">ONE-CLICK READY</button>
-        <button id="btnOpenLive" class="btn secondary" type="button">ОТВОРИ НА ЖИВО</button>
-        <button id="btnDownloadAll" class="btn secondary" type="button">СВАЛИ ПРОЕКТА</button>
-      </div>
-
-      <div id="statusMsg" class="status"></div>
-      <div id="assembleFeed" style="display:none;margin-top:10px;padding:10px 12px;background:#090b0f;border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.78rem;color:#9ca3af;max-height:130px;overflow-y:auto;"></div>
-    </section>
-
-    <section class="grid2">
-      <div class="box">
-        <div class="box-head">
-          <h2>Готов продукт (визуализация)</h2>
-          <span id="badgeInfo" class="badge">Готово</span>
+        <div>
+          <label for="bizCityInput">Region / grad v Bulgariq</label>
+          <input id="bizCityInput" type="text" placeholder="Napr. Pernik, Sofiq, Magistrala Struma">
         </div>
-        <iframe id="liveFrame" class="preview-iframe" title="Ready Generated Product"></iframe>
-      </div>
-
-      <div class="box">
-        <div class="box-head">
-          <h2>Код на продукта</h2>
-          <div class="tabs">
-            <button class="tab active" data-f="index.html" type="button">index.html</button>
-            <button class="tab" data-f="style.css" type="button">style.css</button>
-            <button class="tab" data-f="app.js" type="button">app.js</button>
+        <div>
+          <label for="paletteSelect">Cvetova viziq</label>
+          <select id="paletteSelect">
+            <option value="cyber-red">Cyber Red + Dark Grid</option>
+            <option value="electric-cyan">Electric Cyan + Deep Space</option>
+            <option value="toxic-emerald">Emerald Green + Carbon</option>
+            <option value="royal-gold">Crimson &amp; Gold Command</option>
+          </select>
+        </div>
+        <div>
+          <label for="customPhotoUrl">Dobavi snimka za biznesa (URL ili izberi fail)</label>
+          <div class="photo-row">
+            <input id="customPhotoUrl" type="text" placeholder="https://... snimka">
+            <input id="customPhotoFile" type="file" accept="image/*">
           </div>
         </div>
-        <textarea id="codeBox" class="code-box" spellcheck="false"></textarea>
-        <div class="row" style="margin-top:10px;">
-          <button id="btnApplyCode" class="btn secondary" type="button">Приложи промяната в кода</button>
-          <button id="btnDownloadFile" class="btn ghost" type="button">Свали текущия файл</button>
+      </div>
+
+      <div class="prompt-strip">
+        <input id="promptBox" type="text" placeholder="Dopulnitelni opcii: napr. 24/7 repatrak, besplatna konsultaciq, onlain poruchki...">
+        <button id="btnAddPhoto" class="btn-hud" type="button">+ KACHI SNIMKA</button>
+      </div>
+
+      <div id="statusMsg" class="hud-status"></div>
+    </section>
+
+    <section class="hud-split">
+      <div class="hud-panel">
+        <div class="panel-bar">
+          <h2>2. BROTALNA FULL HD VIZIQ (LIVE PREVIEW)</h2>
+          <span id="variantLabel" class="pill-sub">Variant #1</span>
+        </div>
+        <iframe id="liveFrame" class="fullhd-frame" title="Full HD Business Preview"></iframe>
+      </div>
+
+      <div class="hud-panel">
+        <div class="panel-bar">
+          <h2>3. KOD NA PROEKTA</h2>
+          <div class="file-tabs">
+            <button class="ftab active" data-f="index.html" type="button">index.html</button>
+            <button class="ftab" data-f="style.css" type="button">style.css</button>
+            <button class="ftab" data-f="app.js" type="button">app.js</button>
+          </div>
+        </div>
+        <textarea id="codeBox" class="code-editor" spellcheck="false"></textarea>
+        <div class="btn-row">
+          <button id="btnApplyCode" class="btn-hud btn-cyan" type="button">PRILOJI KODA</button>
+          <button id="btnDownloadFile" class="btn-hud" type="button">SVALI FAILA</button>
         </div>
       </div>
     </section>
 
-    <section class="box" id="contact" style="margin-top:20px;">
-      <h2>Изпрати запитване</h2>
-      <form id="contactForm" class="cform">
-        <div class="row">
-          <input id="cName" type="text" placeholder="Име" required>
-          <input id="cEmail" type="email" placeholder="Имейл" required>
+    <section class="hud-panel" style="margin-top:18px;">
+      <div class="panel-bar">
+        <h2>4. ZAPITVANE / PORYCHKA</h2>
+      </div>
+      <form id="contactForm" class="c-form">
+        <div class="c-row">
+          <input id="cName" type="text" placeholder="Tvoyto ime" required>
+          <input id="cEmail" type="email" placeholder="imeil@primer.com" required>
         </div>
-        <textarea id="cMsg" placeholder="Съобщение..." style="min-height:80px;" required></textarea>
-        <button class="btn primary" type="submit">Изпрати</button>
-        <div id="cStatus" class="status"></div>
+        <textarea id="cMsg" placeholder="Kakuv sait i viziq iskash..." style="min-height:76px;" required></textarea>
+        <button class="btn-hud btn-hot" type="submit">IZPRATI ZAPITVANE</button>
+        <div id="cStatus" class="hud-status"></div>
       </form>
     </section>
   </main>
