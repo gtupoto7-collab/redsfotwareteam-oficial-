@@ -3,17 +3,193 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RED-SOFTWARE-TEAM-BULGARIA</title>
+  <title>RED-SOFTWARE-TEAM-BULGARIA | CYBER &amp; AI COMMAND</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header class="topbar">
-    <a href="#top" class="brand">RED-SOFTWARE-TEAM-BULGARIA</a>
+<body id="top">
+  <div class="cyber-backdrop" aria-hidden="true"></div>
+
+  <header class="top-command">
+    <div class="wrap top-row">
+      <a href="#top" class="brand-lock">
+        <span class="brand-core">R</span>
+        <span class="brand-titles">
+          <strong>RED-SOFTWARE-TEAM-BULGARIA</strong>
+          <small>CYBER • AI • WEB • AUTOMATION COMMAND</small>
+        </span>
+      </a>
+
+      <div class="status-cluster">
+        <span class="st-item">SYSTEM: <b id="apiState">ONLINE</b></span>
+        <span class="st-item">CORE: <b>v12.0 RED</b></span>
+        <span class="st-item">AGENTS: <b>READY</b></span>
+      </div>
+
+      <div class="top-actions">
+        <a href="#contact" class="btn-neon-red" data-plan="Nov proekt / Custom System">NEW PROJECT</a>
+        <a href="tel:+359879813928" class="btn-neon-cyan">+359 879 813928</a>
+      </div>
+    </div>
+
+    <nav class="sub-nav">
+      <div class="wrap nav-list">
+        <button type="button" class="nav-tab active" data-plan="Home Command">HOME</button>
+        <button type="button" class="nav-tab" data-plan="Cyber AI & Agents">CYBER AI</button>
+        <button type="button" class="nav-tab" data-plan="Web & API Systems">WEB SYSTEMS</button>
+        <button type="button" class="nav-tab" data-plan="Security & Audit Tools">SECURITY AUDIT</button>
+        <button type="button" class="nav-tab" data-plan="Bot & Automation Hub">BOTS &amp; AUTO</button>
+        <button type="button" class="nav-tab" data-plan="Cloud & Diagnostics">DIAGNOSTICS</button>
+        <button type="button" class="nav-tab" data-plan="Analytics & Reports">REPORTS</button>
+        <a href="#contact" class="nav-tab link-tab">CONTACT</a>
+      </div>
+    </nav>
   </header>
 
-  <main id="canvas" class="stage">
-    <!-- Tuk slagash tvoite butoni -->
+  <main class="wrap main-grid">
+    <aside class="left-rail">
+      <div class="rail-box">
+        <div class="rail-head">AI &amp; SYSTEM MODULES</div>
+        <div class="rail-items">
+          <button type="button" class="rail-btn" data-plan="AI Code & Architecture Agent">AI Code Agent</button>
+          <button type="button" class="rail-btn" data-plan="Web Scraper & Data Parser">Data Scraper</button>
+          <button type="button" class="rail-btn" data-plan="API & Endpoint Tester">API Tester</button>
+          <button type="button" class="rail-btn" data-plan="Telegram & Discord Bot Builder">Bot Builder</button>
+          <button type="button" class="rail-btn" data-plan="UI / Dashboard Generator">UI Builder</button>
+          <button type="button" class="rail-btn" data-plan="Log & Error Monitor">Log Monitor</button>
+          <button type="button" class="rail-btn" data-plan="Workflow Automation">Automation</button>
+          <button type="button" class="rail-btn" data-plan="Database & JSON Store">Data Store</button>
+        </div>
+      </div>
+
+      <div class="rail-box cyan-border">
+        <div class="rail-head">QUICK CONTROLS</div>
+        <div class="rail-stack">
+          <button type="button" class="mini-btn red" data-plan="Quick Launch: Web + API">Launch Web Stack</button>
+          <button type="button" class="mini-btn cyan" data-plan="Quick Audit: Speed & Security">Run System Check</button>
+          <button type="button" class="mini-btn purple" data-plan="Quick Bot: Telegram / Web">Deploy Bot Flow</button>
+        </div>
+      </div>
+    </aside>
+
+    <section class="center-deck">
+      <div class="hero-banner">
+        <div class="banner-tag">RED SOFTWARE ENGINEERING // DARK INTERFACE</div>
+        <h1>RED-SOFTWARE-TEAM-BULGARIA</h1>
+        <p>Brutalna viziq, burzi sistemi, AI avtomatizaciq i prilozheniq po poruchka.</p>
+        <div class="banner-btns">
+          <a href="#contact" class="btn-neon-red" data-plan="Full Platform Build">START BUILD</a>
+          <a href="https://www.paypal.com/ncp/payment/BWG4AH3MMH8T6" target="_blank" rel="noopener noreferrer" class="btn-neon-purple">PAYPAL</a>
+        </div>
+      </div>
+
+      <div class="builder-panel">
+        <div class="panel-bar">
+          <span>MODULE CONFIGURATOR</span>
+          <span class="tag-live">ACTIVE</span>
+        </div>
+
+        <div class="builder-controls">
+          <input id="quickPrompt" type="text" placeholder="Opishi kakuv modul, sait ili bot iskash da izgradim...">
+          <select id="stackSelect" aria-label="Izberi tehnologiq">
+            <option value="Node.js + Express">Node.js + Express</option>
+            <option value="HTML / CSS / JS">HTML / CSS / JS</option>
+            <option value="Telegram / Discord Bot">Telegram / Discord Bot</option>
+            <option value="AI Agent / Automation">AI Agent / Automation</option>
+          </select>
+          <button type="button" id="applyBuilderBtn" class="btn-neon-purple">LOAD TO FORM</button>
+        </div>
+
+        <div class="module-grid">
+          <button type="button" class="mod-tile" data-plan="Web Scraper & Collector">
+            <b>Data Collector</b>
+            <small>Web / JSON</small>
+          </button>
+          <button type="button" class="mod-tile" data-plan="Port & Endpoint Monitor">
+            <b>Endpoint Check</b>
+            <small>HTTP / API</small>
+          </button>
+          <button type="button" class="mod-tile" data-plan="Form & Lead Handler">
+            <b>Lead Engine</b>
+            <small>POST /api/contact</small>
+          </button>
+          <button type="button" class="mod-tile" data-plan="Security & Header Audit">
+            <b>Header Audit</b>
+            <small>Web Check</small>
+          </button>
+          <button type="button" class="mod-tile" data-plan="Discord / Telegram Bot">
+            <b>Chat Bot Core</b>
+            <small>Automation</small>
+          </button>
+          <button type="button" class="mod-tile" data-plan="Dashboard & Admin UI">
+            <b>Admin Console</b>
+            <small>Dark UI</small>
+          </button>
+          <button type="button" class="mod-tile" data-plan="Config & Token Manager">
+            <b>Env Config</b>
+            <small>Setup</small>
+          </button>
+          <button type="button" class="mod-tile" data-plan="Traffic & Event Logger">
+            <b>Event Logger</b>
+            <small>Telemetry</small>
+          </button>
+        </div>
+
+        <div class="console-out" id="consolePreview">
+          <div>[SYSTEM] RED-SOFTWARE-TEAM-BULGARIA interface initialized.</div>
+          <div>[READY] Select any module button to attach it directly to your project request.</div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="right-rail">
+      <div class="rail-box purple-border">
+        <div class="rail-head">DIRECT COMMAND CHAT</div>
+        <div class="chat-feed">
+          <div class="msg user">Iskam brutalen sait s moduli i butoni.</div>
+          <div class="msg bot">Gotovo. Izberi modul i prati zaqvka prez formata otdolu.</div>
+        </div>
+        <div class="chat-quick">
+          <a href="#contact" class="btn-neon-red full" data-plan="Direct Command Request">OPEN REQUEST FORM</a>
+        </div>
+      </div>
+
+      <div class="rail-box green-border">
+        <div class="rail-head">TELEMETRY &amp; CONTACTS</div>
+        <div class="stat-bar"><span>UI ENGINE</span><b>100%</b></div>
+        <div class="stat-bar"><span>API ROUTE</span><b>/api/contact</b></div>
+        <div class="stat-bar"><span>PHONE</span><b>0879 813 928</b></div>
+      </div>
+    </aside>
   </main>
+
+  <section id="contact" class="wrap contact-zone">
+    <div class="contact-card">
+      <h2>PROJECT REQUEST / CONTACT</h2>
+      <p>Izpranoto se zapisva prez <code>POST /api/contact</code> na survara.</p>
+
+      <form id="contactForm" novalidate>
+        <div class="row-2">
+          <input id="name" name="name" type="text" placeholder="Tvoreto ime" required>
+          <input id="email" name="email" type="email" placeholder="imeil@primer.com" required>
+        </div>
+        <input id="subject" name="subject" type="text" placeholder="Izbran modul / tema" required>
+        <textarea id="message" name="message" placeholder="Opishi kakvo iskash da izgradim..." required></textarea>
+
+        <button id="sendBtn" class="send-btn" type="submit">
+          <span class="btn-text">TRANSMIT REQUEST</span>
+          <span class="loader" aria-hidden="true"></span>
+        </button>
+        <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <footer class="foot-bar">
+    <div class="wrap foot-row">
+      <span>RED-SOFTWARE-TEAM-BULGARIA</span>
+      <span>0879 813 928</span>
+    </div>
+  </footer>
 
   <script src="app.js" defer></script>
 </body>
