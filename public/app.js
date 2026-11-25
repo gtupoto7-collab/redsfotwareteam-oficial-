@@ -207,3 +207,28 @@
 
   $("btnPublishSite")?.addEventListener("click", publishWebsite);
 })();
+
+document.querySelectorAll("[data-preset]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const box = document.getElementById("promptBox");
+    if (box) {
+      box.value = btn.getAttribute("data-preset") || "";
+      box.focus();
+    }
+  });
+});
+
+document.getElementById("btnDownloadHtml")?.addEventListener("click", () => {
+  const frame = document.getElementById("siteFrame");
+  const content = frame && frame.srcdoc ? frame.srcdoc : "";
+  if (!content) return;
+  const blob = new Blob([content], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "website.html";
+  a.click();
+  URL.revokeObjectURL(url);
+  const msg = document.getElementById("workMsg");
+  if (msg) msg.textContent = "Файлът website.html е свален.";
+});

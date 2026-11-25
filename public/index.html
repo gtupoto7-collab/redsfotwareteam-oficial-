@@ -8,20 +8,28 @@
 </head>
 <body>
   <main class="wrap">
-    <!-- ЕКРАН 1: САМО ТОВА -->
     <section id="startScreen" class="start-card">
       <div class="start-badge">RED AUTO BUILDER</div>
       <h1>Какво искаш да създадем?</h1>
       <textarea id="promptBox" rows="3" placeholder="Искам модерен сайт за строителна компания с Home, Services, Projects и Contact. Черно-златен стил, премиум визия."></textarea>
+
+      <div class="presets-row">
+        <button class="preset-chip" type="button" data-preset="Искам модерен сайт за строителна компания с Home, Services, Projects и Contact. Черно-златен стил, премиум визия.">Строителство (черно-златно)</button>
+        <button class="preset-chip" type="button" data-preset="Искам сайт за пътна помощ 24/7 и автосервиз с бърза връзка, услуги и контакти.">Пътна помощ 24/7</button>
+        <button class="preset-chip" type="button" data-preset="Искам модерен сайт за софтуерна и AI компания с услуги, решения и форма за запитване.">AI / Софтуер</button>
+      </div>
+
       <button id="btnGenerateSite" class="btn-main" type="button">GENERATE MY WEBSITE</button>
       <div id="flowStatus" class="flow-status"></div>
     </section>
 
-    <!-- РАБОТЕН ЕКРАН: LIVE PREVIEW + ЛЕНТА С ДЕЙСТВИЯ -->
     <section id="workScreen" class="work-card" style="display:none;">
       <div class="work-top">
         <span id="projectInfo" class="project-info">Проект готов</span>
-        <button id="btnNewPrompt" class="btn-chip" type="button">Нов проект</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="btnDownloadHtml" class="btn-chip" type="button">Свали сайта</button>
+          <button id="btnNewPrompt" class="btn-chip" type="button">Нов проект</button>
+        </div>
       </div>
 
       <div id="previewBox" class="preview-box">
@@ -47,7 +55,7 @@
       </div>
 
       <div id="askRow" class="ask-row" style="display:none;">
-        <input id="askInput" type="text" placeholder="Кажи какво да се промени (напр. направи хедъра по-премиум или добави страница)...">
+        <input id="askInput" type="text" placeholder="Кажи с прости думи какво да се промени...">
         <button id="btnSendAsk" class="btn-chip active" type="button">Приложи</button>
       </div>
 
