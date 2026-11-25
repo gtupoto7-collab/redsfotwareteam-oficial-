@@ -595,3 +595,315 @@ document.getElementById("btnLoadIntoStudio")?.addEventListener("click", () => {
   compileProject();
   if (statusMsg) statusMsg.textContent = `Zareden softuer v Studio: ${selectedSoftware.id} (${selectedSoftware.name}).`;
 });
+
+const autoBuilderExt = {
+  toggles: {
+    hero: true,
+    pricing: true,
+    form: true,
+    faq: false,
+    gallery: true,
+    quickbar: true
+  },
+  autos: {
+    leads: { enabled: true, variant: 1 },
+    quotes: { enabled: false, variant: 1 },
+    alerts: { enabled: false, variant: 1 }
+  }
+};
+
+const TOGGLE_ITEMS = [
+  { key: "hero", label: "Hero sekciq" },
+  { key: "pricing", label: "Ceni i paketi" },
+  { key: "form", label: "Forma za zapitvane" },
+  { key: "faq", label: "ChZ / FAQ" },
+  { key: "gallery", label: "Galeriq snimki" },
+  { key: "quickbar", label: "Bar za burzi deistviq" }
+];
+
+const AUTO_CONFIGS = [
+  {
+    key: "leads",
+    title: "Avtomatizaciq 1: Lidove",
+    variants: [
+      { v: 1, name: "V1: Burz kontakt" },
+      { v: 2, name: "V2: Po grad/usluga" },
+      { v: 3, name: "V3: Kod na zayavka" }
+    ]
+  },
+  {
+    key: "quotes",
+    title: "Avtomatizaciq 2: Oferti",
+    variants: [
+      { v: 1, name: "V1: Fiksna cena" },
+      { v: 2, name: "V2: Po broi uslugi" },
+      { v: 3, name: "V3: Paket -15%" }
+    ]
+  },
+  {
+    key: "alerts",
+    title: "Avtomatizaciq 3: Statusi",
+    variants: [
+      { v: 1, name: "V1: Jiv status" },
+      { v: 2, name: "V2: Log na deistviq" },
+      { v: 3, name: "V3: Burz eksport" }
+    ]
+  }
+];
+
+function mountExtendedGeneratorControls() {
+  const heroPanel = document.querySelector(".hero-panel");
+  if (!heroPanel || document.getElementById("extGeneratorBox")) return;
+
+  const box = document.createElement("div");
+  box.id = "extGeneratorBox";
+  box.style.marginTop = "14px";
+  box.style.paddingTop = "14px";
+  box.style.borderTop = "1px solid var(--border-soft)";
+
+  const tglHtml = TOGGLE_ITEMS.map(
+    (t) =>
+      `<button type="button" class="tgl-btn ${autoBuilderExt.toggles[t.key] ? "on" : ""}" data-tgl="${t.key}">
+        ${autoBuilderExt.toggles[t.key] ? "[ON]" : "[OFF]"} ${t.label}
+      </button>`
+  ).join("");
+
+  const autoHtml = AUTO_CONFIGS.map((cfg) => {
+    const cur = autoBuilderExt.autos[cfg.key];
+    const vBtns = cfg.variants
+      .map(
+        (vb) =>
+          `<button type="button" class="var-btn ${cur.variant === vb.v ? "active" : ""}" data-autokey="${cfg.key}" data-var="${vb.v}">${vb.name}</button>`
+      )
+      .join("");
+
+    return `
+      <div class="auto-card">
+        <div class="auto-card-head">
+          <strong>${cfg.title}</strong>
+          <button type="button" class="ftab ${cur.enabled ? "active" : ""}" data-autotoggle="${cfg.key}">
+            ${cur.enabled ? "VKLUCHENA" : "IZKLUCHENA"}
+          </button>
+        </div>
+        <div class="auto-variants">${vBtns}</div>
+      </div>
+    `;
+  }).join("");
+
+  box.innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+      <span class="eyebrow" style="margin:0;">TOGGLE MODULI (SLAGASH / MAHASH SUS SUSHHTIQ BUTON)</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" id="btnTransferBizToGen" class="btn btn-surface" style="height:34px;padding:0 12px;font-size:0.75rem;">PREFURLI SAITA V GENERATORA</button>
+        <button type="button" id="btnTransferSwToGen" class="btn btn-accent" style="height:34px;padding:0 12px;font-size:0.75rem;">PREFURLI IZBRANIQ SOFTUER V GENERATORA</button>
+      </div>
+    </div>
+    <div class="toggle-grid">${tglHtml}</div>
+    <div class="auto-suite">${autoHtml}</div>
+  `;
+
+  const statusLine = document.getElementById("statusMsg");
+  heroPanel.insertBefore(box, statusLine || null);
+
+  box.querySelectorAll("[data-tgl]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const k = btn.getAttribute("data-tgl");
+      autoBuilderExt.toggles[k] = !autoBuilderExt.toggles[k];
+      box.remove();
+      mountExtendedGeneratorControls();
+      compileRichGeneratorOutput();
+      if (statusLine) {
+        statusLine.textContent = `${k} -> ${autoBuilderExt.toggles[k] ? "dobaven" : "premahnat"}.`;
+      }
+    });
+  });
+
+  box.querySelectorAll("[data-autotoggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const k = btn.getAttribute("data-autotoggle");
+      autoBuilderExt.autos[k].enabled = !autoBuilderExt.autos[k].enabled;
+      box.remove();
+      mountExtendedGeneratorControls();
+      compileRichGeneratorOutput();
+      if (statusLine) {
+        statusLine.textContent = `${k} -> ${autoBuilderExt.autos[k].enabled ? "vklyuchena" : "izkluchena"}.`;
+      }
+    });
+  });
+
+  box.querySelectorAll("[data-autokey]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const k = btn.getAttribute("data-autokey");
+      const v = Number(btn.getAttribute("data-var")) || 1;
+      autoBuilderExt.autos[k].enabled = true;
+      autoBuilderExt.autos[k].variant = v;
+      box.remove();
+      mountExtendedGeneratorControls();
+      compileRichGeneratorOutput();
+      if (statusLine) {
+        statusLine.textContent = `${k} -> izbran Variant ${v}.`;
+      }
+    });
+  });
+
+  document.getElementById("btnTransferBizToGen")?.addEventListener("click", () => {
+    const biz = getCurrentBiz();
+    state.title = biz.defaultTitle;
+    state.city = biz.defaultCity;
+    state.photos = [...biz.photos];
+    if (titleInp) titleInp.value = state.title;
+    if (cityInp) cityInp.value = state.city;
+    compileRichGeneratorOutput();
+    if (statusLine) statusLine.textContent = `Prefurlen sait "${biz.name}" v generatora.`;
+  });
+
+  document.getElementById("btnTransferSwToGen")?.addEventListener("click", () => {
+    if (!selectedSoftware) return;
+    state.title = `${selectedSoftware.name} (${selectedSoftware.price})`;
+    state.note = selectedSoftware.summary;
+    if (titleInp) titleInp.value = state.title;
+    if (promptBox) promptBox.value = state.note;
+    compileRichGeneratorOutput();
+    if (statusLine) statusLine.textContent = `Prefurlen softuer ${selectedSoftware.id} v generatora.`;
+  });
+}
+
+function compileRichGeneratorOutput() {
+  const biz = getCurrentBiz();
+  const pal = PALETTES[state.paletteKey] || PALETTES["crimson-hd"];
+  applyRootPalette(state.paletteKey);
+
+  const t = autoBuilderExt.toggles;
+  const a = autoBuilderExt.autos;
+
+  const heroSection = t.hero
+    ? `<section class="hero">
+      <div class="kicker">${esc(biz.name)} • ${esc(state.city)} • V${state.variantNum}</div>
+      <h1>${esc(state.title)}</h1>
+      <p class="sub">${esc(state.note)}</p>
+      ${t.quickbar ? `<div style="display:flex;gap:8px;flex-wrap:wrap;"><button id="ctaBtn" class="cta" type="button">AKTIVIRAI</button><button id="quoteBtn" class="cta" style="background:transparent;border:1px solid ${pal.primary};" type="button">OFERTA</button></div>` : ""}
+      <div id="ctaOut" style="margin-top:10px;font-size:0.86rem;color:#e2e8f0;"></div>
+    </section>`
+    : "";
+
+  const pricingSection = t.pricing
+    ? `<section class="cards" style="margin-top:14px;">
+      ${biz.services
+        .map(
+          (s, idx) =>
+            `<div class="card"><h3>${esc(s.title)}</h3><p>${esc(s.desc)}</p><div style="margin-top:8px;font-weight:800;color:${pal.primary};">Paket ${idx + 1}: ${45 + idx * 25} EUR</div></div>`
+        )
+        .join("\n      ")}
+    </section>`
+    : "";
+
+  const faqSection = t.faq
+    ? `<section class="hero" style="margin-top:14px;padding:18px;">
+      <div class="kicker">CHZ / FAQ</div>
+      <p style="font-size:0.88rem;color:#cbd5e1;"><strong>Kolko burzo se puska?</strong> Vednaga sled izbirane na opciite i eksport.</p>
+      <p style="font-size:0.88rem;color:#cbd5e1;margin-top:6px;"><strong>Mogа li da smenqm moduli?</strong> Da, vseki toggle buton slagа ili maha s edin klik.</p>
+    </section>`
+    : "";
+
+  const gallerySection = t.gallery
+    ? `<section class="media-grid" style="margin-top:14px;">
+      ${state.photos.map((src, i) => `<img src="${esc(src)}" alt="Snimka ${i + 1}">`).join("\n      ")}
+    </section>`
+    : "";
+
+  const formSection = t.form
+    ? `<section class="hero" style="margin-top:14px;padding:18px;">
+      <div class="kicker">BURZA ZAYAVKA</div>
+      <input id="demoPhone" type="text" placeholder="Telefon ili imeil za vruzka" style="max-width:340px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:#07090e;color:#fff;margin-right:8px;">
+      <button id="sendDemoLead" class="cta" type="button">IZPRATI</button>
+      <div id="demoLeadMsg" style="margin-top:8px;font-size:0.84rem;color:#4ade80;"></div>
+    </section>`
+    : "";
+
+  const activeAutosSummary = [
+    a.leads.enabled ? `Lidove-V${a.leads.variant}` : null,
+    a.quotes.enabled ? `Oferti-V${a.quotes.variant}` : null,
+    a.alerts.enabled ? `Statusi-V${a.alerts.variant}` : null
+  ]
+    .filter(Boolean)
+    .join(" | ") || "Nqma vklyucheni avtomatizacii";
+
+  const css = `* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: ${pal.bg}; color: #f8fafc;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  padding: 20px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+.hero {
+  background: ${pal.surface}; border: 1px solid ${pal.border};
+  box-shadow: 0 14px 34px ${pal.glow}; border-radius: 14px; padding: 22px;
+}
+.kicker { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; color: ${pal.primary}; text-transform: uppercase; margin-bottom: 6px; }
+h1 { font-size: 1.8rem; margin-bottom: 8px; }
+.sub { color: #cbd5e1; font-size: 0.92rem; margin-bottom: 12px; }
+.cta { background: ${pal.primary}; color: #fff; border: 0; border-radius: 8px; padding: 9px 16px; font-weight: 800; cursor: pointer; font-size: 0.82rem; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.card { background: ${pal.surface}; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 14px; }
+.card h3 { color: ${pal.primary}; font-size: 0.98rem; margin-bottom: 4px; }
+.card p { color: #cbd5e1; font-size: 0.84rem; }
+.media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.media-grid img { width: 100%; height: 170px; object-fit: cover; border-radius: 10px; }
+@media (max-width: 820px) { .cards { grid-template-columns: 1fr; } }`;
+
+  const html = `<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>${esc(state.title)}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <div style="font-size:0.74rem;color:#94a3b8;margin-bottom:10px;">Avtomatizacii: ${esc(activeAutosSummary)}</div>
+    ${heroSection}
+    ${pricingSection}
+    ${faqSection}
+    ${gallerySection}
+    ${formSection}
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>`;
+
+  const js = `const autoState = ${JSON.stringify(autoBuilderExt.autos)};
+document.getElementById("ctaBtn")?.addEventListener("click", () => {
+  const el = document.getElementById("ctaOut");
+  if (el) el.textContent = "Aktivna avtomatizaciq (${esc(activeAutosSummary)}) — tel. 0879 813 928.";
+});
+document.getElementById("quoteBtn")?.addEventListener("click", () => {
+  const el = document.getElementById("ctaOut");
+  const mode = autoState.quotes.enabled ? "Variant " + autoState.quotes.variant : "Standartna";
+  if (el) el.textContent = "Oferta (" + mode + "): ot 45 EUR.";
+});
+document.getElementById("sendDemoLead")?.addEventListener("click", () => {
+  const val = (document.getElementById("demoPhone")?.value || "").trim();
+  const msg = document.getElementById("demoLeadMsg");
+  if (msg) msg.textContent = val ? "Prieto (" + val + ") — kod #" + Date.now().toString().slice(-5) : "Vuvedi kontakt.";
+});`;
+
+  state.files = { "index.html": html, "style.css": css, "app.js": js };
+  state.lastPreviewUrl = "";
+  if (variantLabel) variantLabel.textContent = `Variant #${state.variantNum} • ${activeAutosSummary}`;
+  if (codeBox) codeBox.value = state.files[state.activeFile] || "";
+  if (liveFrame) {
+    liveFrame.srcdoc = html
+      .replace(/<link[^>]*href=["']style\.css["'][^>]*>/i, `<style>${css}</style>`)
+      .replace(/<script[^>]*src=["']app\.js["'][^>]*><\/script>/i, `<script>${js}<\/script>`);
+  }
+}
+
+const origLoadSwBtn = document.getElementById("btnLoadIntoStudio");
+if (origLoadSwBtn && selectedSoftware) {
+  origLoadSwBtn.addEventListener("click", () => {
+    compileRichGeneratorOutput();
+  });
+}
+
+mountExtendedGeneratorControls();
+compileRichGeneratorOutput();
