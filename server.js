@@ -472,7 +472,7 @@ app.get("/p/:id", (req, res) => {
   const isActive = validToken && Date.now() < session.expiresAt;
 
   if (!isActive) {
-    return res.status(402).send("<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Временният достъп изтече</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#090b10;color:#f8fafc;font-family:system-ui,sans-serif;padding:20px;}.box{max-width:520px;background:#121826;border:1px solid rgba(239,35,60,0.5);border-radius:16px;padding:26px;text-align:center;}h1{color:#ff6b7d;margin-bottom:10px;font-size:1.5rem;}p{color:#cbd5e1;line-height:1.5;margin-bottom:14px;}.btn{display:inline-block;padding:12px 20px;border-radius:10px;background:#ef233c;color:#fff;text-decoration:none;font-weight:800;}</style></head><body><div class="box"><h1>Временният тест приключи!</h1><p>Пробният линк от машината изтече, за да може да се порадваш на сайта на живо.</p><p>За да продължи онлайн или да финализираш хостинга/пакета, направи плащане към съответната компания / избрания метод.</p><a class="btn" href="/">Върни се в RED AUTO BUILDER</a></div></body></html>");
+    return res.status(402).send('<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Временният достъп изтече</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#090b10;color:#f8fafc;font-family:system-ui,sans-serif;padding:20px;}.box{max-width:520px;background:#121826;border:1px solid rgba(239,35,60,0.5);border-radius:16px;padding:26px;text-align:center;}h1{color:#ff6b7d;margin-bottom:10px;font-size:1.5rem;}p{color:#cbd5e1;line-height:1.5;margin-bottom:14px;}.btn{display:inline-block;padding:12px 20px;border-radius:10px;background:#ef233c;color:#fff;text-decoration:none;font-weight:800;}</style></head><body><div class="box"><h1>Временният тест приключи!</h1><p>Пробният линк от машината изтече, за да може да се порадваш на сайта на живо.</p><p>За да продължи онлайн или да финализираш хостинга/пакета, направи плащане към съответната компания / избрания метод.</p><a class="btn" href="/">Върни се в RED AUTO BUILDER</a></div></body></html>');
   }
 
   const files = readAllFiles(dir);
@@ -480,13 +480,90 @@ app.get("/p/:id", (req, res) => {
   const css = files["src/styles/main.css"] || "";
   const js = files["src/app/main.js"] || "";
   if (css) html = html.replace("</head>", "<style>" + css + "</style>\n</head>");
-  if (js) html = html.replace("</body>", "<script>" + js.replace(/</script>/gi, "<\/script>") + "</script>\n</body>");
+  if (js) html = html.replace("</body>", "<script>" + js.replace(new RegExp("<\\/script>", "gi"), "<\\/script>") + "</script>\n</body>");
   res.send(html);
 });
 
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, service: "RED AUTO BUILDER", ts: new Date().toISOString() });
 });
+
+function buildRichProjectFiles({ brandName, targetType, stylePreset, prompt, palette, modules }) {
+  const cleanPrompt = String(prompt || "").trim() || "AL — Автоматизация и решения за строителство и пътна помощ";
+  const lower = cleanPrompt.toLowerCase();
+  const pType = String(targetType || "AL — Автоматизация и решения").trim();
+  const isAl = pType.toUpperCase().startsWith("AL");
+
+  const mods = {
+    mixCam: isAl && Boolean(modules && modules.mixCam),
+    call: modules && typeof modules.call === "boolean" ? modules.call : true,
+    dashboard: modules && typeof modules.dashboard === "boolean" ? modules.dashboard : true,
+    register: modules && typeof modules.register === "boolean" ? modules.register : true,
+    admin: modules && typeof modules.admin === "boolean" ? modules.admin : true
+  };
+
+  let nicheLabel = "AL АВТОМАТИЗАЦИЯ И РЕШЕНИЯ";
+  let nicheSummary = "Интелигентна автоматизация на процеси, обекти и заявки в реално време.";
+  if (lower.includes("строит") || lower.includes("обект")) {
+    nicheLabel = "AL СТРОИТЕЛСТВО & АВТОМАТИЗАЦИЯ";
+    nicheSummary = "Управление на строителни обекти, графици, материали и бързи запитвания на едно място.";
+  } else if (lower.includes("пътна") || lower.includes("репатрак") || lower.includes("24/7")) {
+    nicheLabel = "AL ПЪТНА ПОМОЩ 24/7 & ДИСПЕЧЕР";
+    nicheSummary = "Моментална реакция при аварии на пътя, координация на екипи и проследяване на заявки.";
+  } else if (pType.toUpperCase().includes("BOT")) {
+    nicheLabel = "AUTOMATED BOT SYSTEM";
+    nicheSummary = "Автоматизиран бот поток за клиенти, известия и бързи команди.";
+  } else if (pType.toUpperCase().includes("WEBMARKETPLACE")) {
+    nicheLabel = "WEB MARKETPLACE";
+    nicheSummary = "Каталог с услуги, модули, оферти и директни поръчки.";
+  } else if (pType.toUpperCase().includes("TOOLS")) {
+    nicheLabel = "TOOLS • KALI LINUX / PYTHON / JS";
+    nicheSummary = "Практически инструменти, автоматизационни скриптове и конзолни модули.";
+  } else if (pType.toUpperCase().includes("FULL APP")) {
+    nicheLabel = "FULL APPLICATION SUITE";
+    nicheSummary = "Цялостно уеб приложение с модули, табло и потребителски потоци.";
+  }
+
+  const title = (brandName && String(brandName).trim()) || nicheLabel;
+  const pal = palette && typeof palette === "object" ? palette : {};
+  const bg = pal.bg || "#090c12";
+  const card = pal.card || "#121826";
+  const text = pal.text || "#f8fafc";
+  const accent = pal.accent || "#ef233c";
+  const secondary = pal.secondary || "#f59e0b";
+
+  const mixCamHtml = mods.mixCam
+    ? '<div class="mod-card"><h3>MIX CAM (AL LIVE)</h3><p>Активен видео/сензорен поток за AL обект и терен.</p><span class="pill">ONLINE • AL</span></div>'
+    : "";
+
+  const callHtml = mods.call
+    ? '<div class="mod-card"><h3>ЗВЪНЕНЕ</h3><p>Бърза линия за спешна реакция и клиентски обаждания.</p><a class="act-btn" href="tel:0879813928">ОБАДИ СЕ СЕГА</a></div>'
+    : "";
+
+  const dashboardHtml = mods.dashboard
+    ? '<div class="mod-card"><h3>DASHBOARD</h3><p>Активни задачи: <b>12</b> • Статус: <b>ОПЕРАТИВЕН</b> • Време за реакция: <b>&lt; 5 мин</b></p></div>'
+    : "";
+
+  const registerHtml = mods.register
+    ? '<div class="mod-card"><h3>РЕГИСТРАЦИЯ</h3><p>Бърза регистрация на клиент или екип към системата.</p><input class="mini-inp" type="text" placeholder="Име или телефон"><button class="act-btn" type="button" data-demo="Регистрацията е подготвена в демото.">Регистрация</button></div>'
+    : "";
+
+  const adminHtml = mods.admin
+    ? '<div class="mod-card"><h3>ADMIN PASS / ADMIN ACC</h3><p>Административен вход и контрол на достъпа.</p><input class="mini-inp" type="password" placeholder="Admin Pass / Ключ"><button class="act-btn" type="button" data-demo="Админ панелът е в демо режим.">Вход Админ</button></div>'
+    : "";
+
+  const indexHtml = '<!DOCTYPE html>\n<html lang="bg">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>' + title + '</title>\n  <link rel="stylesheet" href="src/styles/main.css">\n</head>\n<body>\n  <header class="top-nav">\n    <div class="container nav-inner">\n      <div class="brand">' + title + '</div>\n      <div class="type-badge">' + pType + '</div>\n    </div>\n  </header>\n  <main class="container">\n    <section id="home" class="hero">\n      <div class="kicker">' + nicheLabel + '</div>\n      <h1>' + cleanPrompt + '</h1>\n      <p>' + nicheSummary + '</p>\n      <div class="hero-actions">' + (mods.call ? '<a class="act-btn" href="tel:0879813928">БЪРЗО ЗВЪНЕНЕ</a>' : '') + '<a class="ghost-btn" href="#modules">МОДУЛИ</a></div>\n    </section>\n    <section id="modules" class="mod-grid">' + mixCamHtml + callHtml + dashboardHtml + registerHtml + adminHtml + '</section>\n    <section id="contact" class="footer-note">\n      <div><strong>Тип:</strong> ' + pType + ' • <strong>Стил:</strong> ' + (stylePreset || "Custom / Photo") + '</div>\n      <div id="liveFeedback" class="feedback"></div>\n    </section>\n  </main>\n  <script src="src/app/main.js"></script>\n</body>\n</html>';
+
+  const mainCss = ':root { --bg: ' + bg + '; --card: ' + card + '; --text: ' + text + '; --accent: ' + accent + '; --secondary: ' + secondary + '; } * { box-sizing: border-box; margin: 0; padding: 0; } body { background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; line-height: 1.55; } .container { max-width: 1080px; margin: 0 auto; padding: 20px; } .top-nav { border-bottom: 1px solid rgba(255,255,255,0.12); } .nav-inner { display: flex; justify-content: space-between; align-items: center; gap: 12px; } .brand { font-weight: 900; } .type-badge { font-size: 0.75rem; font-weight: 800; padding: 5px 10px; border-radius: 999px; background: var(--accent); color: #fff; } .hero { background: var(--card); border: 1px solid rgba(255,255,255,0.14); border-radius: 18px; padding: 26px; margin-top: 12px; display: flex; flex-direction: column; gap: 10px; } .kicker { font-size: 0.76rem; font-weight: 900; color: var(--accent); } .hero h1 { font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 900; } .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; } .act-btn { display: inline-block; background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 10px 16px; font-size: 0.84rem; font-weight: 800; text-decoration: none; cursor: pointer; } .ghost-btn { display: inline-block; color: var(--text); border: 1px solid rgba(255,255,255,0.24); border-radius: 10px; padding: 10px 16px; font-size: 0.84rem; font-weight: 800; text-decoration: none; } .mod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 18px; } .mod-card { background: var(--card); border: 1px solid rgba(255,255,255,0.14); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 8px; } .mod-card h3 { color: var(--accent); font-size: 0.95rem; } .pill { align-self: flex-start; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.1); } .mini-inp { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.25); color: var(--text); } .footer-note { margin-top: 20px; padding: 14px 18px; border-radius: 12px; background: var(--card); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.82rem; } .feedback { color: var(--secondary); font-weight: 700; }';
+
+  const mainJs = 'document.querySelectorAll("[data-demo]").forEach((btn) => { btn.addEventListener("click", () => { const out = document.getElementById("liveFeedback"); if (out) out.textContent = btn.getAttribute("data-demo") || "Готово."; }); });';
+
+  return {
+    "index.html": indexHtml,
+    "src/styles/main.css": mainCss,
+    "src/app/main.js": mainJs
+  };
+}
 
 app.post("/api/projects/create", (req, res) => {
   try {
