@@ -261,3 +261,157 @@ document.getElementById("btnDownloadHtml")?.addEventListener("click", () => {
     reader.readAsDataURL(file);
   });
 })();
+
+(() => {
+  const fileInput = document.getElementById("refPhotoInput");
+  const wrap = document.getElementById("refPhotoPreviewWrap");
+  const img = document.getElementById("refPhotoPreview");
+  const meta = document.getElementById("refPhotoMeta");
+  const promptBox = document.getElementById("promptBox");
+
+  if (!fileInput || !img) return;
+
+  window.extractedPhotoPalette = null;
+
+  function rgbToHex(r, g, b) {
+    const toHex = (n) => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+  }
+
+  function colorDist(a, b) {
+    return Math.hypot(a.r - b.r, a.g - b.g, a.b - b.b);
+  }
+
+  function extractColorsFromImage(imageEl) {
+    const canvas = document.createElement("canvas");
+    const size = 64;
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+
+    ctx.drawImage(imageEl, 0, 0, size, size);
+    const data = ctx.getImageData(0, 0, size, size).data;
+    const buckets = new Map();
+
+    for (let i = 0; i < data.length; i += 4) {
+      const alpha = data[i + 3];
+      if (alpha < 128) continue;
+      const r = Math.min(255, Math.floor(data[i] / 24) * 24 + 12);
+      const g = Math.min(255, Math.floor(data[i + 1] / 24) * 24 + 12);
+      const b = Math.min(255, Math.floor(data[i + 2] / 24) * 24 + 12);
+      const key = `${r},${g},${b}`;
+      const prev = buckets.get(key) || { r, g, b, count: 0 };
+      prev.count += 1;
+      buckets.set(key, prev);
+    }
+
+    const sorted = [...buckets.values()].sort((a, b) => b.count - a.count);
+    const picked = [];
+    for (const c of sorted) {
+      if (picked.every((p) => colorDist(p, c) > 42)) {
+        picked.push(c);
+      }
+      if (picked.length >= 5) break;
+    }
+
+    if (!picked.length) return null;
+
+    const primary = picked[0];
+    const accent =
+      picked.find((c) => colorDist(c, primary) > 65) ||
+      picked[1] ||
+      primary;
+    const secondary = picked[2] || accent;
+    const lum = (0.299 * primary.r + 0.587 * primary.g + 0.114 * primary.b) / 255;
+
+    return {
+      isDark: lum < 0.45,
+      bg: lum < 0.45 ? rgbToHex(primary.r * 0.35, primary.g * 0.35, primary.b * 0.35) : "#0B0F17",
+      card: lum < 0.45 ? rgbToHex(primary.r * 0.65 + 14, primary.g * 0.65 + 14, primary.b * 0.65 + 18) : "#131A29",
+      text: lum < 0.45 ? "#F8FAFC" : "#F8FAFC",
+      accent: rgbToHex(accent.r, accent.g, accent.b),
+      secondary: rgbToHex(secondary.r, secondary.g, secondary.b),
+      swatches: picked.map((c) => rgbToHex(c.r, c.g, c.b))
+    };
+  }
+
+  function renderSwatches(palette) {
+    if (!wrap || !palette) return;
+    let bar = document.getElementById("photoPaletteBar");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.id = "photoPaletteBar";
+      bar.className = "palette-swatches";
+      wrap.appendChild(bar);
+    }
+    bar.innerHTML = palette.swatches
+      .map(
+        (hex) =>
+          `<span class="swatch-pill"><span class="swatch-dot" style="background:${hex};"></span>${hex}</span>`
+      )
+      .join("");
+  }
+
+  function applyExtractedPaletteToFrame() {
+    const pal = window.extractedPhotoPalette;
+    const frame = document.getElementById("siteFrame");
+    if (!pal || !frame || !frame.srcdoc) return;
+
+    const liveCssOverride = `
+<style id="extractedPhotoColors">
+  :root {
+    --bg: ${pal.bg} !important;
+    --card: ${pal.card} !important;
+    --text: ${pal.text} !important;
+    --accent: ${pal.accent} !important;
+  }
+  body {
+    background: ${pal.bg} !important;
+    color: ${pal.text} !important;
+  }
+  .card, .hero {
+    background: ${pal.card} !important;
+    border-color: ${pal.accent} !important;
+  }
+  .btn.primary, .cta, button {
+    background: ${pal.accent} !important;
+    border-color: ${pal.secondary} !important;
+  }
+  a, h1, h2, h3, .badge {
+    color: ${pal.accent} !important;
+  }
+</style>`;
+
+    if (frame.srcdoc.includes('id="extractedPhotoColors"')) {
+      frame.srcdoc = frame.srcdoc.replace(/<style id="extractedPhotoColors">[\s\S]*?<\/style>/i, liveCssOverride);
+    } else if (frame.srcdoc.includes("</head>")) {
+      frame.srcdoc = frame.srcdoc.replace("</head>", `${liveCssOverride}\n</head>`);
+    }
+  }
+
+  img.addEventListener("load", () => {
+    const pal = extractColorsFromImage(img);
+    if (!pal) return;
+    window.extractedPhotoPalette = pal;
+    renderSwatches(pal);
+    document.documentElement.style.setProperty("--accent", pal.accent);
+
+    if (meta) {
+      const baseText = meta.textContent.split(" | Цветове:")[0];
+      meta.textContent = `${baseText} | Цветове: ${pal.swatches.join(", ")}`;
+    }
+
+    if (promptBox && (!promptBox.value.trim() || promptBox.value.includes("вдъхновен от снимката"))) {
+      promptBox.value = `Създай модерен сайт с цветовете от снимката (${pal.swatches.join(", ")}) и основен акцент ${pal.accent}, с Home, Services, About и Contact.`;
+    }
+
+    applyExtractedPaletteToFrame();
+  });
+
+  const frame = document.getElementById("siteFrame");
+  if (frame) {
+    const observer = new MutationObserver(() => applyExtractedPaletteToFrame());
+    observer.observe(frame, { attributes: true, attributeFilter: ["srcdoc"] });
+  }
+})();
