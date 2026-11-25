@@ -907,3 +907,166 @@ if (origLoadSwBtn && selectedSoftware) {
 
 mountExtendedGeneratorControls();
 compileRichGeneratorOutput();
+
+const maxHdConfig = {
+  motionBoost: true,
+  animSeed: 1
+};
+
+function enhanceSiteWithMaxHd(html, css, js, pal, title, city, variantNum) {
+  const hdCss = `${css}
+@keyframes siteScanline {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes cardLiftPulse {
+  0%, 100% { transform: translateY(0px); border-color: rgba(255,255,255,0.14); }
+  50% { transform: translateY(-4px); border-color: ${pal.primary}; }
+}
+@keyframes meterSweep {
+  0% { width: 22%; }
+  50% { width: 92%; }
+  100% { width: 38%; }
+}
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 45%; height: 2px;
+  background: linear-gradient(90deg, transparent, ${pal.primary}, transparent);
+  animation: siteScanline 3.2s linear infinite;
+}
+.card {
+  animation: cardLiftPulse 4.2s ease-in-out infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 14px 30px ${pal.glow};
+}
+.hd-telemetry-strip {
+  margin-top: 14px;
+  background: rgba(5, 7, 12, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.hd-metric-box strong {
+  display: block;
+  font-size: 1.05rem;
+  color: ${pal.primary};
+}
+.hd-metric-box span {
+  font-size: 0.74rem;
+  color: #cbd5e1;
+}
+.hd-bar-line {
+  margin-top: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  overflow: hidden;
+}
+.hd-bar-run {
+  height: 100%;
+  background: ${pal.primary};
+  animation: meterSweep 3.6s ease-in-out infinite;
+}
+@media (max-width: 760px) {
+  .hd-telemetry-strip { grid-template-columns: 1fr; }
+}`;
+
+  const telemetryBlock = `
+    <section class="hd-telemetry-strip">
+      <div class="hd-metric-box">
+        <span id="hdLiveCounter">AKTIVNOST • ${esc(city)}</span>
+        <strong id="hdLiveStat">99.9% FULL HD</strong>
+        <div class="hd-bar-line"><div class="hd-bar-run"></div></div>
+      </div>
+      <div class="hd-metric-box">
+        <span>REJIM I VIZIQ</span>
+        <strong>V${variantNum} • LIVE MOTION</strong>
+        <div class="hd-bar-line"><div class="hd-bar-run" style="animation-delay:0.8s;"></div></div>
+      </div>
+      <div class="hd-metric-box">
+        <span>PROEKT</span>
+        <strong>${esc(title)}</strong>
+        <div class="hd-bar-line"><div class="hd-bar-run" style="animation-delay:1.5s;"></div></div>
+      </div>
+    </section>`;
+
+  const patchedHtml = html.replace(
+    /<script src="app\.js"><\/script>/i,
+    `${telemetryBlock}\n  <script src="app.js"></script>`
+  );
+
+  const patchedJs = `${js}
+setInterval(() => {
+  const el = document.getElementById("hdLiveStat");
+  if (el) {
+    const val = (96 + (Date.now() % 40) / 10).toFixed(1);
+    el.textContent = val + "% HD SYNC";
+  }
+}, 1400);`;
+
+  return { html: patchedHtml, css: hdCss, js: patchedJs };
+}
+
+function applyMaxHdToCurrentProject() {
+  const pal = PALETTES[state.paletteKey] || PALETTES["crimson-hd"];
+  const baseHtml = state.files["index.html"] || "";
+  const baseCss = state.files["style.css"] || "";
+  const baseJs = state.files["app.js"] || "";
+  if (!baseHtml || !baseCss) return;
+
+  const upgraded = enhanceSiteWithMaxHd(
+    baseHtml,
+    baseCss,
+    baseJs,
+    pal,
+    state.title,
+    state.city,
+    state.variantNum
+  );
+
+  state.files["index.html"] = upgraded.html;
+  state.files["style.css"] = upgraded.css;
+  state.files["app.js"] = upgraded.js;
+
+  if (codeBox) codeBox.value = state.files[state.activeFile] || "";
+  if (liveFrame) {
+    liveFrame.srcdoc = upgraded.html
+      .replace(/<link[^>]*href=["']style\.css["'][^>]*>/i, `<style>${upgraded.css}</style>`)
+      .replace(/<script[^>]*src=["']app\.js["'][^>]*><\/script>/i, `<script>${upgraded.js}<\/script>`);
+  }
+}
+
+const origPlayClip = window.playSoftwareClip;
+window.playSoftwareClip = function (sw) {
+  if (typeof origPlayClip === "function") {
+    origPlayClip(sw);
+  }
+  const visEl = document.getElementById("swClipVisual");
+  if (visEl && sw) {
+    const bars = Array.from({ length: 14 }, (_, i) => {
+      const delay = ((i * 90) % 700) / 1000;
+      return `<div class="sw-eq-bar" style="animation-delay:${delay}s;"></div>`;
+    }).join("");
+    visEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;font-weight:800;">
+        <span>${esc(sw.id)} • ${esc(sw.name)}</span>
+        <span style="color:#4ade80;">${esc(sw.price)}</span>
+      </div>
+      <div class="sw-eq-bars">${bars}</div>
+      <div class="sw-bar-track"><div id="swProgBar" class="sw-bar-fill" style="width:45%;"></div></div>
+    `;
+  }
+};
+
+applyMaxHdToCurrentProject();
